@@ -41,6 +41,7 @@ mainRouter.use('/reservation-status', reservationSatusRouter(reservationSatusCon
 mainRouter.use('/room-type', roomTypeRouter(roomTypeController))
 mainRouter.use('/rooms',roomRouter(roomController))
 
+
 app.listen(3000, () => {
     console.log(`listening on port ${3000} ...`);
 });
