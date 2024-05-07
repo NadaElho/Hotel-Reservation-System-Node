@@ -26,6 +26,9 @@ app.use(express.json())
 app.use(cors());
 app.use('/api/v1', mainRouter);
 
+mainRouter.use('/reservation-status', reservationSatusRouter(reservationSatusController))
+
+
 // Creating instances of repositories
 const reservationSatusRepository = new ReservationSatusRepository()
 const roomTypeRepository = new RoomTypeRepository()
