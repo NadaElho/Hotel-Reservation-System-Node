@@ -86,7 +86,7 @@ class roomController {
             const room = await this.roomRepository.getRoomById ({_id: id});
            
               if (!room) {
-                res.status(404).json("Room  not found");
+                res.status(404).json("Room not found");
                 return;
               }
              await this.roomRepository.deleteRoom({_id: id});

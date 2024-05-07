@@ -2,11 +2,11 @@ const Room = require("../models/room.model")
 
 class roomRepository{
     async getAllRooms(){
-        //populate('hotelId)
+        //populate('hotelId')
         return await Room.find().populate('roomTypeId');
     }
     async getRoomById (id){
-        //populate('hotelId)
+        //populate('hotelId')
         return await Room.findOne(id).populate('roomTypeId');
     
     }

@@ -23,7 +23,7 @@ const roomSchema=mongoose.Schema({
     roomTypeId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'RoomType',
-        required: [true, 'Room must have Room Type Id']
+        required: [true, ' Room must have Room Type Id']
 
     } ,
     price:{
