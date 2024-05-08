@@ -1,5 +1,7 @@
 const Reservation = require('../models/reservation.model')
 const Room = require('../models/room.model')
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 var cron = require('node-cron')
 
 cron.schedule('0 0 * * *', async () => {
@@ -86,6 +88,35 @@ class reservationController {
 
   cancelReservation(id) {
     return this.reservationRepository.cancelReservation(id)
+  }
+
+  async payWithStripe(req, id){
+    const reservation = await this.reservationRepository.getReservation(id) 
+
+    if(!reservation._id){
+        return {message: `No reservation with this id ${id}`}
+    }
+
+    const session = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: 'egp',
+              unit_amount: reservation.totalPrice * 100,
+              product_data: {
+                name: `Room Number: ${reservation.roomId.roomNumber}`,
+                description: reservation.roomId.description,
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${req.protocol}://${req.get('host')}/reservations?success=true`,
+        cancel_url: `${req.protocol}://${req.get('host')}/reservations?canceled=true`,
+        customer_email: 'nadaelhosary51@gmail.com',
+      })
+      return session
   }
 }
 
