@@ -98,7 +98,15 @@ const reservationRouter = (reservationController) => {
     }
   })
 
-  router.post('/:id/payment', async (req, res) => {})
+  router.post('/:id/payment', async (req, res) => {
+    const response = await reservationController.payWithStripe(req, req.params.id)
+    if(response?.message){
+      res.status(404).send(response.message)
+    }else{
+      res.status(200).send({status: 'success', session: response})
+    }
+
+  })
 
   return router
 }
