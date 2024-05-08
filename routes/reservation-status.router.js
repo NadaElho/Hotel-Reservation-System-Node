@@ -4,11 +4,16 @@ const router = express.Router()
 const reservationSatusRouter = (reservationSatusController) => {
   router.get('/', async (req, res) => {
     try {
-      res
-        .status(200)
-        .send(await reservationSatusController.getReservationStatus())
+      const getAllTypes = await reservationSatusController.getReservationStatus()
+      if(!getAllTypes.length){
+        res.status(404).send(`No reservation types found`)
+      }else{
+        res
+          .status(200)
+          .send(getAllTypes)
+      }
     } catch (err) {
-      res.status(404).send('No reservation status found')
+      res.status(404).send(`Error Happened ${err}`)
     }
   })
 
@@ -17,7 +22,7 @@ const reservationSatusRouter = (reservationSatusController) => {
       reservationSatusController.addReservationStatus(req.body)
       res.status(201).send('Reservation status added successfully')
     } catch (err) {
-      res.status(404).send('Error happened')
+      res.status(404).send(`Error Happened ${err}`)
     }
   })
 
@@ -26,7 +31,7 @@ const reservationSatusRouter = (reservationSatusController) => {
       reservationSatusController.editReservationStatus(req.params.id, req.body)
       res.status(200).send('Reservation status updated successfully')
     } catch (err) {
-      res.status(404).send('Error happened')
+      res.status(404).send(`Error Happened ${err}`)
     }
   })
 
