@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 
 const reservationStatusSchema = mongoose.Schema({
-    name:{
+    name_en:{
+        type: String,
+        required: true
+    },
+    name_ar:{
         type: String,
         required: true
     }
