@@ -13,12 +13,11 @@ class hotelRepository {
   }
   //
   async editHotel(id, body) {
-    
     return await Hotel.updateOne({ _id: id }, body);
   }
   //
   async deleteHotel(id){
     return await Hotel.deleteOne({_id:id});
-}
+  }
 }
 module.exports = hotelRepository;
