@@ -46,18 +46,7 @@ class reservationController {
     ) {
       return { message: 'Room is already reserved' }
     }
-    const differenceBetweenDays =
-      new Date(body.checkOut).getTime() - new Date(body.checkIn).getTime()
-    const calcNoOfNights =
-      Math.round(differenceBetweenDays) / (1000 * 3600 * 24)
-    const room = await Room.findOne({ _id: body.roomId })
-    const calcTotalPrice = calcNoOfNights * room.price
-    const newBody = {
-      ...body,
-      totalPrice: calcTotalPrice,
-      noOfNights: calcNoOfNights,
-    }
-    return this.reservationRepository.addNewReservation(newBody)
+    return this.reservationRepository.addNewReservation(body)
   }
 
   async editReservation(id, body) {
@@ -72,18 +61,7 @@ class reservationController {
     ) {
       return { message: 'Room is already reserved' }
     }
-    const differenceBetweenDays =
-      new Date(body.checkOut).getTime() - new Date(body.checkIn).getTime()
-    const calcNoOfNights =
-      Math.round(differenceBetweenDays) / (1000 * 3600 * 24)
-    const room = await Room.findOne({ _id: body.roomId })
-    const calcTotalPrice = calcNoOfNights * room.price
-    const newBody = {
-      ...body,
-      totalPrice: calcTotalPrice,
-      noOfNights: calcNoOfNights,
-    }
-    return this.reservationRepository.editReservation(id, newBody)
+    return this.reservationRepository.editReservation(id, body)
   }
 
   cancelReservation(id) {

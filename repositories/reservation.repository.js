@@ -37,7 +37,6 @@ class reservationRepository {
     checkIn,
     checkOut,
     totalPrice,
-    noOfNights,
   }) {
     await Reservation.create({
       userId,
@@ -46,7 +45,6 @@ class reservationRepository {
       checkIn,
       checkOut,
       totalPrice,
-      noOfNights,
     })
   }
 

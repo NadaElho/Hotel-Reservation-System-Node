@@ -8,7 +8,6 @@ class roomRepository{
     async getRoomById (id){
         //populate('hotelId')
         return await Room.findOne(id).populate('roomTypeId');
-    
     }
     
     async addRoom(req){
