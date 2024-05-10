@@ -8,10 +8,6 @@ const app = express();
 const AppError = require("./unites/appError");
 const userRouter = require("./routes/user.router");
 
-//if router not found will display this message
-app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-});
 
 const mainRouter = express.Router();
 
@@ -59,6 +55,11 @@ const roomController = new RoomController(roomRepository)
 const hotelController = new HotelController(hotelRepository);
 const amentyController = new AmentyController(amentyRepository)
 
+//if router not found will display this message
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
 // routers with controllers
 mainRouter.use("/users", userRouter);
 mainRouter.use('/reservations', reservationRouter(reservationController))
@@ -69,5 +70,5 @@ mainRouter.use('/hotels', hotelRouter(hotelController));
 mainRouter.use('/amenties', amentyRouter(amentyController))
 
 app.listen(3000, () => {
-  console.log(`listening on port ${3000} ...`);
+  console.log(`listening on port 3000 ...`);
 });

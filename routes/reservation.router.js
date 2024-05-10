@@ -1,8 +1,9 @@
 const express = require('express')
+const { protect, restrictTo } = require('../controllers/auth.controller')
 const router = express.Router()
 
 const reservationRouter = (reservationController) => {
-  router.get('/', async (req, res) => {
+  router.get('/', protect, restrictTo('admin'), async (req, res) => {
     try {
       const allReservations = await reservationController.getAllReservations()
       if (!allReservations.length) {
@@ -11,11 +12,11 @@ const reservationRouter = (reservationController) => {
         res.status(200).send(allReservations)
       }
     } catch (err) {
-      res.status(404).send(`Error Happened ${err}`)
+      res.status(500).send(`Error Happened ${err}`)
     }
   })
 
-  router.get('/:userId', async (req, res) => {
+  router.get('/:userId', protect, async (req, res) => {
     try {
       const userReservations = await reservationController.getUserReservations(
         req.params.userId,
@@ -26,11 +27,11 @@ const reservationRouter = (reservationController) => {
         res.status(200).send(userReservations)
       }
     } catch (err) {
-      res.status(404).send(`Error Happened ${err}`)
+      res.status(500).send(`Error Happened ${err}`)
     }
   })
 
-  router.get('/room/:roomId', async (req, res) => {
+  router.get('/room/:roomId', protect, restrictTo('admin'), async (req, res) => {
     try {
       const roomReservations = await reservationController.getRoomReservations(
         req.params.roomId,
@@ -41,11 +42,11 @@ const reservationRouter = (reservationController) => {
         res.status(200).send(roomReservations)
       }
     } catch (err) {
-      res.status(404).send(`Error Happened ${err}`)
+      res.status(500).send(`Error Happened ${err}`)
     }
   })
 
-  router.get('/reservation/:id', async (req, res) => {
+  router.get('/reservation/:id', protect, async (req, res) => {
     try {
       const reservation = await reservationController.getReservation(
         req.params.id,
@@ -56,11 +57,11 @@ const reservationRouter = (reservationController) => {
         res.status(200).send(reservation)
       }
     } catch (err) {
-      res.status(404).send(`Error Happened ${err}`)
+      res.status(500).send(`Error Happened ${err}`)
     }
   })
 
-  router.post('/', async (req, res) => {
+  router.post('/', protect, async (req, res) => {
     try {
       let response = await reservationController.addNewReservation(req.body)
       if (response?.message) {
@@ -69,11 +70,11 @@ const reservationRouter = (reservationController) => {
         res.status(201).send('Reservation created')
       }
     } catch (err) {
-      res.status(404).send(`Error Happened ${err}`)
+      res.status(500).send(`Error Happened ${err}`)
     }
   })
 
-  router.patch('/:id', async (req, res) => {
+  router.patch('/:id', protect, async (req, res) => {
     try {
       let response = await reservationController.editReservation(
         req.params.id,
@@ -85,27 +86,26 @@ const reservationRouter = (reservationController) => {
         res.status(200).send('Reservation updated')
       }
     } catch (err) {
-      res.status(404).send(`Error Happened ${err}`)
+      res.status(500).send(`Error Happened ${err}`)
     }
   })
 
-  router.patch('/:id/cancel', async (req, res) => {
+  router.patch('/:id/cancel', protect, async (req, res) => {
     try {
       await reservationController.cancelReservation(req.params.id)
       res.status(200).send('Reservation canceled')
     } catch (err) {
-      res.status(404).send(`Error Happened ${err}`)
+      res.status(500).send(`Error Happened ${err}`)
     }
   })
 
-  router.post('/:id/payment', async (req, res) => {
+  router.post('/:id/payment', protect, async (req, res) => {
     const response = await reservationController.payWithStripe(req, req.params.id)
     if(response?.message){
       res.status(404).send(response.message)
     }else{
       res.status(200).send({status: 'success', session: response})
     }
-
   })
 
   return router
