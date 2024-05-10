@@ -5,6 +5,14 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 
+const AppError = require("./unites/appError");
+const userRouter = require("./routes/user.router");
+
+//if router not found will display this message
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
 const mainRouter = express.Router();
 
 // Importing repositories
@@ -52,6 +60,7 @@ const hotelController = new HotelController(hotelRepository);
 const amentyController = new AmentyController(amentyRepository)
 
 // routers with controllers
+mainRouter.use("/users", userRouter);
 mainRouter.use('/reservations', reservationRouter(reservationController))
 mainRouter.use('/reservation-status', reservationSatusRouter(reservationSatusController))
 mainRouter.use('/room-type', roomTypeRouter(roomTypeController))
@@ -60,5 +69,5 @@ mainRouter.use('/hotels', hotelRouter(hotelController));
 mainRouter.use('/amenties', amentyRouter(amentyController))
 
 app.listen(3000, () => {
-    console.log(`listening on port ${3000} ...`);
+  console.log(`listening on port ${3000} ...`);
 });
