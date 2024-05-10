@@ -22,15 +22,92 @@ class roomController {
             res.status(400).json({'Error happened ' : err.message})
         }
       }
+      async getAllRooms(req, res) {
+        try {
+          /// filter roomNumber[gte]=50
+            const queryObj = { ...req.query };
+            const excludedFields = ['page', 'sort', 'limit', 'fields'];
+            excludedFields.forEach(el => delete queryObj[el]);
+            let queryStr = JSON.stringify(queryObj);
+            queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+            const page = req.query.page * 1 || 1;
+            const limit = req.query.limit * 1 || 6;
+            const skip = (page - 1) * limit;
+            const endIndex = page * limit;
+            let query = {};
+            let sortBy ;
     
-    async getAllRooms(req, res) {
-            try {
-                const rooms= await this.roomRepository.getAllRooms();             
-                res.status(200).json({status: "success",rooms :rooms });
-            } catch (err) {
-                res.status(400).json({'Error happened ' : err.message})
+            // if (req.query.keyword) {
+            //     query.$and = [
+            //         { description: { $regex: req.query.keyword, $options: "i" } },
+            //         { roomNumber: { $regex: req.query.keyword, $options: "i" } }
+            //     ];
+            // }
+          //   const samar
+          //   = req.query.samar.split(',');
+          // console.log('samar',samar)
+//search
+// getRoomIdsByReservationDates service
+            if (req.query.checkIn && req.query.checkOut&&req.query.amenityId) {
+                          
+              const amenityIds = req.query.amenityId.split(',');
+
+              query.$and = [
+                  { _id: { $in: await this.getRoomIdsByReservationDates(req.query.checkIn, req.query.checkOut) }
+                 },
+    
+                 { amenityId :{ $elemMatch: { amenity: { $in: amenityIds } } }}
+            
+      
+              ];
+          }
+    
+            const parsed = JSON.parse(queryStr);
+            query = { ...query, ...parsed };
+    
+
+    //sort
+            if (req.query.sort) {
+                sortBy = req.query.sort.split(',').join(' ');
+                
+            } else {
+              sortBy = '-creatAt';
+              
             }
+          //   const totalDocuments = await this.roomRepository.getRoomCount(query);
+          //  const documentCount = totalDocuments.length;
+          let result = await this.roomRepository.getAllRooms(query,sortBy,skip,limit);
+          const {
+            data,
+            documentCount
+        } = result;
+        // const sortBy1 = req.query.sortg.split(',').join(' ');
+        // data = data.sort(sortBy1);
+        // console.log('data',sortBy1 )
+          // const documentCount= await this.roomRepository.getRoomCount(query);
+  
+    //pagination 
+            const pagination = {
+                currentPage: page,
+                limit,
+                numberPages: Math.ceil(documentCount / limit),
+                documentCount
+            };
+    
+            if (endIndex < documentCount) {
+                pagination.nextPage = page + 1;
+            }
+    
+            if (skip > 0) {
+                pagination.prevPage = page - 1;
+            }
+    
+            res.status(200).json({ status: "success", pagination, data: data });
+        } catch (err) {
+            res.status(400).json({ 'Error happened': err.message });
+        }
     }
+    
 
     async getRoomById(req,res){
       try{
