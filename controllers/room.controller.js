@@ -2,13 +2,14 @@ const { populate } = require("dotenv");
 
 class roomController {
     constructor(roomRepository) {
-      this.roomRepository = roomRepository,
+      this.roomRepository = roomRepository;
       // Bind methods to the instance to maintain the correct context
       this.addRoom = this.addRoom.bind(this);
       this.getAllRooms = this.getAllRooms.bind(this);
       this.getRoomById = this.getRoomById.bind(this);
       this.editRoom = this.editRoom.bind(this);
       this.deleteRoom = this.deleteRoom.bind(this);
+      ///
     }
     async  addRoom (req, res){
         try {
@@ -37,26 +38,17 @@ class roomController {
             let query = {};
             let sortBy ;
     
-            // if (req.query.keyword) {
-            //     query.$and = [
-            //         { description: { $regex: req.query.keyword, $options: "i" } },
-            //         { roomNumber: { $regex: req.query.keyword, $options: "i" } }
-            //     ];
-            // }
-          //   const samar
-          //   = req.query.samar.split(',');
-          // console.log('samar',samar)
-//search
-// getRoomIdsByReservationDates service
-            if (req.query.checkIn && req.query.checkOut&&req.query.amenityId) {
+      
+z
+            if (req.query.checkIn && req.query.checkOut&&req.query.hoteId&&req.query.roomType) {
                           
-              const amenityIds = req.query.amenityId.split(',');
+             const amenityIds = req.query.amenityId.split(',');
 
-              query.$and = [
+              query= [
                   { _id: { $in: await this.getRoomIdsByReservationDates(req.query.checkIn, req.query.checkOut) }
                  },
     
-                 { amenityId :{ $elemMatch: { amenity: { $in: amenityIds } } }}
+               
             
       
               ];
