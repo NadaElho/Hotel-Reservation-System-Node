@@ -30,13 +30,14 @@ class roomController {
     try {
       /// filter roomNumber[gte]=50
       const queryObj = { ...req.query };
-      const excludedFields = ["page", "sort", "limit", "fields"];
+      const excludedFields = ["page", "sort", "limit", "fields",'checkIn','checkOut','amentiesIds','hotelId','roomTypeId'];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
       queryStr = queryStr.replace(
         /\b(gte|gt|lte|lt)\b/g,
         (match) => `$${match}`
       );
+      const parse=JSON.parse(queryStr);
       const page = req.query.page * 1 || 1;
       const limit = req.query.limit * 1 || 6;
       const skip = (page - 1) * limit;
@@ -44,9 +45,10 @@ class roomController {
       let query = {};
       let sortBy;
       let queruRomm = {};
+
       //search
       if (
-        req.query.roomType &&
+        req.query.roomTypeId&&
         req.query.hotelId &&
         req.query.checkIn &&
         req.query.checkOut
@@ -76,18 +78,28 @@ class roomController {
         });
         queruRomm = {
           _id: { $nin: roomIds },
-          roomTypeId: req.query.roomType,
+          roomTypeId: req.query.roomTypeId,
           hotelId: req.query.hotelId,
         };
       }
-      query = { ...queruRomm };
+      
+      //filter
+      let amenties;
+      if(req.query.amentiesIds){
+        
+        const fields = req.query.amentiesIds.split(",");
+        amenties={amentiesIds:{ $all: fields }}
+        console.log('fields',fields,'samar ali')
+        
+      }
+      query = { ...queruRomm ,...parse,...amenties};
       //sort
       if (req.query.sort) {
         sortBy = req.query.sort.split(",").join(" ");
       } else {
         sortBy = "-creatAt";
       }
-
+      // find data
       let result = await this.roomRepository.getAllRooms(
         query,
         sortBy,

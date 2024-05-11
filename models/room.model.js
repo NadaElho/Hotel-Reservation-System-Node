@@ -15,7 +15,7 @@ const roomSchema=mongoose.Schema({
         required: [true, 'Room must have Description']
 
     },
-    amenityId:[{
+    amentiesIds:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Amenity'
 
