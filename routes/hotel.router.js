@@ -1,69 +1,64 @@
 const express = require("express");
 const router = express.Router();
-const Hotel = require("../models/hotel.model");
+const { protect, restrictTo } = require("../controllers/auth.controller");
+
 const hotelRouter = (hotelController) => {
   //////////////////////////////////////////////////////////////
-
   router.get("/", async (req, res) => {
     try {
-      const hotels = await hotelController.getAllHotels();
-      res.send(hotels);
+      const Allhotels = await hotelController.getAllHotels();
+      res.send(Allhotels);
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
   //////////////////////////////////////////////////////////////
-  router.get("/:id", async (req, res) => {
+  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const id = req.params.id;
-      const hotel = await Hotel.findById(id);
+      const hotel = await hotelController.getHotelById(req.params.id);
       if (!hotel) {
-        res.status(404).send("this hotel is not exist");
+        res.status(404).send("this hotel  does not exist");
         return;
       }
-      await hotelController.getHotelById(id);
       res.send(hotel);
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
   //////////////////////////////////////////////////////////////
-  router.post("/", async (req, res) => {
+  router.post("/", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const hotel = req.body;
-      await hotelController.addHotel(hotel);
-      res.send("the hotel added successfully");
+      await hotelController.addHotel(req.body);
+      res.status(201).send("the hotel added successfully");
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
   //////////////////////////////////////////////////////////////
-  router.delete("/:id", async (req, res) => {
+  router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const id = req.params.id;
-      const hotel = await Hotel.findById(id);
+      const hotel = await hotelController.getHotelById(req.params.id);
       if (!hotel) {
-        res.status(404).send("this hotel is not exist");
+        res.status(404).send("This hotel does not exist");
         return;
       }
-      await hotelController.deleteHotel(id);
-      res.status(200).send("The hotel deleted successfully");
+      await hotelController.deleteHotel(req.params.id);
+      res.status(200).send("The hotel was deleted successfully");
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
+
   //////////////////////////////////////////////////////////////
-  router.patch("/:id", async (req, res) => {
+  router.patch("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const id = req.params.id;
-      const hotel = await Hotel.findById(id);
-      const hotelBody = req.body;
+      const hotel = await hotelController.getHotelById(req.params.id);
       if (!hotel) {
-        res.status(404).send("this hotel is not exist");
+        res.status(404).send("this hotel does not exist");
         return;
       }
-      await hotelController.editHotel(id, hotelBody);
-      res.status(201).send("This hotel updated successfully");
+      await hotelController.editHotel(req.params.id, req.body);
+      res.status(200).send("This hotel updated successfully");
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
@@ -74,3 +69,8 @@ const hotelRouter = (hotelController) => {
 };
 
 module.exports = hotelRouter;
+
+
+
+////////////////////
+

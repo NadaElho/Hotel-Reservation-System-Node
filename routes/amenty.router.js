@@ -1,68 +1,63 @@
 const express = require("express");
 const router = express.Router();
-const Amenty = require("../models/amenty.model");
+const { protect, restrictTo } = require("../controllers/auth.controller");
 const amentyRouter = (amentyController) => {
   //////////////////////////////////////////////////////////////
   router.get("/", async (req, res) => {
     try {
-      const amenties = await amentyController.getAllAmenties();
-      res.send(amenties);
+      const getAmenties = await amentyController.getAllAmenties();
+      res.send(getAmenties);
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
+
   //////////////////////////////////////////////////////////////
-  router.get("/:id", async (req, res) => {
+  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const id = req.params.id;
-      const amenty = await Amenty.findById(id);
+      const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
-        res.status(404).send("this amenty is not exist");
+        res.status(404).send("this amenty does not exist");
         return;
       }
-      await amentyController.getAmentyById(id);
       res.send(amenty);
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
   //////////////////////////////////////////////////////////////
-  router.post("/", async (req, res) => {
+  router.post("/", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const amenty = req.body;
-      await amentyController.addAmenty(amenty);
-      res.status(200).send("the amenty added successfully");
+      await amentyController.addAmenty(req.body);
+      res.status(201).send("the amenty added successfully");
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
   //////////////////////////////////////////////////////////////
-  router.delete("/:id", async (req, res) => {
+  router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const id = req.params.id;
-      const amenty = await Amenty.findById(id);
+      const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
-        res.status(404).send("this amenty is not exist");
+        res.status(404).send("this amenty does not exist");
         return;
       }
-      await amentyController.deleteAmenty(id);
+      await amentyController.deleteAmenty(req.params.id);
       res.status(200).send("The amenty deleted successfully");
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
   });
   //////////////////////////////////////////////////////////////
-  router.patch("/:id", async (req, res) => {
+  router.patch("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const id = req.params.id;
-      const amenty = await Amenty.findById(id);
-      const amentyBody = req.body;
+      const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
-        res.status(404).send("this amenty is not exist");
+        res.status(404).send("this amenty does not exist");
         return;
       }
-      await amentyController.editAmenty(id, amentyBody);
-      res.status(201).send("The amenty updated successfully");
+      await amentyController.editAmenty(req.params.id, req.body);
+      res.status(200).send("The amenty updated successfully");
     } catch (error) {
       res.status(500).json({ message: "Server Error" });
     }
@@ -72,3 +67,4 @@ const amentyRouter = (amentyController) => {
 };
 
 module.exports = amentyRouter;
+
