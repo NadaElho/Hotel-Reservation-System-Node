@@ -1,6 +1,11 @@
 const mongoose=require("mongoose");
 const roomTypeSchema=mongoose.Schema({
-    type:{
+    type_en:{
+        type: String,
+        required: [true, 'RoomType  must have Type']
+
+    },
+    type_ar:{
         type: String,
         required: [true, 'RoomType  must have Type']
 

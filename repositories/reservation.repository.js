@@ -37,7 +37,6 @@ class reservationRepository {
     checkIn,
     checkOut,
     totalPrice,
-    noOfNights,
   }) {
     await Reservation.create({
       userId,
@@ -46,7 +45,6 @@ class reservationRepository {
       checkIn,
       checkOut,
       totalPrice,
-      noOfNights,
     })
   }
 
@@ -72,8 +70,7 @@ class reservationRepository {
     const getRoomReservations = await Reservation.find({
       roomId,
       $or: [
-        { checkIn: { $lt: checkOut }, checkOut: { $gt: checkIn } },
-        { checkIn: { $lte: checkIn }, checkOut: { $gte: checkOut } },
+     
       ],
     }).populate('status')
     const reservationsExceptEditing = getRoomReservations.filter(

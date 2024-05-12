@@ -29,8 +29,8 @@ const hotelSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  phoneNumer: {
-    type: [Number],
+  phoneNumber: {
+    type: [String],
     required: true,
   },
   imageId: {

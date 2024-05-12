@@ -13,7 +13,6 @@ const amentySchema = mongoose.Schema({
     type: String,
     required: true
   }
- 
 });
-const amenty = mongoose.model(" Amenty", amentySchema);
+const amenty = mongoose.model("Amenty", amentySchema);
 module.exports = amenty;

@@ -26,9 +26,6 @@ const reservationSchema = mongoose.Schema({
     },
     totalPrice: {
         type: Number,
-    },
-    noOfNights : {
-        type: Number
     }
 })
 
