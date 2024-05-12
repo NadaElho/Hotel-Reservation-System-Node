@@ -1,6 +1,7 @@
 const { populate } = require("dotenv");
 const Reservation = require("../models/reservation.model");
 const Room = require("../models/room.model");
+const { deleteImages } = require("../middleware/firebase");
 
 class roomController {
   constructor(roomRepository) {
@@ -15,14 +16,15 @@ class roomController {
   }
   async addRoom(req, res) {
     try {
-      const room = await this.roomRepository.addRoom({ ...req.body });
+      const imagesId=req.imagesId
+      const room = await this.roomRepository.addRoom({ ...req.body,imagesId });
       res.status(201).json({
         status: "success",
         message: " Rome added successfully",
         room: room,
       });
     } catch (err) {
-      res.status(400).json({ "Error happened ": err.message });
+      res.status(500).json({ "Error happened ": err.message });
     }
   }
 
@@ -96,9 +98,10 @@ class roomController {
       //sort
       if (req.query.sort) {
         sortBy = req.query.sort.split(",").join(" ");
-      } else {
-        sortBy = "-creatAt";
-      }
+      } 
+      // else {
+      //   sortBy = "-creatAt";
+      // }
       // find data
       let result = await this.roomRepository.getAllRooms(
         query,
@@ -126,7 +129,7 @@ class roomController {
 
       res.status(200).json({ status: "success", pagination, data: data });
     } catch (err) {
-      res.status(400).json({ "Error happened": err.message });
+      res.status(500).json({ "Error happened": err.message });
     }
   }
 
@@ -157,9 +160,17 @@ class roomController {
         res.status(404).json("Room not found");
         return;
       }
+
+      // if (req.body.images) {
+      //   console.log('req.body.images',room.images)
+
+      //   await deleteImages(room.images)
+      // }
+      // const fileId = req.fileId
+      const imagesId=req.imagesId
       const updateRoom = await this.roomRepository.editRoom(
         { _id: id },
-        { ...req.body }
+        { ...req.body,imagesId }
       );
 
       const findNewRome = await this.roomRepository.getRoomById({
@@ -191,7 +202,7 @@ class roomController {
         message: " Room deleted successfully",
       });
     } catch (err) {
-      res.status(400).json({ "Error happened ": err.message });
+      res.status(500).json({ "Error happened ": err.message });
     }
   }
 }
