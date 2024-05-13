@@ -37,7 +37,8 @@ const hotelRouter = require("./routes/hotel.router");
 const amentyRouter = require("./routes/amenty.router");
 const userRouter = require("./routes/user.router");
 
-app.use(express.json());
+
+app.use(express.json())
 app.use(cors());
 app.use("/api/v1", mainRouter);
 
@@ -64,7 +65,7 @@ const userController = new UserController(userRepository);
 //if router not found will display this message
 
 // routers with controllers
-// mainRouter.use("/users", userRouter);
+mainRouter.use("/users", userRouter);
 mainRouter.use("/reservations", reservationRouter(reservationController));
 mainRouter.use(
   "/reservation-status",

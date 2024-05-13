@@ -10,14 +10,19 @@ const roomSchema=mongoose.Schema({
         required: [true, 'Room must have Room Number']
 
     },
-    description:{
+    description_en:{
+        type: String,
+        required: [true, 'Room must have Description']
+
+    },
+    description_ar:{
         type: String,
         required: [true, 'Room must have Description']
 
     },
     amentiesIds:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Amenity'
+        ref:'Amenty'
 
     }],
     roomTypeId:{

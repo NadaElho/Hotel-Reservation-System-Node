@@ -10,8 +10,8 @@ class hotelController {
     return this.hotelRepository.getHotelById(id);
   }
 
-  addHotel(newHotel) {
-    this.hotelRepository.addHotel(newHotel);
+  addHotel(newHotel){
+   return this.hotelRepository.addHotel(newHotel)
   }
 
   editHotel(id, body) {

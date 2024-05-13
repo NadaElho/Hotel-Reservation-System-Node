@@ -3,7 +3,7 @@ const Room = require("../models/room.model")
 class roomRepository{
     async getAllRooms(query,sortBy,skip,limit){
 
-    const   data=  await Room.find(query).sort(sortBy)
+    const   data=  await Room.find(query).populate('roomTypeId').sort(sortBy)
     .skip(skip)
     .limit(limit);
     const documentCount=await Room.countDocuments(query);
@@ -16,7 +16,7 @@ class roomRepository{
     // }
     async getRoomById (id){
         //populate('hotelId')
-        return await Room.findOne(id).populate('roomTypeId');
+        return await Room.findOne(id).populate('amentiesIds').populate('hotelId').populate('roomTypeId');
     }
     
     async addRoom(req){

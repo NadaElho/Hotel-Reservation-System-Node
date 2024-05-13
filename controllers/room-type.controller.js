@@ -16,7 +16,7 @@ class roomTypeController {
                 roomType:roomType
               });
         } catch (err) {
-            res.status(400).json({'Error happened ' : err.message})
+            res.status(500).json({'Error happened ' : err.message})
         }
       }
     
@@ -26,7 +26,7 @@ class roomTypeController {
               
                 res.status(200).json({status: "success",roomstype :roomstype });
             } catch (err) {
-                res.status(400).json({'Error happened ' : err.message})
+                res.status(500).json({'Error happened ' : err.message})
             }
     }
     async editRoomType(req,res){
@@ -75,7 +75,7 @@ class roomTypeController {
               });
     
         }catch(err){
-            res.status(400).json({'Error happened ' : err.message})
+            res.status(500).json({'Error happened ' : err.message})
         }
     
     }

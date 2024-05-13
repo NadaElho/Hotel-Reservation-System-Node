@@ -10,7 +10,7 @@ class amentyController {
       return this.AmentyRepository.getAmentyById(id);
     }
     addAmenty(NewAmenty){
-      this.AmentyRepository.addAmenty(NewAmenty)
+     return this.AmentyRepository.addAmenty(NewAmenty)
     }
     ///
     editAmenty(id,body){
