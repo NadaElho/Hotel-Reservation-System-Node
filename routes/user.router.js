@@ -1,15 +1,10 @@
 const express = require("express");
-// const UserController = require("./../controllers/auth.controller");
 const middleWare = require("../middleware/auth");
 const User = require("./../models/user.model");
-const { login } = require("../controllers/auth.controller");
 
 const router = express.Router();
 
 const userRouter = (userController) => {
-  console.log(userController);
-  //////////////////////////////////////////////////////////////
-
   router.get(
     "/",
     middleWare.protect,
@@ -45,7 +40,7 @@ const userRouter = (userController) => {
       await userController.addUser(user);
       res.send("the user added successfully");
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       res.status(500).json({ message: "Server Error" });
     }
   });

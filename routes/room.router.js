@@ -2,6 +2,7 @@ const express = require('express')
 const { uploadMultiple } = require('../middleware/multer')
 const { uploadImage } = require('../middleware/firebase')
 const middleWare = require("../middleware/auth");
+
 const router = express.Router()
 //router
 const roomRouter = (roomController) => {

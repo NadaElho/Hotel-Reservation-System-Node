@@ -56,6 +56,7 @@ const userSchema = new mongoose.Schema({
     },
   },
 });
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next;
 
@@ -74,3 +75,4 @@ userSchema.methods.correctPassword = async function (
 const User = mongoose.model("User", userSchema);
 
 module.exports =  User
+
