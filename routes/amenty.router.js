@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { protect, restrictTo } = require("../controllers/auth.controller");
+const { protect, restrictTo } = require('../middleware/auth')
 const amentyRouter = (amentyController) => {
   //////////////////////////////////////////////////////////////
   router.get("/", async (req, res) => {

@@ -1,11 +1,11 @@
 const Reservation = require('../models/reservation.model')
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 class reservationRepository {
   async getAllReservations() {
     const reservations = await Reservation.find()
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return reservations
   }
 
@@ -13,6 +13,7 @@ class reservationRepository {
     const userReservations = await Reservation.find({ userId })
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return userReservations
   }
 
@@ -20,6 +21,7 @@ class reservationRepository {
     const reservation = await Reservation.findOne({ _id: id })
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return reservation
   }
 
@@ -27,6 +29,7 @@ class reservationRepository {
     const roomReservations = await Reservation.find({ roomId })
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return roomReservations
   }
 
@@ -69,9 +72,7 @@ class reservationRepository {
   async isRoomReserved(roomId, checkIn, checkOut, id) {
     const getRoomReservations = await Reservation.find({
       roomId,
-      $or: [
-     
-      ],
+      $or: [],
     }).populate('status')
     const reservationsExceptEditing = getRoomReservations.filter(
       (reservation) => {
