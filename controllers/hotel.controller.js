@@ -6,19 +6,20 @@ class hotelController {
     return this.hotelRepository.getAllHotels();
   }
   //
-  getHotelById(id){
+  getHotelById(id) {
     return this.hotelRepository.getHotelById(id);
   }
-  addHotel(newHotel){
-    this.hotelRepository.addHotel(newHotel)
+
+  addHotel(newHotel) {
+    this.hotelRepository.addHotel(newHotel);
   }
-  ///
-  editHotel(id,body){
-   return this.hotelRepository.editHotel(id,body)
+
+  editHotel(id, body) {
+    return this.hotelRepository.editHotel(id, body);
   }
-  //
+
   deleteHotel(id) {
-   return this.hotelRepository.deleteHotel(id);
+    return this.hotelRepository.deleteHotel(id);
   }
 }
 module.exports = hotelController;
