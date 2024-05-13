@@ -14,6 +14,7 @@ class roomController {
     this.deleteRoom = this.deleteRoom.bind(this);
     ///
   }
+  //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
       const imagesId=req.imagesId
@@ -28,10 +29,14 @@ class roomController {
     }
   }
 
+  //-----------------------------------------------find ALL Room--------------------------------------------------------
   async getAllRooms(req, res) {
     try {
-      /// filter roomNumber[gte]=50
-      const queryObj = { ...req.query };
+   
+
+      let filterObj = {};
+      if (req.params.hotelId) filterObj = { hotelId: req.params.hotelId};
+      const queryObj = { ...req.query,...filterObj };
       const excludedFields = ["page", "sort", "limit", "fields",'checkIn','checkOut','amentiesIds','hotelId','roomTypeId'];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
@@ -94,7 +99,10 @@ class roomController {
         console.log('fields',fields,'samar ali')
         
       }
-      query = { ...queruRomm ,...parse,...amenties};
+      if (req.params.hotelId) {
+        query = {  ...filterObj };
+      }
+      query = { ...queruRomm ,...query,...parse,...amenties};
       //sort
       if (req.query.sort) {
         sortBy = req.query.sort.split(",").join(" ");
