@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { protect, restrictTo } = require("../controllers/auth.controller");
 
-const hotelRouter = (hotelController) => {
+
+const hotelRouter = (hotelController, roomController) => {
+  router.use("/:hotelId/rooms", roomController.getAllRooms);
   //////////////////////////////////////////////////////////////
   router.get("/", async (req, res) => {
     try {
@@ -64,6 +66,9 @@ const hotelRouter = (hotelController) => {
     }
   });
   //////////////////////////////////////////////////////////////
+
+  // router.use("/:hotelId/rooms",roomRouter );
+ 
 
   return router;
 };

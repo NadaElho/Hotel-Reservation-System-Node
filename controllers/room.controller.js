@@ -14,10 +14,11 @@ class roomController {
     this.deleteRoom = this.deleteRoom.bind(this);
     ///
   }
+  //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
-      const imagesId=req.imagesId
-      const room = await this.roomRepository.addRoom({ ...req.body,imagesId });
+      // const imagesId=req.imagesId
+      const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",
         message: " Rome added successfully",
@@ -28,10 +29,14 @@ class roomController {
     }
   }
 
+  //-----------------------------------------------find ALL Room--------------------------------------------------------
   async getAllRooms(req, res) {
     try {
-      /// filter roomNumber[gte]=50
-      const queryObj = { ...req.query };
+   
+
+      let filterObj = {};
+      if (req.params.hotelId) filterObj = { hotelId: req.params.hotelId};
+      const queryObj = { ...req.query,...filterObj };
       const excludedFields = ["page", "sort", "limit", "fields",'checkIn','checkOut','amentiesIds','hotelId','roomTypeId'];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
@@ -94,7 +99,10 @@ class roomController {
         console.log('fields',fields,'samar ali')
         
       }
-      query = { ...queruRomm ,...parse,...amenties};
+      if (req.params.hotelId) {
+        query = {  ...filterObj };
+      }
+      query = { ...queruRomm ,...query,...parse,...amenties};
       //sort
       if (req.query.sort) {
         sortBy = req.query.sort.split(",").join(" ");
@@ -161,16 +169,16 @@ class roomController {
         return;
       }
 
-      // if (req.body.images) {
-      //   console.log('req.body.images',room.images)
+      if (req.body.images) {
+        console.log('req.body.images',room.images)
 
-      //   await deleteImages(room.images)
-      // }
+        await deleteImages(room.images)
+      }
       // const fileId = req.fileId
-      const imagesId=req.imagesId
+      // const imagesId=req.imagesId
       const updateRoom = await this.roomRepository.editRoom(
         { _id: id },
-        { ...req.body,imagesId }
+        { ...req.body }
       );
 
       const findNewRome = await this.roomRepository.getRoomById({
@@ -195,6 +203,7 @@ class roomController {
         res.status(404).json("Room not found");
         return;
       }
+      await deleteImages(room.images);
       await this.roomRepository.deleteRoom({ _id: id });
 
       res.status(200).json({

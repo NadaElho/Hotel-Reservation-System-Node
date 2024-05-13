@@ -35,6 +35,7 @@ const roomRouter = require("./routes/room.router");
 const hotelRouter = require('./routes/hotel.router');
 const amentyRouter = require('./routes/amenty.router');
 
+
 app.use(express.json())
 app.use(cors());
 app.use('/api/v1', mainRouter);
@@ -66,7 +67,9 @@ mainRouter.use('/reservations', reservationRouter(reservationController))
 mainRouter.use('/reservation-status', reservationSatusRouter(reservationSatusController))
 mainRouter.use('/room-type', roomTypeRouter(roomTypeController))
 mainRouter.use('/rooms',roomRouter(roomController))
-mainRouter.use('/hotels', hotelRouter(hotelController));
+// mainRouter.use('/hotels', hotelRouter(hotelController));
+mainRouter.use('/hotels', hotelRouter(hotelController, roomController));
+
 mainRouter.use('/amenties', amentyRouter(amentyController))
 
 app.listen(3000, () => {
