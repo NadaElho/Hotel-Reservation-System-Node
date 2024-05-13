@@ -18,22 +18,15 @@ class UserController {
   }
 
   getAllUsers() {
-    return this.UserRepository.getAllUsers;
+    return this.UserRepository.getAllUsers(id);
   }
+  getUserById(id){
+    return this.UserRepository.getUserById(id);
+  }
+
 }
 
-// exports.getAllUsers = catchAsync(async (req, res, next) => {
-//   const users = await User.find();
 
-//   // SEND RESPONSE
-//   res.status(200).json({
-//     status: "success",
-//     results: users.length,
-//     data: {
-//       users,
-//     },
-//   });
-// });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { protect, restrictTo } = require("../controllers/auth.controller");
 
 
+const middleWare = require("../middleware/auth");
 const hotelRouter = (hotelController, roomController) => {
   router.use("/:hotelId/rooms", roomController.getAllRooms);
   //////////////////////////////////////////////////////////////
@@ -15,7 +15,7 @@ const hotelRouter = (hotelController, roomController) => {
     }
   });
   //////////////////////////////////////////////////////////////
-  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
+  router.get("/:id",  async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
       if (!hotel) {
@@ -28,7 +28,7 @@ const hotelRouter = (hotelController, roomController) => {
     }
   });
   //////////////////////////////////////////////////////////////
-  router.post("/", protect, restrictTo("admin"), async (req, res) => {
+  router.post("/",  async (req, res) => {
     try {
       await hotelController.addHotel(req.body);
       res.status(201).send("the hotel added successfully");
@@ -37,7 +37,7 @@ const hotelRouter = (hotelController, roomController) => {
     }
   });
   //////////////////////////////////////////////////////////////
-  router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
+  router.delete("/:id",  async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
       if (!hotel) {
@@ -52,7 +52,7 @@ const hotelRouter = (hotelController, roomController) => {
   });
 
   //////////////////////////////////////////////////////////////
-  router.patch("/:id", protect, restrictTo("admin"), async (req, res) => {
+  router.patch("/:id",  async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
       if (!hotel) {
