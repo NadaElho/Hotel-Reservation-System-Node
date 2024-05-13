@@ -21,7 +21,7 @@ class roomController {
       const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",
-        message: " Rome added successfully",
+        message: "Rome added successfully",
         room: room,
       });
     } catch (err) {
@@ -32,8 +32,6 @@ class roomController {
   //-----------------------------------------------find ALL Room--------------------------------------------------------
   async getAllRooms(req, res) {
     try {
-   
-
       let filterObj = {};
       if (req.params.hotelId) filterObj = { hotelId: req.params.hotelId};
       const queryObj = { ...req.query,...filterObj };

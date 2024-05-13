@@ -5,6 +5,7 @@ class reservationRepository {
     const reservations = await Reservation.find()
       .populate('roomId')
       .populate('status')
+      .popuate('userId')
     return reservations
   }
 
@@ -12,6 +13,7 @@ class reservationRepository {
     const userReservations = await Reservation.find({ userId })
       .populate('roomId')
       .populate('status')
+      .popuate('userId')
     return userReservations
   }
 
@@ -19,6 +21,7 @@ class reservationRepository {
     const reservation = await Reservation.findOne({ _id: id })
       .populate('roomId')
       .populate('status')
+      .popuate('userId')
     return reservation
   }
 
@@ -26,6 +29,7 @@ class reservationRepository {
     const roomReservations = await Reservation.find({ roomId })
       .populate('roomId')
       .populate('status')
+      .popuate('userId')
     return roomReservations
   }
 
