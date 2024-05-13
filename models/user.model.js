@@ -1,21 +1,38 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-
 const validator = require("validator");
-
+const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, "please tell us your name!"],
+    required: [true, "you must enter a First Name!"],
+  },
+  lastName: {
+    type: String,
+    required: [true, "you must enter a Last Name!"],
   },
   email: {
     type: String,
     unique: true,
-    required: [true, "please tell us your email!"],
-    lowercase: true,
-    validate: [validator.isEmail, "please enter valid  email!"],
+    required: [true, "you must enter an email!"],
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email'
+  ]
   },
-  photo: String,
+  gender:{
+    type:String,
+    enum: ['male', 'female'],
+  },
+  image: {
+    type: String,
+    default:' '
+  },
+  phoneNumber: {
+    type: String,
+    match:[
+      /^\d{11}$/,'Phone number must be 11 digits'
+    ]
+   
+},
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role',
@@ -23,14 +40,14 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "please provide a password!"],
+    required: [true, "you must enter a password!"],
     minlength: 8,
-    select: false,
+   
   },
   passwordConfirm: {
     type: String,
     select: false,
-    required: [true, "please confirm your password  !"],
+    required: [true, "you must confirm your password  !"],
     validate: {
       validator: function (el) {
         return el === this.password;
@@ -57,4 +74,5 @@ userSchema.methods.correctPassword = async function (
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User
+module.exports =  User
+

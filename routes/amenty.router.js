@@ -13,7 +13,7 @@ const amentyRouter = (amentyController) => {
   });
 
   //////////////////////////////////////////////////////////////
-  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
+  router.get("/:id",  async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
@@ -26,7 +26,7 @@ const amentyRouter = (amentyController) => {
     }
   });
   //////////////////////////////////////////////////////////////
-  router.post("/", protect, restrictTo("admin"), async (req, res) => {
+  router.post("/",  async (req, res) => {
     try {
       await amentyController.addAmenty(req.body);
       res.status(201).send("the amenty added successfully");
@@ -35,7 +35,7 @@ const amentyRouter = (amentyController) => {
     }
   });
   //////////////////////////////////////////////////////////////
-  router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
+  router.delete("/:id",  async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
@@ -49,7 +49,7 @@ const amentyRouter = (amentyController) => {
     }
   });
   //////////////////////////////////////////////////////////////
-  router.patch("/:id", protect, restrictTo("admin"), async (req, res) => {
+  router.patch("/:id",  async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {

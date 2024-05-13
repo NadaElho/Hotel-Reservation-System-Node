@@ -12,15 +12,9 @@ class UserRepository {
   }
 
   async addUser(newUser) {
-    return await User.create({
-      name: newUser.name,
-      email: newUser.email,
-      password: newUser.password,
-      passwordConfirm: newUser.passwordConfirm,
-      passwordChangedAt: newUser.passwordChangedAt,
-      role: newUser.role,
-      active: newUser.active,
-    });
+    return await User.create(
+      newUser
+    );
   }
 
   async updateUser(id, body) {
