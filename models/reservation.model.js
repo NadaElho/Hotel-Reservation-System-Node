@@ -9,20 +9,20 @@ const reservationSchema = mongoose.Schema({
     roomId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Room',
-        required: [true, 'Room must have Room Number']
+        required: [true, 'Room id is required']
     },
     status: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ReservationStatus',
-        required: true
+        required: [true, 'Status id is required']
     },
     checkIn:{
         type: Date,
-        required: true
+        required: [true, 'Check in date is required']
     },
     checkOut: {
         type: Date,
-        required: true
+        required: [true, 'Check out date is required']
     },
     totalPrice: {
         type: Number,
