@@ -1,6 +1,7 @@
 const { populate } = require("dotenv");
 const Reservation = require("../models/reservation.model");
 const Room = require("../models/room.model");
+const { deleteImages } = require("../middleware/firebase");
 
 class roomController {
   constructor(roomRepository) {
@@ -13,8 +14,10 @@ class roomController {
     this.deleteRoom = this.deleteRoom.bind(this);
     ///
   }
+  //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
+      // const imagesId=req.imagesId
       const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",
@@ -22,14 +25,18 @@ class roomController {
         room: room,
       });
     } catch (err) {
-      res.status(400).json({ "Error happened ": err.message });
+      res.status(500).json({ "Error happened ": err.message });
     }
   }
 
+  //-----------------------------------------------find ALL Room--------------------------------------------------------
   async getAllRooms(req, res) {
     try {
-      /// filter roomNumber[gte]=50
-      const queryObj = { ...req.query };
+   
+
+      let filterObj = {};
+      if (req.params.hotelId) filterObj = { hotelId: req.params.hotelId};
+      const queryObj = { ...req.query,...filterObj };
       const excludedFields = ["page", "sort", "limit", "fields",'checkIn','checkOut','amentiesIds','hotelId','roomTypeId'];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
@@ -92,13 +99,17 @@ class roomController {
         console.log('fields',fields,'samar ali')
         
       }
-      query = { ...queruRomm ,...parse,...amenties};
+      if (req.params.hotelId) {
+        query = {  ...filterObj };
+      }
+      query = { ...queruRomm ,...query,...parse,...amenties};
       //sort
       if (req.query.sort) {
         sortBy = req.query.sort.split(",").join(" ");
-      } else {
-        sortBy = "-creatAt";
-      }
+      } 
+      // else {
+      //   sortBy = "-creatAt";
+      // }
       // find data
       let result = await this.roomRepository.getAllRooms(
         query,
@@ -126,7 +137,7 @@ class roomController {
 
       res.status(200).json({ status: "success", pagination, data: data });
     } catch (err) {
-      res.status(400).json({ "Error happened": err.message });
+      res.status(500).json({ "Error happened": err.message });
     }
   }
 
@@ -157,6 +168,14 @@ class roomController {
         res.status(404).json("Room not found");
         return;
       }
+
+      if (req.body.images) {
+        console.log('req.body.images',room.images)
+
+        await deleteImages(room.images)
+      }
+      // const fileId = req.fileId
+      // const imagesId=req.imagesId
       const updateRoom = await this.roomRepository.editRoom(
         { _id: id },
         { ...req.body }
@@ -184,6 +203,7 @@ class roomController {
         res.status(404).json("Room not found");
         return;
       }
+      await deleteImages(room.images);
       await this.roomRepository.deleteRoom({ _id: id });
 
       res.status(200).json({
@@ -191,7 +211,7 @@ class roomController {
         message: " Room deleted successfully",
       });
     } catch (err) {
-      res.status(400).json({ "Error happened ": err.message });
+      res.status(500).json({ "Error happened ": err.message });
     }
   }
 }

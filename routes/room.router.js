@@ -1,4 +1,7 @@
 const express = require('express')
+const { uploadMultiple } = require('../middleware/multer')
+const { uploadImage } = require('../middleware/firebase')
+const { protect, restrictTo } = require('../controllers/auth.controller')
 const router = express.Router()
 //router
 const roomRouter = (roomController) => {
@@ -6,11 +9,13 @@ const roomRouter = (roomController) => {
 
   router.get('/:id',roomController.getRoomById)
 
-  router.post('/',roomController.addRoom)
-
-  router.patch('/:id',roomController.editRoom)
-
-  router.delete('/:id',roomController.deleteRoom)
+  router.post('/',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.addRoom)
+  router.patch('/:id',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.editRoom)
+  router.delete('/:id',protect, restrictTo('admin'),roomController.deleteRoom)
+  
+  // router.post('/',uploadMultiple,uploadImage,roomController.addRoom)
+  // router.patch('/:id',uploadMultiple,uploadImage,roomController.editRoom)
+  // router.delete('/:id',roomController.deleteRoom)
 
   return router
 }
