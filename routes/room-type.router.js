@@ -11,6 +11,10 @@ const roomTypeRouter = (roomTypeController) => {
 
   router.delete('/:id',protect, restrictTo('admin'),roomTypeController.deleteRoomType)
 
+  // router.post('/',roomTypeController.addRoomType)
+  // router.patch('/:id',roomTypeController.editRoomType)
+  // router.delete('/:id',roomTypeController.deleteRoomType)
+
   return router
 }
 

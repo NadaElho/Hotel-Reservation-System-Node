@@ -1,8 +1,7 @@
 
-const { getStorage, ref, uploadBytesResumable, getDownloadURL} = require('firebase/storage');
+const { getStorage, ref, uploadBytesResumable, getDownloadURL,deleteObject} = require('firebase/storage');
 const { signInWithEmailAndPassword} = require("firebase/auth");
 const { auth } = require('../config/firebase.config');
-
 
 
 const uploadImage = async (req, res, next) => {
@@ -32,7 +31,7 @@ const uploadImage = async (req, res, next) => {
             // const imageName = fileName.split('/').pop();
             imagesId.push(fileName);
         }
-        req.imagesId = imagesId;
+        // req.imagesId = imagesId;
         req.body.images = imageUrls;
         next();
 
@@ -45,36 +44,19 @@ const uploadImage = async (req, res, next) => {
     }
 };
 
-
-// const deleteImages = async (images) => {
-//     try {
-//         const storageFB = getStorage();
-    
-//             await Promise.all(images.map(async (image) => {
-
-//                 const fileRef = storageFB.refFromURL(image); 
-//                 await fileRef.delete();
-           
-//             }));
-
-//     } catch (err) {
-//         console.log("Error deleting old image:", err.message);
-//     }
-// }
-// const deleteImages = async (images) => {
-//     try {
-//       const storageFB = getStorage();
-//       await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH);
-  
-//       await Promise.all(images.map(async (image) => {
-//         const storageRef = ref(storageFB, image);
-//         await deleteObject(storageRef);
-//       }));
-//     } catch (err) {
-//       console.log("Error deleting old image:", err.message);
-//     }
-//   };
+const deleteImages = async (images) => {
+    try {
+      const storageFB = getStorage();
+      await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH);
+     images.map(async (image) => {
+        const storageRef = ref(storageFB, image);
+        await deleteObject(storageRef);
+      });
+    } catch (err) {
+      console.log("error in deleted Image from firebase",err.message);
+    }
+  };
 module.exports={
     uploadImage,
-    // deleteImages
+    deleteImages
 }

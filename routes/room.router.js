@@ -10,10 +10,12 @@ const roomRouter = (roomController) => {
   router.get('/:id',roomController.getRoomById)
 
   router.post('/',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.addRoom)
-  
   router.patch('/:id',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.editRoom)
-
   router.delete('/:id',protect, restrictTo('admin'),roomController.deleteRoom)
+  
+  // router.post('/',uploadMultiple,uploadImage,roomController.addRoom)
+  // router.patch('/:id',uploadMultiple,uploadImage,roomController.editRoom)
+  // router.delete('/:id',roomController.deleteRoom)
 
   return router
 }

@@ -17,8 +17,8 @@ class roomController {
   //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
-      const imagesId=req.imagesId
-      const room = await this.roomRepository.addRoom({ ...req.body,imagesId });
+      // const imagesId=req.imagesId
+      const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",
         message: " Rome added successfully",
@@ -169,16 +169,16 @@ class roomController {
         return;
       }
 
-      // if (req.body.images) {
-      //   console.log('req.body.images',room.images)
+      if (req.body.images) {
+        console.log('req.body.images',room.images)
 
-      //   await deleteImages(room.images)
-      // }
+        await deleteImages(room.images)
+      }
       // const fileId = req.fileId
-      const imagesId=req.imagesId
+      // const imagesId=req.imagesId
       const updateRoom = await this.roomRepository.editRoom(
         { _id: id },
-        { ...req.body,imagesId }
+        { ...req.body }
       );
 
       const findNewRome = await this.roomRepository.getRoomById({
@@ -203,6 +203,7 @@ class roomController {
         res.status(404).json("Room not found");
         return;
       }
+      await deleteImages(room.images);
       await this.roomRepository.deleteRoom({ _id: id });
 
       res.status(200).json({
