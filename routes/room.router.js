@@ -8,11 +8,11 @@ const roomRouter = (roomController) => {
 
   router.get('/:id',roomController.getRoomById)
 
-  router.post('/',uploadMultiple,uploadImage,roomController.addRoom)
+  router.post('/',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.addRoom)
   
-  router.patch('/:id',uploadMultiple,uploadImage,roomController.editRoom)
+  router.patch('/:id',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.editRoom)
 
-  router.delete('/:id',roomController.deleteRoom)
+  router.delete('/:id',protect, restrictTo('admin'),roomController.deleteRoom)
 
   return router
 }

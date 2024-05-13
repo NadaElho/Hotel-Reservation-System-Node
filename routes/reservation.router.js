@@ -31,7 +31,7 @@ const reservationRouter = (reservationController) => {
     }
   })
 
-  router.get('/room/:roomId', protect, restrictTo('admin'), async (req, res) => {
+  router.get('/room/:roomId', 9, async (req, res) => {
     try {
       const roomReservations = await reservationController.getRoomReservations(
         req.params.roomId,
