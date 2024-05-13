@@ -93,9 +93,7 @@ class roomController {
       if(req.query.amentiesIds){
         
         const fields = req.query.amentiesIds.split(",");
-        amenties={amentiesIds:{ $all: fields }}
-        console.log('fields',fields,'samar ali')
-        
+        amenties={amentiesIds:{ $all: fields }}        
       }
       if (req.params.hotelId) {
         query = {  ...filterObj };
@@ -168,8 +166,6 @@ class roomController {
       }
 
       if (req.body.images) {
-        console.log('req.body.images',room.images)
-
         await deleteImages(room.images)
       }
       // const fileId = req.fileId

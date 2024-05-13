@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { protect, restrictTo } = require("../controllers/auth.controller");
+const { protect, restrictTo } = require('../middleware/auth')
 
 
 const hotelRouter = (hotelController, roomController) => {
@@ -65,17 +65,9 @@ const hotelRouter = (hotelController, roomController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
-
-  // router.use("/:hotelId/rooms",roomRouter );
- 
+  ////////////////////////////////////////////////////////////// 
 
   return router;
 };
 
 module.exports = hotelRouter;
-
-
-
-////////////////////
-

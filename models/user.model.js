@@ -3,14 +3,6 @@ const bcrypt = require("bcryptjs");
 
 const validator = require("validator");
 
-const roleSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    enum: ["user", "admin"],
-    default: "user",
-  },
-});
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -26,7 +18,8 @@ const userSchema = new mongoose.Schema({
   photo: String,
   role: {
     type: mongoose.Schema.Types.ObjectId,
-    default: "user",
+    ref: 'Role',
+    required: true
   },
   password: {
     type: String,
@@ -62,7 +55,6 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const Role = mongoose.model("Role", roleSchema);
 const User = mongoose.model("User", userSchema);
 
-module.exports = { Role, User };
+module.exports = User

@@ -5,7 +5,7 @@ class reservationRepository {
     const reservations = await Reservation.find()
       .populate('roomId')
       .populate('status')
-      .popuate('userId')
+      .populate('userId')
     return reservations
   }
 
@@ -13,7 +13,7 @@ class reservationRepository {
     const userReservations = await Reservation.find({ userId })
       .populate('roomId')
       .populate('status')
-      .popuate('userId')
+      .populate('userId')
     return userReservations
   }
 
@@ -21,7 +21,7 @@ class reservationRepository {
     const reservation = await Reservation.findOne({ _id: id })
       .populate('roomId')
       .populate('status')
-      .popuate('userId')
+      .populate('userId')
     return reservation
   }
 
@@ -29,7 +29,7 @@ class reservationRepository {
     const roomReservations = await Reservation.find({ roomId })
       .populate('roomId')
       .populate('status')
-      .popuate('userId')
+      .populate('userId')
     return roomReservations
   }
 
@@ -72,9 +72,7 @@ class reservationRepository {
   async isRoomReserved(roomId, checkIn, checkOut, id) {
     const getRoomReservations = await Reservation.find({
       roomId,
-      $or: [
-     
-      ],
+      $or: [],
     }).populate('status')
     const reservationsExceptEditing = getRoomReservations.filter(
       (reservation) => {
