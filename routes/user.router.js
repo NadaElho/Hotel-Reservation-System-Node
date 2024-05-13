@@ -1,24 +1,99 @@
 const express = require("express");
-const userController = require("./../controllers/user.controller");
-const authController = require("./../controllers/auth.controller");
+// const UserController = require("./../controllers/auth.controller");
+const middleWare = require("../middleware/auth");
+const User = require("./../models/user.model");
+const { login } = require("../controllers/auth.controller");
 
 const router = express.Router();
 
-router.post("/signup", authController.signup);
-router.post("/login", authController.login);
+const userRouter = (userController) => {
+  console.log(userController);
+  //////////////////////////////////////////////////////////////
 
-router
-  .route("/")
-  .get(
-    authController.protect,
-    authController.restrictTo("admin"),
-    userController.getAllUsers
-  )
-  .post(userController.createUser);
+  router.get(
+    "/",
+    middleWare.protect,
+    middleWare.restrictTo("admin"),
+    async (req, res) => {
+      try {
+        const users = await userController.getAllUsers();
+        res.send(users);
+      } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+      }
+    }
+  );
+  //////////////////////////////////////////////////////////////
+  router.get("/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findById(id);
+      if (!user) {
+        res.status(404).send("this user is not exist");
+        return;
+      }
+      await userController.getUserById(id);
+      res.send(user);
+    } catch (error) {
+      res.status(500).json({ message: "Server Error" });
+    }
+  });
+  //////////////////////////////////////////////////////////////
+  router.post("/signup", async (req, res) => {
+    try {
+      const user = req.body;
+      await userController.addUser(user);
+      res.send("the user added successfully");
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ message: "Server Error" });
+    }
+  });
+  //////////////////////////////////////////////////////////////
+  router.post("/login", async (req, res) => {
+    try {
+      const user = req.body;
+      const token = await userController.login(user);
+      res.json({ message: "loggin succesffly", token });
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ message: "Server Error" });
+    }
+  });
+  //////////////////////////////////////////////////////////////
+  router.delete("/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findById(id);
+      if (!user) {
+        res.status(404).send("this user is not exist");
+        return;
+      }
+      await userController.deleteUser(id);
+      res.status(200).send("The user deleted successfully");
+    } catch (error) {
+      res.status(500).json({ message: "Server Error" });
+    }
+  });
+  //////////////////////////////////////////////////////////////
+  router.patch("/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findById(id);
+      const userBody = req.body;
+      if (!user) {
+        res.status(404).send("this user is not exist");
+        return;
+      }
+      await userController.updateUser(id, userBody);
+      res.status(201).send("This user updated successfully");
+    } catch (error) {
+      res.status(500).json({ message: "Server Error" });
+    }
+  });
+  //////////////////////////////////////////////////////////////
 
-router
-  .route("/:id")
-  .get(userController.getUser)
-  .delete(authController.restrictTo("admin"), userController.deleteUser);
+  return router;
+};
 
-module.exports = router;
+module.exports = userRouter;

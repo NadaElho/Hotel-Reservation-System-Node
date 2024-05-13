@@ -12,18 +12,28 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+class UserController {
+  constructor(UserRepository) {
+    this.UserRepository = UserRepository;
+  }
 
-  // SEND RESPONSE
-  res.status(200).json({
-    status: "success",
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-});
+  getAllUsers() {
+    return this.UserRepository.getAllUsers;
+  }
+}
+
+// exports.getAllUsers = catchAsync(async (req, res, next) => {
+//   const users = await User.find();
+
+//   // SEND RESPONSE
+//   res.status(200).json({
+//     status: "success",
+//     results: users.length,
+//     data: {
+//       users,
+//     },
+//   });
+// });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
