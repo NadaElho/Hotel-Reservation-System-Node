@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { protect, restrictTo } = require('../middleware/auth')
 const amentyRouter = (amentyController) => {
-  //////////////////////////////////////////////////////////////
   router.get("/", async (req, res) => {
     try {
       const getAmenties = await amentyController.getAllAmenties();
@@ -12,7 +11,6 @@ const amentyRouter = (amentyController) => {
     }
   });
 
-  //////////////////////////////////////////////////////////////
   router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
@@ -25,7 +23,7 @@ const amentyRouter = (amentyController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+
   router.post("/", protect, restrictTo("admin"), async (req, res) => {
     try {
       await amentyController.addAmenty(req.body);
@@ -34,7 +32,7 @@ const amentyRouter = (amentyController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+
   router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
@@ -48,7 +46,7 @@ const amentyRouter = (amentyController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+
   router.patch("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);

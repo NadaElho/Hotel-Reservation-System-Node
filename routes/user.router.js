@@ -18,7 +18,7 @@ const userRouter = (userController) => {
       }
     }
   );
-  //////////////////////////////////////////////////////////////
+  
   router.get("/:id", async (req, res) => {
     try {
       const id = req.params.id;
@@ -33,7 +33,7 @@ const userRouter = (userController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.post("/signup", async (req, res) => {
     try {
       const user = req.body;
@@ -44,7 +44,7 @@ const userRouter = (userController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.post("/login", async (req, res) => {
     try {
       const user = req.body;
@@ -55,7 +55,7 @@ const userRouter = (userController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.delete("/:id", async (req, res) => {
     try {
       const id = req.params.id;
@@ -70,7 +70,7 @@ const userRouter = (userController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.patch("/:id", async (req, res) => {
     try {
       const id = req.params.id;
@@ -86,7 +86,6 @@ const userRouter = (userController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
 
   return router;
 };

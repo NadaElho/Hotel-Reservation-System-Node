@@ -5,7 +5,7 @@ const { protect, restrictTo } = require('../middleware/auth')
 
 const hotelRouter = (hotelController, roomController) => {
   router.use("/:hotelId/rooms", roomController.getAllRooms);
-  //////////////////////////////////////////////////////////////
+  
   router.get("/", async (req, res) => {
     try {
       const Allhotels = await hotelController.getAllHotels();
@@ -14,7 +14,7 @@ const hotelRouter = (hotelController, roomController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
@@ -27,7 +27,7 @@ const hotelRouter = (hotelController, roomController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.post("/", protect, restrictTo("admin"), async (req, res) => {
     try {
       await hotelController.addHotel(req.body);
@@ -36,7 +36,7 @@ const hotelRouter = (hotelController, roomController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
+
   router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
@@ -51,7 +51,6 @@ const hotelRouter = (hotelController, roomController) => {
     }
   });
 
-  //////////////////////////////////////////////////////////////
   router.patch("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
@@ -65,7 +64,6 @@ const hotelRouter = (hotelController, roomController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  ////////////////////////////////////////////////////////////// 
 
   return router;
 };

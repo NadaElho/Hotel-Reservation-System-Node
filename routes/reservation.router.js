@@ -110,14 +110,18 @@ const reservationRouter = (reservationController) => {
   });
 
   router.post("/:id/payment", protect, async (req, res) => {
-    const response = await reservationController.payWithStripe(
-      req,
-      req.params.id
-    );
-    if (response?.message) {
-      res.status(404).send(response.message);
-    } else {
-      res.status(200).send({ status: "success", session: response });
+    try{
+      const response = await reservationController.payWithStripe(
+        req,
+        req.params.id
+      );
+      if (response?.message) {
+        res.status(404).send(response.message);
+      } else {
+        res.status(200).send({ status: "success", session: response });
+      }
+    } catch(err){
+      res.status(500).send(`Error Happened ${err}`);
     }
   });
 
