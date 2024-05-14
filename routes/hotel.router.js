@@ -4,7 +4,7 @@ const { protect, restrictTo } = require('../middleware/auth')
 
 
 const hotelRouter = (hotelController, roomController) => {
-  router.use("/:hotelId/rooms", roomController.getAllRooms);
+ 
   
   router.get("/", async (req, res) => {
     try {
