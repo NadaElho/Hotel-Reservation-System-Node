@@ -1,7 +1,8 @@
 const express = require("express");
 const middleWare = require("../middleware/auth");
 const User = require("./../models/user.model");
-
+const { uploadMultiple } = require('../middleware/multer')
+const { uploadImage, deleteImages } = require('../middleware/firebase')
 const router = express.Router();
 
 const userRouter = (userController) => {
@@ -34,14 +35,15 @@ const userRouter = (userController) => {
     }
   });
   
-  router.post("/signup", async (req, res) => {
+  router.post("/signup",uploadMultiple,uploadImage, async (req, res) => {
     try {
       const user = req.body;
+      console.log('1234')
       await userController.addUser(user);
       res.send("the user added successfully");
     } catch (error) {
       // console.log(error);
-      res.status(500).json({ message: "Server Error: "+error.message });
+      res.status(500).json({ message: "Server Error: "+ error.message });
     }
   });
   
@@ -64,6 +66,8 @@ const userRouter = (userController) => {
         res.status(404).send("this user is not exist");
         return;
       }
+  
+      await deleteImages(room.images)
       await userController.deleteUser(id);
       res.status(200).send("The user deleted successfully");
     } catch (error) {
@@ -71,7 +75,7 @@ const userRouter = (userController) => {
     }
   });
   
-  router.patch("/:id", async (req, res) => {
+  router.patch("/:id",uploadMultiple,uploadImage, async (req, res) => {
     try {
       const id = req.params.id;
       const user = await User.findById(id);
@@ -79,6 +83,9 @@ const userRouter = (userController) => {
       if (!user) {
         res.status(404).send("this user is not exist");
         return;
+      }
+      if (req.body.images) {
+        await deleteImages(room.images)
       }
       await userController.updateUser(id, userBody);
       res.status(201).send("This user updated successfully");

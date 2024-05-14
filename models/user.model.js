@@ -22,10 +22,10 @@ const userSchema = new mongoose.Schema({
     type:String,
     enum: ['male', 'female'],
   },
-  image: {
+  images:[{
     type: String,
-    default:' '
-  },
+    required: [true, 'Room must have Image']
+}],
   phoneNumber: {
     type: String,
     match:[

@@ -5,6 +5,10 @@ const { auth } = require('../config/firebase.config');
 
 const uploadImage = async (req, res, next) => {
     try {
+        if(!req.files){
+
+            return next();
+        }
         const storageFB = getStorage();
          files = req.files.map(file => ({
             mimetype: file.mimetype,
