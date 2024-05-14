@@ -3,7 +3,6 @@ const { getStorage, ref, uploadBytesResumable, getDownloadURL,deleteObject} = re
 const { signInWithEmailAndPassword} = require("firebase/auth");
 const { auth } = require('../config/firebase.config');
 
-
 const uploadImage = async (req, res, next) => {
     try {
         const storageFB = getStorage();
@@ -11,9 +10,7 @@ const uploadImage = async (req, res, next) => {
             mimetype: file.mimetype,
             buffer: file.buffer
         }));
-
         await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH);
-
         const imageUrls = [];
         for (const file of files) {
             const dateTime = Date.now();

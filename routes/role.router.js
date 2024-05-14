@@ -62,7 +62,7 @@ const roleRouter = (roleController) => {
         roleController.deleteRole(req.params.id);
         res.status(200).send("Reservation status deleted successfully");
       } catch (err) {
-        res.status(500).send("Error happened");
+        res.status(500).send(`Error happened ${err}`);
       }
     }
   );

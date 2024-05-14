@@ -14,7 +14,7 @@ const userRouter = (userController) => {
         const users = await userController.getAllUsers();
         res.send(users);
       } catch (error) {
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({ message: "Server Error: "+error.message  });
       }
     }
   );
@@ -30,7 +30,7 @@ const userRouter = (userController) => {
       await userController.getUserById(id);
       res.send(user);
     } catch (error) {
-      res.status(500).json({ message: "Server Error" });
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
   
@@ -40,8 +40,8 @@ const userRouter = (userController) => {
       await userController.addUser(user);
       res.send("the user added successfully");
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Server Error" });
+      // console.log(error);
+      res.status(500).json({ message: "Server Error: "+error.message });
     }
   });
   
@@ -51,8 +51,8 @@ const userRouter = (userController) => {
       const token = await userController.login(user);
       res.json({ message: "loggin succesffly", token });
     } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ message: "Server Error" });
+      // console.log(error.message);
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
   
@@ -67,7 +67,7 @@ const userRouter = (userController) => {
       await userController.deleteUser(id);
       res.status(200).send("The user deleted successfully");
     } catch (error) {
-      res.status(500).json({ message: "Server Error" });
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
   
@@ -83,7 +83,7 @@ const userRouter = (userController) => {
       await userController.updateUser(id, userBody);
       res.status(201).send("This user updated successfully");
     } catch (error) {
-      res.status(500).json({ message: "Server Error" });
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
 

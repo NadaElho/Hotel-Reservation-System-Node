@@ -13,6 +13,7 @@ class roomController {
     this.deleteRoom = this.deleteRoom.bind(this);
     ///
   }
+  console
   //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
