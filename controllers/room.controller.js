@@ -16,7 +16,6 @@ class roomController {
   //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
-      // const imagesId=req.imagesId
       const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",

@@ -37,10 +37,6 @@ const roomSchema=mongoose.Schema({
     images:[{
         type: String,
         required: [true, 'Room must have Image']
-    }],
-    imagesId:[{
-        type: String,
-        default: ""
     }]
 });
 const Room=mongoose.model('Room',roomSchema);
