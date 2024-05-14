@@ -17,7 +17,7 @@ class roomController {
   //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
-      // const imagesId=req.imagesId
+  
       const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",
@@ -174,8 +174,7 @@ class roomController {
 
         await deleteImages(room.images)
       }
-      // const fileId = req.fileId
-      // const imagesId=req.imagesId
+     
       const updateRoom = await this.roomRepository.editRoom(
         { _id: id },
         { ...req.body }
