@@ -69,17 +69,9 @@ class reservationController {
     return this.reservationRepository.cancelReservation(id)
   }
 
-  findUserEmailById = async (userId) => {
-    const user = await User.findById(userId);
-    if (!user) {
-      res.status(404).send({ message: `User not found ` });
-      return;
-    }
-    return user.email;
-  };
 
   async payWithStripe(req, id){
-    const reservation = await this.reservationRepository.getReservation(id) 
+    const reservation = await this.reservationRepository.getReservation(id)
 
     if(!reservation._id){
         return {message: `No reservation with this id ${id}`}
@@ -102,7 +94,7 @@ class reservationController {
         mode: 'payment',
         success_url: `${req.protocol}://${req.get('host')}/reservations?success=true`,
         cancel_url: `${req.protocol}://${req.get('host')}/reservations?canceled=true`,
-        customer_email: await this.findUserEmailById(reservation.userId),
+        customer_email: reservation.userId.email,
       })
       return session
   }
