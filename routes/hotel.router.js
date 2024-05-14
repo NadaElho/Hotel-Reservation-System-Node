@@ -3,6 +3,7 @@ const router = express.Router();
 const { protect, restrictTo } = require('../middleware/auth')
 const {uploadMultiple} = require("../middleware/multer");
 const {uploadImage} = require("../middleware/firebase");
+const { deleteImages } = require("../middleware/firebase");
 
 
 const hotelRouter = (hotelController, roomController) => {
@@ -47,6 +48,9 @@ const hotelRouter = (hotelController, roomController) => {
         res.status(404).send("This hotel does not exist");
         return;
       }
+      if (req.body.images) {
+        await deleteImages(room.images)
+      }
       await hotelController.deleteHotel(req.params.id);
       res.status(200).send("The hotel was deleted successfully");
     } catch (error) {
@@ -60,6 +64,9 @@ const hotelRouter = (hotelController, roomController) => {
       if (!hotel) {
         res.status(404).send("this hotel does not exist");
         return;
+      }
+      if (req.body.images) {
+        await deleteImages(room.images)
       }
       await hotelController.editHotel(req.params.id, req.body);
       res.status(200).send("This hotel updated successfully");

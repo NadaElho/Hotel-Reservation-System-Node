@@ -3,6 +3,7 @@ const router = express.Router();
 const { protect, restrictTo } = require('../middleware/auth');
 const {uploadMultiple} = require("../middleware/multer");
 const {uploadImage} = require("../middleware/firebase")
+const { deleteImages } = require("../middleware/firebase");
 
 
 const amentyRouter = (amentyController) => {
@@ -44,6 +45,9 @@ const amentyRouter = (amentyController) => {
         res.status(404).send("this amenty does not exist");
         return;
       }
+      if (req.body.images) {
+        await deleteImages(room.images)
+      }
       await amentyController.deleteAmenty(req.params.id);
       res.status(200).send("The amenty deleted successfully");
     } catch (error) {
@@ -57,6 +61,9 @@ const amentyRouter = (amentyController) => {
       if (!amenty) {
         res.status(404).send("this amenty does not exist");
         return;
+      }
+      if (req.body.images) {
+        await deleteImages(room.images)
       }
       await amentyController.editAmenty(req.params.id, req.body);
       res.status(200).send("The amenty updated successfully");
