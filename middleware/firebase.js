@@ -15,7 +15,6 @@ const uploadImage = async (req, res, next) => {
         await signInWithEmailAndPassword(auth, process.env.FIREBASE_USER, process.env.FIREBASE_AUTH);
 
         const imageUrls = [];
-        const imagesId =[]
         for (const file of files) {
             const dateTime = Date.now();
             const fileName = `images/${dateTime}`;
@@ -27,11 +26,7 @@ const uploadImage = async (req, res, next) => {
             await uploadBytesResumable(storageRef, file.buffer, metadata);
             const downloadURL = await getDownloadURL(ref(storageFB, fileName));
             imageUrls.push(downloadURL);
-            //Removes the last element from an array and returns  pop
-            // const imageName = fileName.split('/').pop();
-            imagesId.push(fileName);
         }
-        // req.imagesId = imagesId;
         req.body.images = imageUrls;
         next();
 

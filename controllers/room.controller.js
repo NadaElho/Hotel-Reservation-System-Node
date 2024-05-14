@@ -1,4 +1,3 @@
-const { populate } = require("dotenv");
 const Reservation = require("../models/reservation.model");
 const Room = require("../models/room.model");
 const { deleteImages } = require("../middleware/firebase");
@@ -17,7 +16,6 @@ class roomController {
   //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
-      // const imagesId=req.imagesId
       const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",
@@ -168,8 +166,6 @@ class roomController {
       if (req.body.images) {
         await deleteImages(room.images)
       }
-      // const fileId = req.fileId
-      // const imagesId=req.imagesId
       const updateRoom = await this.roomRepository.editRoom(
         { _id: id },
         { ...req.body }

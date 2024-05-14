@@ -7,13 +7,7 @@ const router = express.Router()
 //router
 const roomRouter = (roomController) => {
   router.get('/',roomController.getAllRooms)
-
-  router.get('/:id',roomController.getRoomById)
-
-  // router.post('/',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.addRoom)
-  // router.patch('/:id',protect, restrictTo('admin'),uploadMultiple,uploadImage,roomController.editRoom)
-  // router.delete('/:id',protect, restrictTo('admin'),roomController.deleteRoom)
-  
+  router.get('/:id',roomController.getRoomById)  
   router.post('/', middleWare.protect,
   middleWare.restrictTo("admin"),uploadMultiple,uploadImage,roomController.addRoom)
   router.patch('/:id', middleWare.protect,

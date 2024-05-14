@@ -33,22 +33,8 @@ class reservationRepository {
     return roomReservations
   }
 
-  async addNewReservation({
-    userId,
-    roomId,
-    status,
-    checkIn,
-    checkOut,
-    totalPrice,
-  }) {
-    await Reservation.create({
-      userId,
-      roomId,
-      status,
-      checkIn,
-      checkOut,
-      totalPrice,
-    })
+  async addNewReservation(body) {
+    await Reservation.create(body)
   }
 
   async editReservation(id, { checkIn, checkOut }) {
@@ -72,8 +58,12 @@ class reservationRepository {
   async isRoomReserved(roomId, checkIn, checkOut, id) {
     const getRoomReservations = await Reservation.find({
       roomId,
-      $or: [],
+      $or: [
+        { checkIn: { $lt: checkOut }, checkOut: { $gt: checkIn } },
+        { checkIn: { $lte: checkIn }, checkOut: { $gte: checkOut } },
+      ],
     }).populate('status')
+
     const reservationsExceptEditing = getRoomReservations.filter(
       (reservation) => {
         return reservation.id != id && reservation.status.name_en != 'canceled'

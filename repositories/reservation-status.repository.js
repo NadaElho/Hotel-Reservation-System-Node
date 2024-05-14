@@ -6,12 +6,12 @@ class reservationSatusRepository {
     return reservationStatus
   }
 
-  async addReservationStatus({ name_en, name_ar }) {
-    await ReservationStatus.create({ name_en, name_ar })
+  async addReservationStatus(newStatus) {
+    await ReservationStatus.create(newStatus)
   }
 
-  async editReservationStatus(id, { name_en, name_ar }) {
-    await ReservationStatus.updateOne({ _id: id }, { name_en, name_ar })
+  async editReservationStatus(id, body) {
+    await ReservationStatus.updateOne({ _id: id }, body)
   }
 
   async deleteReservationStatus(id) {

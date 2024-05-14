@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { protect, restrictTo } = require('../middleware/auth')
 const amentyRouter = (amentyController) => {
-  //////////////////////////////////////////////////////////////
   router.get("/", async (req, res) => {
     try {
       const getAmenties = await amentyController.getAllAmenties();
@@ -12,8 +11,7 @@ const amentyRouter = (amentyController) => {
     }
   });
 
-  //////////////////////////////////////////////////////////////
-  router.get("/:id",  async (req, res) => {
+  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
@@ -25,8 +23,8 @@ const amentyRouter = (amentyController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
-  router.post("/",  async (req, res) => {
+
+  router.post("/", protect, restrictTo("admin"), async (req, res) => {
     try {
       await amentyController.addAmenty(req.body);
       res.status(201).send("the amenty added successfully");
@@ -34,8 +32,8 @@ const amentyRouter = (amentyController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
-  router.delete("/:id",  async (req, res) => {
+
+  router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
@@ -48,8 +46,8 @@ const amentyRouter = (amentyController) => {
       res.status(500).json({ message: "Server Error" });
     }
   });
-  //////////////////////////////////////////////////////////////
-  router.patch("/:id",  async (req, res) => {
+
+  router.patch("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const amenty = await amentyController.getAmentyById(req.params.id);
       if (!amenty) {
