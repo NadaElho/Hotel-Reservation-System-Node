@@ -67,7 +67,7 @@ const userRouter = (userController) => {
         return;
       }
   
-      await deleteImages(room.images)
+      await deleteImages(user.images)
       await userController.deleteUser(id);
       res.status(200).send("The user deleted successfully");
     } catch (error) {
@@ -85,7 +85,7 @@ const userRouter = (userController) => {
         return;
       }
       if (req.body.images) {
-        await deleteImages(room.images)
+        await deleteImages(user.images)
       }
       await userController.updateUser(id, userBody);
       res.status(201).send("This user updated successfully");
