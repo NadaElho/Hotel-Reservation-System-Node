@@ -1,4 +1,3 @@
-const { populate } = require("dotenv");
 const Reservation = require("../models/reservation.model");
 const Room = require("../models/room.model");
 const { deleteImages } = require("../middleware/firebase");
@@ -14,14 +13,14 @@ class roomController {
     this.deleteRoom = this.deleteRoom.bind(this);
     ///
   }
+  console
   //-------------------------------------------Create  Room--------------------------------------------------------------
   async addRoom(req, res) {
     try {
-  
       const room = await this.roomRepository.addRoom({ ...req.body });
       res.status(201).json({
         status: "success",
-        message: " Rome added successfully",
+        message: "Rome added successfully",
         room: room,
       });
     } catch (err) {
@@ -32,8 +31,6 @@ class roomController {
   //-----------------------------------------------find ALL Room--------------------------------------------------------
   async getAllRooms(req, res) {
     try {
-   
-
       let filterObj = {};
       if (req.params.hotelId) filterObj = { hotelId: req.params.hotelId};
       const queryObj = { ...req.query,...filterObj };
@@ -95,9 +92,7 @@ class roomController {
       if(req.query.amentiesIds){
         
         const fields = req.query.amentiesIds.split(",");
-        amenties={amentiesIds:{ $all: fields }}
-        console.log('fields',fields,'samar ali')
-        
+        amenties={amentiesIds:{ $all: fields }}        
       }
       if (req.params.hotelId) {
         query = {  ...filterObj };
@@ -170,11 +165,8 @@ class roomController {
       }
 
       if (req.body.images) {
-        console.log('req.body.images',room.images)
-
         await deleteImages(room.images)
       }
-     
       const updateRoom = await this.roomRepository.editRoom(
         { _id: id },
         { ...req.body }

@@ -23,7 +23,6 @@ const uploadImage = async (req, res, next) => {
             await uploadBytesResumable(storageRef, file.buffer, metadata);
             const downloadURL = await getDownloadURL(ref(storageFB, fileName));
             imageUrls.push(downloadURL);
-           
         }
         req.body.images = imageUrls;
         next();

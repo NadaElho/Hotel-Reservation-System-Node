@@ -32,10 +32,7 @@ const hotelSchema = mongoose.Schema({
   phoneNumber: {
     type: [String],
     required: true,
-  },
-  imageId: {
-    type: [String],
-  },
+  }
 });
 const hotel = mongoose.model("Hotel", hotelSchema);
 module.exports = hotel;

@@ -1,15 +1,10 @@
 const express = require("express");
-// const UserController = require("./../controllers/auth.controller");
 const middleWare = require("../middleware/auth");
 const User = require("./../models/user.model");
-const { login } = require("../controllers/auth.controller");
 
 const router = express.Router();
 
 const userRouter = (userController) => {
-  console.log(userController);
-  //////////////////////////////////////////////////////////////
-
   router.get(
     "/",
     middleWare.protect,
@@ -19,11 +14,11 @@ const userRouter = (userController) => {
         const users = await userController.getAllUsers();
         res.send(users);
       } catch (error) {
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({ message: "Server Error: "+error.message  });
       }
     }
   );
-  //////////////////////////////////////////////////////////////
+  
   router.get("/:id", async (req, res) => {
     try {
       const id = req.params.id;
@@ -35,32 +30,32 @@ const userRouter = (userController) => {
       await userController.getUserById(id);
       res.send(user);
     } catch (error) {
-      res.status(500).json({ message: "Server Error" });
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.post("/signup", async (req, res) => {
     try {
       const user = req.body;
       await userController.addUser(user);
       res.send("the user added successfully");
     } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ message: "Server Error" });
+      // console.log(error);
+      res.status(500).json({ message: "Server Error: "+error.message });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.post("/login", async (req, res) => {
     try {
       const user = req.body;
       const token = await userController.login(user);
       res.json({ message: "loggin succesffly", token });
     } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ message: "Server Error" });
+      // console.log(error.message);
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.delete("/:id", async (req, res) => {
     try {
       const id = req.params.id;
@@ -72,10 +67,10 @@ const userRouter = (userController) => {
       await userController.deleteUser(id);
       res.status(200).send("The user deleted successfully");
     } catch (error) {
-      res.status(500).json({ message: "Server Error" });
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
-  //////////////////////////////////////////////////////////////
+  
   router.patch("/:id", async (req, res) => {
     try {
       const id = req.params.id;
@@ -88,10 +83,9 @@ const userRouter = (userController) => {
       await userController.updateUser(id, userBody);
       res.status(201).send("This user updated successfully");
     } catch (error) {
-      res.status(500).json({ message: "Server Error" });
+      res.status(500).json({ message: "Server Error: "+error.message  });
     }
   });
-  //////////////////////////////////////////////////////////////
 
   return router;
 };

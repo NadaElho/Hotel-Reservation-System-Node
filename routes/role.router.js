@@ -2,19 +2,19 @@ const express = require("express");
 const { protect, restrictTo } = require('../middleware/auth')
 const router = express.Router();
 
-const reservationSatusRouter = (reservationSatusController) => {
+const roleRouter = (roleController) => {
   router.get(
     "/",
     protect,
     restrictTo("admin"),
     async (req, res) => {
       try {
-        const getAllTypes =
-          await reservationSatusController.getReservationStatus();
-        if (!getAllTypes.length) {
-          res.status(404).send(`No reservation types found`);
+        const getAllRoles =
+          await roleController.getRole();
+        if (!getAllRoles.length) {
+          res.status(404).send(`No roles found`);
         } else {
-          res.status(200).send(getAllTypes);
+          res.status(200).send(getAllRoles);
         }
       } catch (err) {
         res.status(500).send(`Error Happened ${err}`);
@@ -26,10 +26,10 @@ const reservationSatusRouter = (reservationSatusController) => {
     "/",
     protect,
     restrictTo("admin"),
-    (req, res) => {
+    async (req, res) => {
       try {
-        reservationSatusController.addReservationStatus(req.body);
-        res.status(201).send("Reservation status added successfully");
+        await roleController.addRole(req.body);
+        res.status(201).send("Role added successfully");
       } catch (err) {
         res.status(500).send(`Error Happened ${err}`);
       }
@@ -42,7 +42,7 @@ const reservationSatusRouter = (reservationSatusController) => {
     restrictTo("admin"),
     (req, res) => {
       try {
-        reservationSatusController.editReservationStatus(
+        roleController.editRole(
           req.params.id,
           req.body
         );
@@ -59,10 +59,10 @@ const reservationSatusRouter = (reservationSatusController) => {
     restrictTo("admin"),
     (req, res) => {
       try {
-        reservationSatusController.deleteReservationStatus(req.params.id);
+        roleController.deleteRole(req.params.id);
         res.status(200).send("Reservation status deleted successfully");
       } catch (err) {
-        res.status(500).send("Error happened");
+        res.status(500).send(`Error happened ${err}`);
       }
     }
   );
@@ -70,4 +70,4 @@ const reservationSatusRouter = (reservationSatusController) => {
   return router;
 };
 
-module.exports = reservationSatusRouter;
+module.exports = roleRouter;

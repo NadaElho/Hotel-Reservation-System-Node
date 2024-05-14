@@ -1,12 +1,12 @@
 const express = require("express");
-const middleWare = require("../middleware/auth");
+const { protect, restrictTo } = require('../middleware/auth')
 const router = express.Router();
 
 const reservationRouter = (reservationController) => {
   router.get(
     "/",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     async (req, res) => {
       try {
         const allReservations =
@@ -22,7 +22,7 @@ const reservationRouter = (reservationController) => {
     }
   );
 
-  router.get("/:userId", middleWare.protect, async (req, res) => {
+  router.get("/:userId", protect, async (req, res) => {
     try {
       const userReservations = await reservationController.getUserReservations(
         req.params.userId
@@ -39,8 +39,8 @@ const reservationRouter = (reservationController) => {
 
   router.get(
     "/room/:roomId",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     async (req, res) => {
       try {
         const roomReservations =
@@ -56,7 +56,7 @@ const reservationRouter = (reservationController) => {
     }
   );
 
-  router.get("/reservation/:id", middleWare.protect, async (req, res) => {
+  router.get("/reservation/:id", protect, async (req, res) => {
     try {
       const reservation = await reservationController.getReservation(
         req.params.id
@@ -71,7 +71,7 @@ const reservationRouter = (reservationController) => {
     }
   });
 
-  router.post("/", middleWare.protect, async (req, res) => {
+  router.post("/", protect, async (req, res) => {
     try {
       let response = await reservationController.addNewReservation(req.body);
       if (response?.message) {
@@ -84,7 +84,7 @@ const reservationRouter = (reservationController) => {
     }
   });
 
-  router.patch("/:id", middleWare.protect, async (req, res) => {
+  router.patch("/:id", protect, async (req, res) => {
     try {
       let response = await reservationController.editReservation(
         req.params.id,
@@ -100,7 +100,7 @@ const reservationRouter = (reservationController) => {
     }
   });
 
-  router.patch("/:id/cancel", middleWare.protect, async (req, res) => {
+  router.patch("/:id/cancel", protect, async (req, res) => {
     try {
       await reservationController.cancelReservation(req.params.id);
       res.status(200).send("Reservation canceled");
@@ -109,15 +109,19 @@ const reservationRouter = (reservationController) => {
     }
   });
 
-  router.post("/:id/payment", middleWare.protect, async (req, res) => {
-    const response = await reservationController.payWithStripe(
-      req,
-      req.params.id
-    );
-    if (response?.message) {
-      res.status(404).send(response.message);
-    } else {
-      res.status(200).send({ status: "success", session: response });
+  router.post("/:id/payment", protect, async (req, res) => {
+    try{
+      const response = await reservationController.payWithStripe(
+        req,
+        req.params.id
+      );
+      if (response?.message) {
+        res.status(404).send(response.message);
+      } else {
+        res.status(200).send({ status: "success", session: response });
+      }
+    } catch(err){
+      res.status(500).send(`Error Happened ${err}`);
     }
   });
 

@@ -2,7 +2,8 @@ const Reservation = require('../models/reservation.model')
 const Room = require('../models/room.model')
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-var cron = require('node-cron')
+var cron = require('node-cron');
+const User = require('../models/user.model');
 
 cron.schedule('0 0 * * *', async () => {
   //MIN H D MON DWeek
@@ -68,8 +69,9 @@ class reservationController {
     return this.reservationRepository.cancelReservation(id)
   }
 
+
   async payWithStripe(req, id){
-    const reservation = await this.reservationRepository.getReservation(id) 
+    const reservation = await this.reservationRepository.getReservation(id)
 
     if(!reservation._id){
         return {message: `No reservation with this id ${id}`}
@@ -92,7 +94,7 @@ class reservationController {
         mode: 'payment',
         success_url: `${req.protocol}://${req.get('host')}/reservations?success=true`,
         cancel_url: `${req.protocol}://${req.get('host')}/reservations?canceled=true`,
-        customer_email: 'nadaelhosary51@gmail.com',
+        customer_email: reservation.userId.email,
       })
       return session
   }

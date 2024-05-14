@@ -1,11 +1,11 @@
 const Reservation = require('../models/reservation.model')
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 class reservationRepository {
   async getAllReservations() {
     const reservations = await Reservation.find()
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return reservations
   }
 
@@ -13,6 +13,7 @@ class reservationRepository {
     const userReservations = await Reservation.find({ userId })
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return userReservations
   }
 
@@ -20,6 +21,7 @@ class reservationRepository {
     const reservation = await Reservation.findOne({ _id: id })
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return reservation
   }
 
@@ -27,25 +29,12 @@ class reservationRepository {
     const roomReservations = await Reservation.find({ roomId })
       .populate('roomId')
       .populate('status')
+      .populate('userId')
     return roomReservations
   }
 
-  async addNewReservation({
-    userId,
-    roomId,
-    status,
-    checkIn,
-    checkOut,
-    totalPrice,
-  }) {
-    await Reservation.create({
-      userId,
-      roomId,
-      status,
-      checkIn,
-      checkOut,
-      totalPrice,
-    })
+  async addNewReservation(body) {
+    await Reservation.create(body)
   }
 
   async editReservation(id, { checkIn, checkOut }) {
@@ -70,9 +59,11 @@ class reservationRepository {
     const getRoomReservations = await Reservation.find({
       roomId,
       $or: [
-     
+        { checkIn: { $lt: checkOut }, checkOut: { $gt: checkIn } },
+        { checkIn: { $lte: checkIn }, checkOut: { $gte: checkOut } },
       ],
     }).populate('status')
+
     const reservationsExceptEditing = getRoomReservations.filter(
       (reservation) => {
         return reservation.id != id && reservation.status.name_en != 'canceled'
