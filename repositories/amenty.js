@@ -1,4 +1,4 @@
-const Amenty = require("../models/amenty.model");
+const Amenty = require("../models/amenty");
 
 class amentyRepository {
   async getAllAmenties() {

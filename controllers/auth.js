@@ -1,6 +1,5 @@
-// const User = require("./../models/user.model");
 const jwt = require('jsonwebtoken')
-const AppError = require('./../utils/appError')
+const AppError = require('../utils/appError')
 
 class AuthController {
   constructor(UserRepository) {

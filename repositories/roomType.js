@@ -1,4 +1,4 @@
-const RoomType = require("../models/room-type.model")
+const RoomType = require("../models/roomType")
 
 class roomTypeRepository{
     async getAllRoomsType(){
