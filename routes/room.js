@@ -4,7 +4,7 @@ const { uploadImage } = require("../middleware/firebase");
 const middleWare = require("../middleware/auth");
 const Room = require("../models/room");
 const { deleteImages } = require("../middleware/firebase");
-const Reservation = require("../models/reservation.model");
+const Reservation = require("../models/reservation");
 const router = express.Router();
 //router
 const roomRouter = (roomController) => {

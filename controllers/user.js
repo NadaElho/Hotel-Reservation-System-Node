@@ -1,6 +1,6 @@
 const AppError = require('../utils/appError')
-const User = require('./../models/user.model')
-const catchAsync = require('./../utils/catchAsync')
+const User = require('../models/user')
+const catchAsync = require('../utils/catchAsync')
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {}
@@ -82,12 +82,9 @@ class UserController {
       message: 'This route is not yet defined!',
     })
   }
-  getUserById(id){
-    return this.UserRepository.getUserById(id);
+  getUserById(id) {
+    return this.UserRepository.getUserById(id)
   }
-
 }
-
-
 
 module.exports = UserController

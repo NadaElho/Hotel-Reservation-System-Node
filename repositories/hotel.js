@@ -1,4 +1,4 @@
-const Hotel = require("../models/hotel.model");
+const Hotel = require("../models/hotel");
 
 class hotelRepository {
   async getAllHotels() {
