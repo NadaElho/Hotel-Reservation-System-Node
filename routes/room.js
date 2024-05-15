@@ -1,10 +1,9 @@
 const express = require("express");
-const { uploadMultiple } = require("../middleware/multer");
-const { uploadImage } = require("../middleware/firebase");
-const middleWare = require("../middleware/auth");
+const { uploadImage, deleteImages } = require("../middlewares/firebase");
+const { protect, restrictTo } = require('../middlewares/auth')
 const Room = require("../models/room");
-const { deleteImages } = require("../middleware/firebase");
 const Reservation = require("../models/reservation");
+const { uploadMultiple } = require("../middlewares/multer");
 const router = express.Router();
 //router
 const roomRouter = (roomController) => {
@@ -115,34 +114,30 @@ const roomRouter = (roomController) => {
       }
 
       res.status(200).json({ status: "success", pagination, data: data });
-    } catch (err) {
-      res.status(500).json({ "Error happened": err.message });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message })
     }
   });
   //-------------------------------------------Find Romm BY Id --------------------------------------------------------------
   router.get("/:id", async (req, res) => {
     try {
+
       const { id } = req.params;
       const room = await roomController.getRoomById({ _id: id });
-
-      if (!room) {
-        res.status(404).json("Room  not found");
-        return;
-      }
       res.status(200).json({
         status: "success",
         message: " Room  updated successfully",
         room: room,
       });
-    } catch (err) {
-      res.status(500).json({ "Error happened ": err.message });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message })
     }
   });
   //-------------------------------------------Create  Room--------------------------------------------------------------
   router.post(
     "/",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     uploadMultiple,
     uploadImage,
     async (req, res) => {
@@ -153,27 +148,22 @@ const roomRouter = (roomController) => {
           message: "Rome added successfully",
           room: room,
         });
-      } catch (err) {
-        res.status(500).json({ "Error happened ": err.message });
+      } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     }
   );
   //-------------------------------------------Edit  Room--------------------------------------------------------------
   router.patch(
     "/:id",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     uploadMultiple,
     uploadImage,
     async (req, res) => {
       try {
         const { id } = req.params;
         const room = await roomController.getRoomById({ _id: id });
-
-        if (!room) {
-          res.status(404).json("Room not found");
-          return;
-        }
 
         if (req.body.images) {
           await deleteImages(room.images);
@@ -183,33 +173,28 @@ const roomRouter = (roomController) => {
           { ...req.body }
         );
 
-        const findNewRome = await roomController.getRoomById({
+        const findNewRoom = await roomController.getRoomById({
           _id: id,
         });
         res.status(200).json({
           status: "success",
           message: " Room updated successfully",
-          room: findNewRome,
+          room: findNewRoom,
         });
-      } catch (err) {
-        res.status(500).json({ "Error happened ": err.message });
+      } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     }
   );
   //-------------------------------------------Delete  Room--------------------------------------------------------------
   router.delete(
     "/:id",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     async (req, res) => {
       try {
         const { id } = req.params;
         const room = await roomController.getRoomById({ _id: id });
-
-        if (!room) {
-          res.status(404).json("Room not found");
-          return;
-        }
         await deleteImages(room.images);
         await roomController.deleteRoom({ _id: id });
 
@@ -217,8 +202,8 @@ const roomRouter = (roomController) => {
           status: "success",
           message: " Room deleted successfully",
         });
-      } catch (err) {
-        res.status(500).json({ "Error happened ": err.message });
+      } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     }
   );

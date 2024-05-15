@@ -1,5 +1,5 @@
 const express = require("express");
-const middleWare = require("../middleware/auth");
+const { protect, restrictTo } = require('../middlewares/auth')
 const router = express.Router();
 
 const roomTypeRouter = (roomTypeController) => {
@@ -21,8 +21,8 @@ const roomTypeRouter = (roomTypeController) => {
   //-------------------------------------------Create  Room--------------------------------------------------------------
   router.post(
     "/",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     async (req, res) => {
       try {
         const roomType = await roomTypeController.addRoomType({
@@ -41,8 +41,8 @@ const roomTypeRouter = (roomTypeController) => {
   //-------------------------------------------Edit  Room--------------------------------------------------------------
   router.patch(
     "/:id",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     async (req, res) => {
       try {
         const { id } = req.params;
@@ -73,8 +73,8 @@ const roomTypeRouter = (roomTypeController) => {
   //-------------------------------------------Delete  Room--------------------------------------------------------------
   router.delete(
     "/:id",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+   restrictTo("admin"),
     async (req, res) => {
       try {
         const { id } = req.params;

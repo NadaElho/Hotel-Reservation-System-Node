@@ -1,8 +1,12 @@
 const RoomType = require("../models/roomType")
-
+const NotFoundError = require('../utils/notFoundError')
 class roomTypeRepository{
     async getAllRoomsType(){
-        return await RoomType.find();
+        const roomType =await RoomType.find();
+        if (!roomType) {
+            throw new NotFoundError('No roomsType found')
+          }
+          return roomType
     }
 
     async getRoomTypeById (id){
