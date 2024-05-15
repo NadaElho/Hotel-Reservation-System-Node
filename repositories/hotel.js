@@ -1,6 +1,6 @@
 const Hotel = require("../models/hotel");
 
-class hotelRepository {
+class HotelRepository {
   async getAllHotels() {
     return await Hotel.find();
   }
@@ -20,4 +20,4 @@ class hotelRepository {
     return await Hotel.deleteOne({_id:id});
   }
 }
-module.exports = hotelRepository;
+module.exports = HotelRepository;

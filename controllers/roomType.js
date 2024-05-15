@@ -1,4 +1,4 @@
-class roomTypeController {
+class RoomTypeController {
   constructor(roomTypeRepository) {
     this.roomTypeRepository = roomTypeRepository;
   }
@@ -20,4 +20,4 @@ class roomTypeController {
   }
 }
 
-module.exports = roomTypeController;
+module.exports = RoomTypeController;

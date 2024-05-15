@@ -1,6 +1,6 @@
 const RoomType = require("../models/roomType")
 
-class roomTypeRepository{
+class RoomTypeRepository{
     async getAllRoomsType(){
         return await RoomType.find();
     }
@@ -22,4 +22,4 @@ class roomTypeRepository{
     }
 }
 
-module.exports = roomTypeRepository;
+module.exports = RoomTypeRepository;
