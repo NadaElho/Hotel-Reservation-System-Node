@@ -1,5 +1,5 @@
 const Reservation = require('../models/reservation.model')
-const Room = require('../models/room.model')
+const Room = require('../models/room')
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 var cron = require('node-cron');

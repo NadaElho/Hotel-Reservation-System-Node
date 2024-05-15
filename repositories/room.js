@@ -1,4 +1,4 @@
-const Room = require("../models/room.model")
+const Room = require("../models/room")
 
 class roomRepository{
     async getAllRooms(query,sortBy,skip,limit){
