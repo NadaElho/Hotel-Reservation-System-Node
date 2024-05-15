@@ -1,8 +1,12 @@
 const ReservationStatus = require('../models/reservationStatus')
+const NotFoundError = require('../utils/notFoundError')
 
-class reservationSatusRepository {
+class ReservationSatusRepository {
   async getReservationStatus() {
     const reservationStatus = await ReservationStatus.find()
+    if (!reservationStatus.length) {
+      throw new NotFoundError('No reservation statuses found')
+    }
     return reservationStatus
   }
 
@@ -19,4 +23,4 @@ class reservationSatusRepository {
   }
 }
 
-module.exports = reservationSatusRepository
+module.exports = ReservationSatusRepository

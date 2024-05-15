@@ -7,26 +7,27 @@ class AuthController {
   }
 
   async getAllUsers() {
-    return this.UserRepository.getAllUsers()
+    return await this.UserRepository.getAllUsers()
   }
 
-  getUserById(id) {
-    return this.UserRepository.getUserById(id)
+  async getUserById(id) {
+    return await this.UserRepository.getUserById(id)
   }
 
-  addUser(newUser) {
-    return this.UserRepository.addUser(newUser)
+  async addUser(newUser) {
+    return await this.UserRepository.addUser(newUser)
   }
 
-  updateUser(id, body) {
-    return this.UserRepository.updateUser(id, body)
+  async updateUser(id, body) {
+    return await this.UserRepository.updateUser(id, body)
   }
   async login(user) {
     if (user) {
       const loggedUser = await this.UserRepository.login(user)
+      console.log(loggedUser)
       const token = jwt.sign(
         { id: loggedUser._id, email: loggedUser.email },
-        'JWT_SECRET',
+        process.env.JWT_SECRET_KEY,
       )
       return token
     } else {

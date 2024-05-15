@@ -1,8 +1,12 @@
-const Role = require("../models/role")
+const Role = require('../models/role')
+const NotFoundError = require('../utils/notFoundError')
 
-class roleRepository {
+class RoleRepository {
   async getRoles() {
     const roles = await Role.find()
+    if (!roles.length) {
+      throw new NotFoundError('No roles found')
+    }
     return roles
   }
 
@@ -19,4 +23,4 @@ class roleRepository {
   }
 }
 
-module.exports = roleRepository
+module.exports = RoleRepository

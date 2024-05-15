@@ -1,7 +1,8 @@
 const Reservation = require('../models/reservation')
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
-var cron = require('node-cron');
+var cron = require('node-cron')
+const BadRequestError = require('../utils/badRequestError')
 
 cron.schedule('0 0 * * *', async () => {
   //MIN H D MON DWeek
@@ -17,25 +18,25 @@ cron.schedule('0 0 * * *', async () => {
   })
 })
 
-class reservationController {
+class ReservationController {
   constructor(reservationRepository) {
     this.reservationRepository = reservationRepository
   }
 
-  getAllReservations() {
-    return this.reservationRepository.getAllReservations()
+  async getAllReservations() {
+    return await this.reservationRepository.getAllReservations()
   }
 
-  getUserReservations(userId) {
-    return this.reservationRepository.getUserReservations(userId)
+  async getUserReservations(userId) {
+    return await this.reservationRepository.getUserReservations(userId)
   }
 
-  getRoomReservations(roomId) {
-    return this.reservationRepository.getRoomReservations(roomId)
+  async getRoomReservations(roomId) {
+    return await this.reservationRepository.getRoomReservations(roomId)
   }
 
-  getReservation(id) {
-    return this.reservationRepository.getReservation(id)
+  async getReservation(id) {
+    return await this.reservationRepository.getReservation(id)
   }
 
   async addNewReservation(body) {
@@ -43,9 +44,9 @@ class reservationController {
     if (
       await this.reservationRepository.isRoomReserved(roomId, checkIn, checkOut)
     ) {
-      return { message: 'Room is already reserved' }
+      throw new BadRequestError('This room already reserved')
     }
-    return this.reservationRepository.addNewReservation(body)
+    return await this.reservationRepository.addNewReservation(body)
   }
 
   async editReservation(id, body) {
@@ -58,44 +59,43 @@ class reservationController {
         id,
       )
     ) {
-      return { message: 'Room is already reserved' }
+      throw new BadRequestError('This room already reserved')
     }
-    return this.reservationRepository.editReservation(id, body)
+    return await this.reservationRepository.editReservation(id, body)
   }
 
-  cancelReservation(id) {
-    return this.reservationRepository.cancelReservation(id)
+  async cancelReservation(id) {
+    return await this.reservationRepository.cancelReservation(id)
   }
 
-
-  async payWithStripe(req, id){
+  async payWithStripe(req, id) {
     const reservation = await this.reservationRepository.getReservation(id)
 
-    if(!reservation._id){
-        return {message: `No reservation with this id ${id}`}
-    }
-
     const session = await stripe.checkout.sessions.create({
-        line_items: [
-          {
-            price_data: {
-              currency: 'egp',
-              unit_amount: reservation.totalPrice * 100,
-              product_data: {
-                name: `Room Number: ${reservation.roomId.roomNumber}`,
-                description: reservation.roomId.description,
-              },
+      line_items: [
+        {
+          price_data: {
+            currency: 'egp',
+            unit_amount: reservation.totalPrice * 100,
+            product_data: {
+              name: `Room Number: ${reservation.roomId.roomNumber}`,
+              description: reservation.roomId.description,
             },
-            quantity: 1,
           },
-        ],
-        mode: 'payment',
-        success_url: `${req.protocol}://${req.get('host')}/reservations?success=true`,
-        cancel_url: `${req.protocol}://${req.get('host')}/reservations?canceled=true`,
-        customer_email: reservation.userId.email,
-      })
-      return session
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${req.protocol}://${req.get(
+        'host',
+      )}/reservations?success=true`,
+      cancel_url: `${req.protocol}://${req.get(
+        'host',
+      )}/reservations?canceled=true`,
+      customer_email: reservation.userId.email,
+    })
+    return session
   }
 }
 
-module.exports = reservationController
+module.exports = ReservationController

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
-const User = require('./../models/user')
-const AppError = require('./../utils/appError')
+const User = require('../models/user')
+const AppError = require('../utils/appError')
 const { promisify } = require('util')
 
 exports.protect = async (req, res, next) => {
@@ -12,7 +12,10 @@ exports.protect = async (req, res, next) => {
     ) {
       token = req.headers.authorization.split(' ')[1]
 
-      const decoded = await promisify(jwt.verify)(token, 'JWT_SECRET')
+      const decoded = await promisify(jwt.verify)(
+        token,
+        process.env.JWT_SECRET_KEY,
+      )
 
       const currentUser = await User.findOne({ _id: decoded.id })
       if (!currentUser) {
@@ -34,8 +37,8 @@ exports.protect = async (req, res, next) => {
 }
 
 exports.restrictTo = (role) => {
-  return async(req, res, next) => {
-    const user = await User.findById(req.user._id).populate('role');
+  return async (req, res, next) => {
+    const user = await User.findById(req.user._id).populate('role')
 
     if (user.role.name !== role) {
       return next(
