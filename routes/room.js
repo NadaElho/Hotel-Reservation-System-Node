@@ -9,7 +9,7 @@ const router = express.Router();
 //router
 const roomRouter = (roomController) => {
   //-------------------------------------------Find All  Room--------------------------------------------------------------
-  router.get(['/:hotelId/rooms', '/'], async (req, res) => {
+  router.get(['/:hotelId/hotelRooms', '/'], async (req, res) => {
     try {
       let filterObj = {};
       if (req.params.hotelId) filterObj = { hotelId: req.params.hotelId };
