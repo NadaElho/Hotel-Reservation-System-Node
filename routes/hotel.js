@@ -6,9 +6,8 @@ const { uploadImage } = require('../middlewares/firebase')
 const { deleteImages } = require('../middlewares/firebase')
 
 const hotelRouter = (hotelController, roomController) => {
-  //-----------------------find room with hotleId----------------------
-  router.use('/:hotelId/rooms', roomController.getAllRooms)
-  router.get('/', async (req, res) => {
+
+  router.get("/", async (req, res) => {
     try {
       const Allhotels = await hotelController.getAllHotels()
       res.send(Allhotels)

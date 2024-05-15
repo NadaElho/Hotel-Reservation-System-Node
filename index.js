@@ -73,7 +73,7 @@ mainRouter.use(
 )
 mainRouter.use('/room-type', roomTypeRouter(roomTypeController))
 mainRouter.use('/rooms', roomRouter(roomController))
-mainRouter.use('/hotels', hotelRouter(hotelController, roomController))
+mainRouter.use('/hotels', hotelRouter(hotelController))
 mainRouter.use('/amenties', amentyRouter(amentyController))
 mainRouter.use('/users', userRouter(userController))
 mainRouter.use('/roles', roleRouter(roleController))

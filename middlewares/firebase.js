@@ -1,7 +1,7 @@
 
 const { getStorage, ref, uploadBytesResumable, getDownloadURL,deleteObject} = require('firebase/storage');
 const { signInWithEmailAndPassword} = require("firebase/auth");
-const { auth } = require('../config/firebase.config');
+const { auth } = require('../config/firebase');
 
 const uploadImage = async (req, res, next) => {
     try {
