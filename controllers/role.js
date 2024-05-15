@@ -1,24 +1,23 @@
-class roleController {
-    constructor(roleRepository) {
-      this.roleRepository = roleRepository
-    }
-
-    getRole() {
-      return this.roleRepository.getRole()
-    }
-  
-    async addRole(body){
-      return await this.roleRepository.addRole(body)
-    }
-  
-    editRole(id, body){
-      return this.roleRepository.editRole(id, body)
-    }
-  
-    async deleteRole(id){
-      return await this.roleRepository.deleteRole(id)
-    }
+class RoleController {
+  constructor(roleRepository) {
+    this.roleRepository = roleRepository
   }
-  
-  module.exports = roleController
-  
+
+  async getRole() {
+    return await this.roleRepository.getRole()
+  }
+
+  async addRole(body) {
+    return await this.roleRepository.addRole(body)
+  }
+
+  async editRole(id, body) {
+    return await this.roleRepository.editRole(id, body)
+  }
+
+  async deleteRole(id) {
+    return await this.roleRepository.deleteRole(id)
+  }
+}
+
+module.exports = RoleController

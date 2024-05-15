@@ -1,22 +1,25 @@
-class reservationSatusController {
-  constructor(reservationSatusRepository) {
-    this.reservationSatusRepository = reservationSatusRepository
+class ReservationSatusController {
+  constructor(reservationStatusRepository) {
+    this.reservationStatusRepository = reservationStatusRepository
   }
-  getReservationStatus() {
-    return this.reservationSatusRepository.getReservationStatus()
-  }
-
-  async addReservationStatus(body){
-    return await this.reservationSatusRepository.addReservationStatus(body)
+  async getReservationStatus() {
+    return await this.reservationStatusRepository.getReservationStatus()
   }
 
-  editReservationStatus(id, body){
-    return this.reservationSatusRepository.editReservationStatus(id, body)
+  async addReservationStatus(body) {
+    return await this.reservationStatusRepository.addReservationStatus(body)
   }
 
-  async deleteReservationStatus(id){
-    return await this.reservationSatusRepository.deleteReservationStatus(id)
+  async editReservationStatus(id, body) {
+    return await this.reservationStatusRepository.editReservationStatus(
+      id,
+      body,
+    )
+  }
+
+  async deleteReservationStatus(id) {
+    return await this.reservationStatusRepository.deleteReservationStatus(id)
   }
 }
 
-module.exports = reservationSatusController
+module.exports = ReservationSatusController

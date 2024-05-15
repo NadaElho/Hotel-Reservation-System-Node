@@ -5,7 +5,7 @@ class hotelController {
   getAllHotels() {
     return this.hotelRepository.getAllHotels();
   }
-  //
+
   getHotelById(id) {
     return this.hotelRepository.getHotelById(id);
   }

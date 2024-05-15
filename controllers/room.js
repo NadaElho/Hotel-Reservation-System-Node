@@ -1,6 +1,6 @@
 const Reservation = require('../models/reservation')
 const Room = require('../models/room')
-const { deleteImages } = require('../middleware/firebase')
+const { deleteImages } = require('../middlewares/firebase')
 
 class roomController {
   constructor(roomRepository) {

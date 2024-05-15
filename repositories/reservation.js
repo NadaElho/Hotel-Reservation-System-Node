@@ -1,11 +1,16 @@
 const Reservation = require('../models/reservation')
+const NotFoundError = require('../utils/notFoundError')
 
-class reservationRepository {
+class ReservationRepository {
   async getAllReservations() {
     const reservations = await Reservation.find()
       .populate('roomId')
       .populate('status')
       .populate('userId')
+
+    if (!reservations.length) {
+      throw new NotFoundError('No reservations found')
+    }
     return reservations
   }
 
@@ -14,6 +19,10 @@ class reservationRepository {
       .populate('roomId')
       .populate('status')
       .populate('userId')
+
+    if (!userReservations.length) {
+      throw new NotFoundError('No reservations found for this user')
+    }
     return userReservations
   }
 
@@ -22,6 +31,10 @@ class reservationRepository {
       .populate('roomId')
       .populate('status')
       .populate('userId')
+
+    if (!reservation) {
+      throw new NotFoundError('No reservation found with this id')
+    }
     return reservation
   }
 
@@ -30,6 +43,10 @@ class reservationRepository {
       .populate('roomId')
       .populate('status')
       .populate('userId')
+
+    if (!roomReservations.length) {
+      throw new NotFoundError('No reservations found for this room')
+    }
     return roomReservations
   }
 
@@ -73,4 +90,4 @@ class reservationRepository {
   }
 }
 
-module.exports = reservationRepository
+module.exports = ReservationRepository

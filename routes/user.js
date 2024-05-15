@@ -1,8 +1,8 @@
 const express = require('express')
-const middleWare = require('../middleware/auth')
+const middleWare = require('../middlewares/auth')
 const User = require('../models/user')
-const { uploadMultiple } = require('../middleware/multer')
-const { uploadImage, deleteImages } = require('../middleware/firebase')
+const { uploadMultiple } = require('../middlewares/multer')
+const { uploadImage, deleteImages } = require('../middlewares/firebase')
 const router = express.Router()
 
 const userRouter = (userController) => {
