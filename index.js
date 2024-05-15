@@ -6,39 +6,38 @@ const express = require('express')
 const app = express()
 
 const AppError = require('./utils/appError')
-// const userRouter = require("./routes/user.router");
 
 const mainRouter = express.Router()
 
 // Importing repositories
-const ReservationRepository = require('./repositories/reservation.repository')
-const ReservationSatusRepository = require('./repositories/reservation-status.repository')
-const RoomTypeRepository = require('./repositories/room-type.repository')
-const RoomRepository = require('./repositories/room.repository')
-const HotelRepository = require('./repositories/hotel.repository')
-const AmentyRepository = require('./repositories/amenty.repository')
-const UserRepository = require('./repositories/user.repository')
-const RoleRepository = require('./repositories/role.repository')
+const ReservationRepository = require('./repositories/reservation')
+const ReservationSatusRepository = require('./repositories/reservationStatus')
+const RoomTypeRepository = require('./repositories/roomType')
+const RoomRepository = require('./repositories/room')
+const HotelRepository = require('./repositories/hotel')
+const AmentyRepository = require('./repositories/amenty')
+const UserRepository = require('./repositories/user')
+const RoleRepository = require('./repositories/role')
 
 // Importing controllers
-const ReservationController = require('./controllers/reservation.controller')
-const ReservationSatusController = require('./controllers/reservation-status.controller')
-const RoomTypeController = require('./controllers/room-type.controller')
-const RoomController = require('./controllers/room.controller')
-const HotelController = require('./controllers/hotel.controller')
-const AmentyController = require('./controllers/amenty.controller')
-const AuthController = require('./controllers/auth.controller')
-const RoleController = require('./controllers/role.controller')
+const ReservationController = require('./controllers/reservation')
+const ReservationSatusController = require('./controllers/reservationStatus')
+const RoomTypeController = require('./controllers/roomType')
+const RoomController = require('./controllers/room')
+const HotelController = require('./controllers/hotel')
+const AmentyController = require('./controllers/amenty')
+const AuthController = require('./controllers/auth')
+const RoleController = require('./controllers/role')
 
 // Importing routers
-const reservationRouter = require('./routes/reservation.router')
-const reservationSatusRouter = require('./routes/reservation-status.router')
-const roomTypeRouter = require('./routes/room-type.router')
-const roomRouter = require('./routes/room.router')
-const hotelRouter = require('./routes/hotel.router')
-const amentyRouter = require('./routes/amenty.router')
-const userRouter = require('./routes/user.router')
-const roleRouter = require('./routes/role.router')
+const reservationRouter = require('./routes/reservation')
+const reservationSatusRouter = require('./routes/reservationStatus')
+const roomTypeRouter = require('./routes/roomType')
+const roomRouter = require('./routes/room')
+const hotelRouter = require('./routes/hotel')
+const amentyRouter = require('./routes/amenty')
+const userRouter = require('./routes/user')
+const roleRouter = require('./routes/role')
 
 app.use(express.json())
 app.use(cors())
@@ -66,10 +65,7 @@ const amentyController = new AmentyController(amentyRepository)
 const userController = new AuthController(userRepository)
 const roleController = new RoleController(roleRepository)
 
-//if router not found will display this message
-
 // routers with controllers
-// mainRouter.use("/users", userRouter);
 mainRouter.use('/reservations', reservationRouter(reservationController))
 mainRouter.use(
   '/reservation-status',
@@ -82,6 +78,7 @@ mainRouter.use('/amenties', amentyRouter(amentyController))
 mainRouter.use('/users', userRouter(userController))
 mainRouter.use('/roles', roleRouter(roleController))
 
+//if router not found will display this message
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })

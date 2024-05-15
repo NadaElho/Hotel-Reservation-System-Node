@@ -1,4 +1,4 @@
-const ReservationStatus = require('../models/reservation-status.model')
+const ReservationStatus = require('../models/reservationStatus')
 
 class reservationSatusRepository {
   async getReservationStatus() {
