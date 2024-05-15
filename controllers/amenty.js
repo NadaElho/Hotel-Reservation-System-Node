@@ -1,4 +1,4 @@
-class amentyController {
+class AmentyController {
     constructor(AmentyRepository) {
       this.AmentyRepository = AmentyRepository;
     }
@@ -22,5 +22,5 @@ class amentyController {
      return this.AmentyRepository.deleteAmenty(id);
     }
   }
-  module.exports = amentyController;
+  module.exports = AmentyController;
   

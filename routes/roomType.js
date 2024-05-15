@@ -1,5 +1,5 @@
 const express = require("express");
-const middleWare = require("../middleware/auth");
+const middleWare = require("../middlewares/auth");
 const router = express.Router();
 
 const roomTypeRouter = (roomTypeController) => {

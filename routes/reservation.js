@@ -1,5 +1,10 @@
 const express = require('express')
 const { protect, restrictTo } = require('../middlewares/auth')
+const {
+  validateNewReservation,
+  validateUpdateReservation,
+} = require('../validations/reservation')
+const BadRequestError = require('../utils/badRequestError')
 const router = express.Router()
 
 const reservationRouter = (reservationController) => {
@@ -52,6 +57,10 @@ const reservationRouter = (reservationController) => {
 
   router.post('/', protect, async (req, res) => {
     try {
+      const { error } = validateNewReservation(req.body)
+      if (error) {
+        throw new BadRequestError(error.message)
+      }
       await reservationController.addNewReservation(req.body)
       res.status(201).json({ data: req.body })
     } catch (error) {
@@ -61,6 +70,10 @@ const reservationRouter = (reservationController) => {
 
   router.patch('/:id', protect, async (req, res) => {
     try {
+      const { error } = validateUpdateReservation(req.body)
+      if (error) {
+        throw new BadRequestError(error.message)
+      }
       await reservationController.editReservation(req.params.id, req.body)
       res.status(200).json({ data: req.body })
     } catch (error) {

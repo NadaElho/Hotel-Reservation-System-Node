@@ -1,6 +1,6 @@
 const Room = require("../models/room")
 
-class roomRepository{
+class RoomRepository{
     async getAllRooms(query,sortBy,skip,limit){
 
     const data=  await Room.find(query).populate('roomTypeId').sort(sortBy)
@@ -27,4 +27,4 @@ class roomRepository{
     }
 }
 
-module.exports = roomRepository;
+module.exports = RoomRepository;
