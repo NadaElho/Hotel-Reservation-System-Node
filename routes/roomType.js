@@ -3,7 +3,7 @@ const { protect, restrictTo } = require('../middlewares/auth')
 const router = express.Router();
 
 const roomTypeRouter = (roomTypeController) => {
-  //-------------------------------------------Find All  Room--------------------------------------------------------------
+  //--------------------------------------------Find All  Room--------------------------------------------------------------
   router.get("/", async (req, res) => {
     try {
       const roomType = await roomTypeController.addRoomType({
