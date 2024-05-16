@@ -1,7 +1,9 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
-const AppError = require("../utils/appError");
-const { promisify } = require("util");
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+const { promisify } = require('util')
+const NotFoundError = require('../utils/notFoundError')
+const AuthError = require('../utils/AuthError')
+const ForbiddenError = require('../utils/ForbiddenError')
 
 exports.protect = async (req, res, next) => {
   try {
@@ -19,17 +21,13 @@ exports.protect = async (req, res, next) => {
 
       const currentUser = await User.findOne({ _id: decoded.id });
       if (!currentUser) {
-        throw new AppError("User not found", 404);
+        throw new NotFoundError('User not found')
       }
-
-      req.user = currentUser;
+      req.user = currentUser
 
       next();
     } else {
-      throw new AppError(
-        "You are not logged in! Please log in to get access.",
-        401
-      );
+      throw new AuthError('You are not logged in! Please log in to get access.')
     }
   } catch (error) {
     next(error);
@@ -38,12 +36,11 @@ exports.protect = async (req, res, next) => {
 
 exports.restrictTo = (role) => {
   return async (req, res, next) => {
-    const user = await User.findById(req.user._id).populate("role");
-
+    const user = await User.findById(req.user._id).populate('role')
     if (user.role.name !== role) {
       return next(
-        new AppError("You do not have permission to access this route", 403)
-      );
+        new ForbiddenError('You do not have permission to access this route'),
+      )
     }
     next();
   };

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 class AuthController {
   constructor(authRepository) {
     this.authRepository = authRepository;
