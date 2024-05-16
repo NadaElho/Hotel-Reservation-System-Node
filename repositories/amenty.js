@@ -1,6 +1,6 @@
 const Amenty = require("../models/amenty");
 
-class amentyRepository {
+class AmentyRepository {
   async getAllAmenties() {
     return await Amenty.find();
   }
@@ -20,4 +20,4 @@ class amentyRepository {
     return await Amenty.deleteOne({_id:id});
   }
 }
-module.exports = amentyRepository;
+module.exports = AmentyRepository;

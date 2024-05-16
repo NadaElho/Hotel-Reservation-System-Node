@@ -1,6 +1,8 @@
 const RoomType = require("../models/roomType")
 const NotFoundError = require('../utils/notFoundError')
 class roomTypeRepository{
+  
+class RoomTypeRepository{
     async getAllRoomsType(){
         const roomType =await RoomType.find();
         if (!roomType) {
@@ -26,4 +28,4 @@ class roomTypeRepository{
     }
 }
 
-module.exports = roomTypeRepository;
+module.exports = RoomTypeRepository;
