@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const AppError = require('../utils/appError')
+const NotFoundError = require('../utils/notFoundError')
 
 class AuthController {
   constructor(UserRepository) {
@@ -31,7 +31,7 @@ class AuthController {
       )
       return token
     } else {
-      throw new AppError('User not found', 404)
+      throw new NotFoundError('User not found')
     }
   }
 

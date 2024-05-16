@@ -5,8 +5,6 @@ const cors = require('cors')
 const express = require('express')
 const app = express()
 
-const AppError = require('./utils/appError')
-
 const mainRouter = express.Router()
 
 // Importing repositories
@@ -38,6 +36,7 @@ const hotelRouter = require('./routes/hotel')
 const amentyRouter = require('./routes/amenty')
 const userRouter = require('./routes/user')
 const roleRouter = require('./routes/role')
+const NotFoundError = require('./utils/notFoundError')
 
 app.use(express.json())
 app.use(cors())
@@ -80,9 +79,10 @@ mainRouter.use('/roles', roleRouter(roleController))
 
 //if router not found will display this message
 app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
+  next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`))
 })
 
-app.listen(3000, () => {
-  console.log(`listening on port 3000 ...`)
+const port = process.env.PORT
+app.listen(port, () => {
+  console.log(`listening on port ${port} ...`)
 })

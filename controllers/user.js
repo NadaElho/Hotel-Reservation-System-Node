@@ -1,5 +1,5 @@
-const AppError = require('../utils/appError')
 const User = require('../models/user')
+const BadRequestError = require('../utils/badRequestError')
 const catchAsync = require('../utils/catchAsync')
 
 const filterObj = (obj, ...allowedFields) => {
@@ -23,7 +23,7 @@ class UserController {
 
   updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm) {
-      return next(new AppError('this route in not for password updates', 400))
+      return next(new BadRequestError('this route in not for password updates'))
     }
 
     const filteredBody = filterObj(req.body, 'name', 'email')
