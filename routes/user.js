@@ -1,5 +1,5 @@
 const express = require("express");
-const middleWare = require("../middlewares/auth");
+const {protect, restrictTo} = require("../middlewares/auth");
 const { uploadMultiple } = require("../middlewares/multer");
 const { uploadImage, deleteImages } = require("../middlewares/firebase");
 const router = express.Router();
@@ -7,8 +7,8 @@ const router = express.Router();
 const userRouter = (userController, authController) => {
   router.get(
     "/",
-    middleWare.protect,
-    middleWare.restrictTo("admin"),
+    protect,
+    restrictTo("admin"),
     async (req, res) => {
       try {
         const users = await userController.getAllUsers();
@@ -25,10 +25,7 @@ const userRouter = (userController, authController) => {
       const user = await userController.getUserById(id);
       if (!user) {
         throw new Error("this user is not exist");
-        // res.status(404).send("this user is not exist");
-        // return;
       }
-      // await userController.getUserById(id);
       res.send(user);
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });

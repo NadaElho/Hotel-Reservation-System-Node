@@ -1,5 +1,10 @@
 const express = require('express')
 const { protect, restrictTo } = require('../middlewares/auth')
+const BadRequestError = require('../utils/badRequestError')
+const {
+  validateUpdateReservationStatus,
+  validateNewReservationStatus,
+} = require('../validations/reservationStatus')
 const router = express.Router()
 
 const reservationSatusRouter = (reservationSatusController) => {
@@ -14,6 +19,10 @@ const reservationSatusRouter = (reservationSatusController) => {
 
   router.post('/', protect, restrictTo('admin'), async (req, res) => {
     try {
+      const { error } = validateNewReservationStatus(req.body)
+      if (error) {
+        throw new BadRequestError(error.message)
+      }
       await reservationSatusController.addReservationStatus(req.body)
       res.status(201).json({ data: req.body })
     } catch (error) {
@@ -23,6 +32,10 @@ const reservationSatusRouter = (reservationSatusController) => {
 
   router.patch('/:id', protect, restrictTo('admin'), async (req, res) => {
     try {
+      const { error } = validateUpdateReservationStatus(req.body)
+      if (error) {
+        throw new BadRequestError(error.message)
+      }
       await reservationSatusController.editReservationStatus(
         req.params.id,
         req.body,
