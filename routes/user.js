@@ -39,7 +39,7 @@ const userRouter = (userController, authController) => {
     try {
       const user = req.body;
       await authController.signup(user);
-      res.send("signup is successfully , you must login ");
+      res.json({ message: "signup is successfully , you must login " });
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
