@@ -1,31 +1,33 @@
-const RoomType = require("../models/roomType")
-const NotFoundError = require('../utils/notFoundError')
-class roomTypeRepository{
-  
-class RoomTypeRepository{
-    async getAllRoomsType(){
-        const roomType =await RoomType.find();
-        if (!roomType) {
-            throw new NotFoundError('No roomsType found')
-          }
-          return roomType
+const RoomType = require("../models/roomType");
+const NotFoundError = require("../utils/notFoundError");
+class RoomTypeRepository {
+  async getAllRoomsType() {
+    const roomType = await RoomType.find();
+    if (!roomType) {
+      throw new NotFoundError("No roomsType found");
     }
+    return roomType;
+  }
 
-    async getRoomTypeById (id){
-        return await RoomType.findOne(id);
+  async getRoomTypeById(id) {
+    const roomType=await RoomType.findOne(id)
+    if (!roomType) {
+      throw new NotFoundError("The room Type with this ID was not found");
     }
-    
-    async addRoomType(req){
-        return await RoomType.create(req);
-    }
+    return roomType;
+  }
 
-    async  editRoomType(id,req){
-        return await RoomType.updateOne(id,req);
-    }
-    
-    async deleteRoomType (id){
-        return  await RoomType.deleteOne(id)
-    }
+  async addRoomType(req) {
+    return await RoomType.create(req);
+  }
+
+  async editRoomType(id, req) {
+    return await RoomType.updateOne(id, req);
+  }
+
+  async deleteRoomType(id) {
+    return await RoomType.deleteOne(id);
+  }
 }
 
 module.exports = RoomTypeRepository;
