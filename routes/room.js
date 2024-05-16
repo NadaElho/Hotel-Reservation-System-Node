@@ -5,6 +5,9 @@ const { protect, restrictTo } = require('../middlewares/auth')
 const Room = require("../models/room");
 const Reservation = require("../models/reservation");
 const { uploadMultiple } = require("../middlewares/multer");
+const { validateNewROOm, validateUpdateRoom } = require("../validations/room");
+const BadRequestError = require('../utils/badRequestError')
+
 const router = express.Router();
 //router
 const roomRouter = (roomController) => {
@@ -125,12 +128,6 @@ const roomRouter = (roomController) => {
     try {
       const { id } = req.params
       const room = await roomController.getRoomById({ _id: id })
-
-      if (!room) {
-        res.status(404).json('Room  not found')
-        return
-      }
-
       res.status(200).json({
         status: 'success',
         message: ' Room  updated successfully',
@@ -149,6 +146,10 @@ const roomRouter = (roomController) => {
     uploadImage,
     async (req, res) => {
       try {
+        const { error } = validateNewROOm(req.body)
+        if (error) {
+          throw new BadRequestError(error.message)
+        }
         const room = await roomController.addRoom({ ...req.body })
         res.status(201).json({
           status: 'success',
@@ -173,7 +174,10 @@ const roomRouter = (roomController) => {
       try {
         const { id } = req.params
         const room = await roomController.getRoomById({ _id: id })
-
+        const { error } = validateUpdateRoom(req.body)
+        if (error) {
+          throw new BadRequestError(error.message)
+        }
         if (req.body.images) {
           await deleteImages(room.images)
         }
