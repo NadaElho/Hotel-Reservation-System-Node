@@ -1,43 +1,44 @@
-const jwt = require('jsonwebtoken')
-const AppError = require('../utils/appError')
-
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 class AuthController {
-  constructor(UserRepository) {
-    this.UserRepository = UserRepository
+  constructor(authRepository) {
+    this.authRepository = authRepository;
   }
 
-  async getAllUsers() {
-    return await this.UserRepository.getAllUsers()
+  async signup(newUser) {
+    return await this.authRepository.signup(newUser);
   }
 
-  async getUserById(id) {
-    return await this.UserRepository.getUserById(id)
-  }
-
-  async addUser(newUser) {
-    return await this.UserRepository.addUser(newUser)
-  }
-
-  async updateUser(id, body) {
-    return await this.UserRepository.updateUser(id, body)
-  }
   async login(user) {
-    if (user) {
-      const loggedUser = await this.UserRepository.login(user)
-      console.log(loggedUser)
-      const token = jwt.sign(
-        { id: loggedUser._id, email: loggedUser.email },
-        process.env.JWT_SECRET_KEY,
-      )
-      return token
-    } else {
-      throw new AppError('User not found', 404)
+    if (!user.password) {
+      throw new Error("must write your password");
     }
-  }
 
-  deleteUser(id) {
-    return this.UserRepository.deleteUser(id)
+    if (!user.email) {
+      throw new Error("must write your email");
+    }
+
+    const loggedUser = await this.authRepository.login(user);
+
+    if (!loggedUser) {
+      throw new Error("invalid email or password");
+    }
+
+    const passwordMatch = await bcrypt.compare(
+      user.password,
+      loggedUser.password
+    );
+
+    if (!passwordMatch) {
+      throw new Error(" invalid email or password");
+    }
+
+    const token = jwt.sign(
+      { id: loggedUser._id, email: loggedUser.email },
+      process.env.JWT_SECRET_KEY
+    );
+    return token;
   }
 }
 
-module.exports = AuthController
+module.exports = AuthController;
