@@ -3,12 +3,15 @@ class RoomTypeController {
     this.roomTypeRepository = roomTypeRepository;
   }
 
-  async addRoomType(newRoomType) {
-    return await this.roomTypeRepository.addRoomType(newRoomType);
-  }
-
   async getAllRoomsType() {
     return await this.roomTypeRepository.getAllRoomsType();
+  }
+  async getRoomTypeById(id) {
+    return await this.roomTypeRepository.getRoomTypeById(id);
+  }
+
+  async addRoomType(newRoomType) {
+    return await this.roomTypeRepository.addRoomType(newRoomType);
   }
 
   async editRoomType(id, UpdateRoomType) {

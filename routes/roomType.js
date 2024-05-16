@@ -1,21 +1,21 @@
 const express = require("express");
-const { protect, restrictTo } = require('../middlewares/auth')
+const { protect, restrictTo } = require('../middlewares/auth');
+const { validateNewRoomType, validateUpdateRoomType } = require("../validations/roomType");
+const BadRequestError = require('../utils/badRequestError')
 const router = express.Router();
 
 const roomTypeRouter = (roomTypeController) => {
   //--------------------------------------------Find All  Room--------------------------------------------------------------
   router.get("/", async (req, res) => {
     try {
-      const roomType = await roomTypeController.addRoomType({
-        ...req.body,
-      });
-      res.status(201).json({
+
+      const roomsType = await roomTypeController.getAllRoomsType();
+      res.status(200).json({
         status: "success",
-        message: " Rome Type added successfully",
-        roomType: roomType,
+        data: roomsType,
       });
-    } catch (err) {
-      res.status(500).json({ "Error happened ": err.message });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message })
     }
   });
   //-------------------------------------------Create  Room--------------------------------------------------------------
@@ -25,6 +25,10 @@ const roomTypeRouter = (roomTypeController) => {
     restrictTo("admin"),
     async (req, res) => {
       try {
+        const { error } = validateNewRoomType(req.body)
+        if (error) {
+          throw new BadRequestError(error.message)
+        }
         const roomType = await roomTypeController.addRoomType({
           ...req.body,
         });
@@ -33,8 +37,8 @@ const roomTypeRouter = (roomTypeController) => {
           message: " Rome Type added successfully",
           roomType: roomType,
         });
-      } catch (err) {
-        res.status(500).json({ "Error happened ": err.message });
+      } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     }
   );
@@ -47,10 +51,9 @@ const roomTypeRouter = (roomTypeController) => {
       try {
         const { id } = req.params;
         const room = await roomTypeController.getRoomTypeById({ _id: id });
-
-        if (!room) {
-          res.status(404).json("Room Type not found");
-          return;
+        const { error } = validateUpdateRoomType(req.body)
+        if (error) {
+          throw new BadRequestError(error.message)
         }
         const updateRoomType = await roomTypeController.editRoomType(
           { _id: id },
@@ -58,15 +61,15 @@ const roomTypeRouter = (roomTypeController) => {
         );
 
         const findNewRomeType = await roomTypeController.getRoomTypeById({
-          _id: id,
+          _id: id
         });
         res.status(200).json({
           status: "success",
           message: " Room Type updated successfully",
           roomType: findNewRomeType,
         });
-      } catch (err) {
-        res.status(500).json({ "Error happened ": err.message });
+      } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     }
   );
@@ -90,8 +93,8 @@ const roomTypeRouter = (roomTypeController) => {
           status: "success",
           message: " Room Type deleted successfully",
         });
-      } catch (err) {
-        res.status(500).json({ "Error happened ": err.message });
+      } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     }
   );
