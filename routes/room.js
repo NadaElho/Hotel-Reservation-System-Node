@@ -1,14 +1,13 @@
-
-const express = require("express");
-const { uploadImage, deleteImages } = require("../middlewares/firebase");
+const express = require('express')
+const { uploadImage, deleteImages } = require('../middlewares/firebase')
 const { protect, restrictTo } = require('../middlewares/auth')
-const Room = require("../models/room");
-const Reservation = require("../models/reservation");
-const { uploadMultiple } = require("../middlewares/multer");
-const { validateNewROOm, validateUpdateRoom } = require("../validations/room");
+const Room = require('../models/room')
+const Reservation = require('../models/reservation')
+const { uploadMultiple } = require('../middlewares/multer')
+const { validateNewROOm, validateUpdateRoom } = require('../validations/room')
 const BadRequestError = require('../utils/badRequestError')
 
-const router = express.Router();
+const router = express.Router()
 //router
 const roomRouter = (roomController) => {
   //-------------------------------------------Find All  Room--------------------------------------------------------------
@@ -94,9 +93,6 @@ const roomRouter = (roomController) => {
       if (req.query.sort) {
         sortBy = req.query.sort.split(',').join(' ')
       }
-      // else {
-      //   sortBy = "-creatAt";
-      // }
       // find data
       let result = await roomController.getAllRooms(query, sortBy, skip, limit)
       const { data, documentCount } = result
@@ -117,8 +113,7 @@ const roomRouter = (roomController) => {
         pagination.prevPage = page - 1
       }
 
-
-      res.status(200).json({ status: "success", pagination, data: data });
+      res.status(200).json({ status: 'success', pagination, data: data })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
@@ -132,16 +127,16 @@ const roomRouter = (roomController) => {
         status: 'success',
         message: ' Room  updated successfully',
         room: room,
-      });
+      })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
   //-------------------------------------------Create  Room--------------------------------------------------------------
   router.post(
-    "/",
+    '/',
     protect,
-    restrictTo("admin"),
+    restrictTo('admin'),
     uploadMultiple,
     uploadImage,
     async (req, res) => {
@@ -155,19 +150,17 @@ const roomRouter = (roomController) => {
           status: 'success',
           message: 'Rome added successfully',
           room: room,
-
-        });
+        })
       } catch (error) {
         res.status(error.statusCode || 500).json({ message: error.message })
-
       }
     },
   )
   //-------------------------------------------Edit  Room--------------------------------------------------------------
   router.patch(
-    "/:id",
+    '/:id',
     protect,
-    restrictTo("admin"),
+    restrictTo('admin'),
     uploadMultiple,
     uploadImage,
     async (req, res) => {
@@ -181,46 +174,37 @@ const roomRouter = (roomController) => {
         if (req.body.images) {
           await deleteImages(room.images)
         }
-        const updateRoom = await roomController.editRoom(
-          { _id: id },
-          { ...req.body },
-        )
+        await roomController.editRoom({ _id: id }, { ...req.body })
 
         const findNewRoom = await roomController.getRoomById({
           _id: id,
         })
         res.status(200).json({
-          status: "success",
-          message: " Room updated successfully",
+          status: 'success',
+          message: ' Room updated successfully',
           room: findNewRoom,
-        });
+        })
       } catch (error) {
         res.status(error.statusCode || 500).json({ message: error.message })
       }
     },
   )
   //-------------------------------------------Delete  Room--------------------------------------------------------------
-  router.delete(
-    "/:id",
-    protect,
-    restrictTo("admin"),
-    async (req, res) => {
-      try {
-        const { id } = req.params;
-        const room = await roomController.getRoomById({ _id: id });
-        await deleteImages(room.images);
-        await roomController.deleteRoom({ _id: id });
+  router.delete('/:id', protect, restrictTo('admin'), async (req, res) => {
+    try {
+      const { id } = req.params
+      const room = await roomController.getRoomById({ _id: id })
+      await deleteImages(room.images)
+      await roomController.deleteRoom({ _id: id })
 
-        res.status(200).json({
-          status: "success",
-          message: " Room deleted successfully",
-        });
-      } catch (error) {
-        res.status(error.statusCode || 500).json({ message: error.message })
-
-      }
-    },
-  )
+      res.status(200).json({
+        status: 'success',
+        message: ' Room deleted successfully',
+      })
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message })
+    }
+  })
   return router
 }
 
