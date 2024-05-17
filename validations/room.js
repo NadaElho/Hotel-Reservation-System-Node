@@ -1,6 +1,6 @@
 const joi = require('joi')
 
-const validateNewROOm= (room) => {
+const validateNewROOm = (room) => {
   const schema = joi.object({
     hotelId: joi.string().required(),
     roomTypeId: joi.string().required(),
@@ -15,7 +15,7 @@ const validateNewROOm= (room) => {
   return schema.validate(room)
 }
 
-const validateUpdateRoom= (room) => {
+const validateUpdateRoom = (room) => {
   const schema = joi.object({
     hotelId: joi.string(),
     roomTypeId: joi.string(),

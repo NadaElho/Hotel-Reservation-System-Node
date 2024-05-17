@@ -1,5 +1,5 @@
 const ReservationStatus = require('../models/reservationStatus')
-const NotFoundError = require('../utils/notFoundError')
+const NotFoundError = require('../handleErrors/notFoundError')
 
 class ReservationSatusRepository {
   async getReservationStatus() {

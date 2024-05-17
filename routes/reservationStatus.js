@@ -1,6 +1,6 @@
 const express = require('express')
 const { protect, restrictTo } = require('../middlewares/auth')
-const BadRequestError = require('../utils/badRequestError')
+const BadRequestError = require('../handleErrors/badRequestError')
 const {
   validateUpdateReservationStatus,
   validateNewReservationStatus,

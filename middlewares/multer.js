@@ -1,41 +1,36 @@
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-// import uuid from "uuid/v4";
-
-
+const multer = require('multer')
+const path = require('path')
 
 const uploadMultiple = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 1000000 },
   fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
-  }
-}).array("images", 12);
+    checkFileType(file, cb)
+  },
+}).array('images', 12)
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 1000000 },
   fileFilter: async function (req, file, cb) {
-  checkFileType(file, cb);
-  }
-}).single("image");
+    checkFileType(file, cb)
+  },
+}).single('image')
 
-// // Check file Type
+// Check file Type
 function checkFileType(file, cb) {
-
   // Allowed ext
-  const fileTypes = /jpeg|jpg|png|gif/;
+  const fileTypes = /jpeg|jpg|png|gif/
   // Check ext
-  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase())
   // Check mime
-  const mimeType = fileTypes.test(file.mimetype);
+  const mimeType = fileTypes.test(file.mimetype)
 
   if (mimeType && extName) {
-    return cb(null, true);
+    return cb(null, true)
   } else {
-    cb("Error: Images Only !!!");
+    cb('Error: Images Only !!!')
   }
 }
 
-module.exports = { uploadMultiple, upload };
+module.exports = { uploadMultiple, upload }
