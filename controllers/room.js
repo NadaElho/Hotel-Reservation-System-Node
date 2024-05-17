@@ -7,8 +7,8 @@ class RoomController {
     return await this.roomRepository.addRoom(newRoom)
   }
 
-  async getAllRooms() {
-    return await this.roomRepository.getAllRooms()
+  async getAllRooms(query, sortBy, skip, limit) {
+    return await this.roomRepository.getAllRooms(query, sortBy, skip, limit)
   }
 
   async getRoomById(roomId) {
