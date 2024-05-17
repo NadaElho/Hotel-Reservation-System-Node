@@ -1,30 +1,26 @@
 const express = require("express");
-const {protect, restrictTo} = require("../middlewares/auth");
+const { protect, restrictTo } = require("../middlewares/auth");
 const { uploadMultiple } = require("../middlewares/multer");
 const { uploadImage, deleteImages } = require("../middlewares/firebase");
 const router = express.Router();
+const NotFoundError = require("./../utils/notFoundError");
 
 const userRouter = (userController, authController) => {
-  router.get(
-    "/",
-    protect,
-    restrictTo("admin"),
-    async (req, res) => {
-      try {
-        const users = await userController.getAllUsers();
-        res.send(users);
-      } catch (error) {
-        res.status(500).json({ message: "Server Error: " + error.message });
-      }
+  router.get("/", protect, restrictTo("admin"), async (req, res) => {
+    try {
+      const users = await userController.getAllUsers();
+      res.send(users);
+    } catch (error) {
+      res.status(500).json({ message: "Server Error: " + error.message });
     }
-  );
+  });
 
-  router.get("/:id", async (req, res) => {
+  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const id = req.params.id;
       const user = await userController.getUserById(id);
       if (!user) {
-        throw new Error("this user is not exist");
+        throw new NotFoundError("this user is not exist");
       }
       res.send(user);
     } catch (error) {
@@ -46,18 +42,19 @@ const userRouter = (userController, authController) => {
     try {
       const user = req.body;
       const token = await authController.login(user);
+
       res.json({ message: "loggin succesffly", token });
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
   });
 
-  router.delete("/:id", async (req, res) => {
+  router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const id = req.params.id;
       const user = await userController.getUserById(id);
       if (!user) {
-        throw new Error("this user is not exist");
+        throw new NotFoundError("this user is not exist");
       }
 
       await deleteImages(user.images);
@@ -68,23 +65,29 @@ const userRouter = (userController, authController) => {
     }
   });
 
-  router.patch("/:id", uploadMultiple, uploadImage, async (req, res) => {
-    try {
-      const id = req.params.id;
-      const user = await userController.getUserById(id);
-      const userBody = req.body;
-      if (!user) {
-        throw new Error("this user is not exist");
+  router.patch(
+    "/:id",
+    protect,
+    uploadMultiple,
+    uploadImage,
+    async (req, res) => {
+      try {
+        const id = req.params.id;
+        const user = await userController.getUserById(id);
+        const userBody = req.body;
+        if (!user) {
+          throw new NotFoundError("this user is not exist");
+        }
+        if (req.body.images) {
+          await deleteImages(user.images);
+        }
+        await userController.updateUser(id, userBody);
+        res.status(201).send("This user updated successfully");
+      } catch (error) {
+        res.status(500).json({ message: "Server Error: " + error.message });
       }
-      if (req.body.images) {
-        await deleteImages(user.images);
-      }
-      await userController.updateUser(id, userBody);
-      res.status(201).send("This user updated successfully");
-    } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
     }
-  });
+  );
 
   return router;
 };
