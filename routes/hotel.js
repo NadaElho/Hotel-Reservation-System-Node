@@ -4,10 +4,11 @@ const { protect, restrictTo } = require("../middlewares/auth");
 const { uploadMultiple } = require("../middlewares/multer");
 const { uploadImage } = require("../middlewares/firebase");
 const { deleteImages } = require("../middlewares/firebase");
+
 const notFoundError = require("../utils/notFoundError");
 const { ValidateAddHotel, ValidateEditHotel } = require("../validations/hotel");
 const badRequestError = require("../utils/badRequestError");
-///////////////////////////////////////////////////////////////////
+
 const hotelRouter = (hotelController, roomController) => {
   router.get("/", async (req, res) => {
     try {
@@ -21,6 +22,7 @@ const hotelRouter = (hotelController, roomController) => {
   router.get("/:id", protect, async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
+
       if (!hotel) throw new notFoundError("this amenty does not exist");
       res.status(200).json({ data: hotel });
     } catch (error) {
@@ -49,6 +51,7 @@ const hotelRouter = (hotelController, roomController) => {
   router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const hotel = await hotelController.getHotelById(req.params.id);
+
       if (!hotel) throw new notFoundError("This hotel does not exist");
 
       if (req.body.images) {
