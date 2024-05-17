@@ -4,27 +4,31 @@ const { protect, restrictTo } = require('../middlewares/auth')
 const { uploadMultiple } = require('../middlewares/multer')
 const { uploadImage } = require('../middlewares/firebase')
 const { deleteImages } = require('../middlewares/firebase')
+const notFoundError = require('../handleErrors/notFoundError')
+const {
+  ValidateAddAmenity,
+  ValidateEditAmenity,
+} = require('../validations/amenity')
+const badRequestError = require('../handleErrors/badRequestError')
 
-const amentyRouter = (amentyController) => {
+const amenityRouter = (amenityController) => {
   router.get('/', async (req, res) => {
     try {
-      const allAmenties = await amentyController.getAllAmenties()
-      res.send(allAmenties)
+      const amenities = await amenityController.getAllAmenities()
+      res.status(200).json({ data: amenities })
     } catch (error) {
-      res.status(500).json({ message: 'Server Error' + error.message })
+      res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
 
   router.get('/:id', protect, async (req, res) => {
     try {
-      const amenty = await amentyController.getAmentyById(req.params.id)
-      if (!amenty) {
-        res.status(404).send('this amenty does not exist')
-        return
-      }
-      res.send(amenty)
+      const amenity = await amenityController.getAmenityById(req.params.id)
+      if (!amenity) throw new notFoundError('this amenity does not exist')
+
+      res.status(200).json({ data: amenity })
     } catch (error) {
-      res.status(500).json({ message: 'Server Error: ' + error.message })
+      res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
 
@@ -32,32 +36,33 @@ const amentyRouter = (amentyController) => {
     '/',
     protect,
     restrictTo('admin'),
+
     uploadMultiple,
     uploadImage,
     async (req, res) => {
       try {
-        await amentyController.addAmenty(req.body)
-        res.status(201).json({ data: req.body })
+        const { error } = ValidateAddAmenity(req.boby)
+        if (error) throw new badRequestError(error.message)
+        await amenityController.addAmenity(req.body)
+        res.status(201).json({ message: 'the amenity added successfully' })
       } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     },
   )
 
   router.delete('/:id', protect, restrictTo('admin'), async (req, res) => {
     try {
-      const amenty = await amentyController.getAmentyById(req.params.id)
-      if (!amenty) {
-        res.status(404).send('this amenty does not exist')
-        return
-      }
+      const amenity = await amenityController.getAmenityById(req.params.id)
+      if (!amenity) throw new notFoundError('this amenity does not exist')
+
       if (req.body.images) {
-        await deleteImages(room.images)
+        await deleteImages(amenity.images)
       }
-      await amentyController.deleteAmenty(req.params.id)
-      res.status(200).send('The amenty deleted successfully')
+      await amenityController.deleteAmenity(req.params.id)
+      res.status(200).json({ message: 'The amenity deleted successfully' })
     } catch (error) {
-      res.status(500).json({ message: 'Server Error' + error.message })
+      res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
 
@@ -65,22 +70,20 @@ const amentyRouter = (amentyController) => {
     '/:id',
     protect,
     restrictTo('admin'),
-    uploadMultiple,
     uploadImage,
     async (req, res) => {
       try {
-        const amenty = await amentyController.getAmentyById(req.params.id)
-        if (!amenty) {
-          res.status(404).send('this amenty does not exist')
-          return
-        }
+        const { error } = ValidateEditAmenity(req.boby)
+        if (error) throw new badRequestError(error.message)
+        const amenity = await amenityController.getAmenityById(req.params.id)
+        if (!amenity) throw new notFoundError('this amenity does not exist')
         if (req.body.images) {
-          await deleteImages(room.images)
+          await deleteImages(amenity.images)
         }
-        await amentyController.editAmenty(req.params.id, req.body)
-        res.status(200).send('The amenty updated successfully')
+        await amenityController.editAmenity(req.params.id, req.body)
+        res.status(200).json({ message: 'The amenity updated successfully' })
       } catch (error) {
-        res.status(500).json({ message: 'Server Error' + error.message })
+        res.status(error.statusCode || 500).json({ message: error.message })
       }
     },
   )
@@ -88,4 +91,4 @@ const amentyRouter = (amentyController) => {
   return router
 }
 
-module.exports = amentyRouter
+module.exports = amenityRouter
