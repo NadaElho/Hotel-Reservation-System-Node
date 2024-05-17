@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const amentySchema = mongoose.Schema({
+const amenitySchema = mongoose.Schema({
   name_ar: {
     type: String,
     required: true,
@@ -14,5 +14,5 @@ const amentySchema = mongoose.Schema({
     required: true
   }
 });
-const amenty = mongoose.model("Amenty", amentySchema);
-module.exports = amenty;
+const amenity = mongoose.model("Amenity", amenitySchema);
+module.exports = amenity;

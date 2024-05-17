@@ -4,16 +4,18 @@ const { protect, restrictTo } = require("../middlewares/auth");
 const { uploadMultiple } = require("../middlewares/multer");
 const { uploadImage } = require("../middlewares/firebase");
 const { deleteImages } = require("../middlewares/firebase");
-
 const notFoundError = require("../utils/notFoundError");
-const { ValidateAddHotel, ValidateEditHotel } = require("../validations/hotel");
+const {
+  ValidateAddAmenity,
+  ValidateEditAmenity,
+} = require("../validations/amenity");
 const badRequestError = require("../utils/badRequestError");
-
-const hotelRouter = (hotelController, roomController) => {
+////////////////////////////////////////////////
+const amenityRouter = (amenityController) => {
   router.get("/", async (req, res) => {
     try {
-      const hotels = await hotelController.getAllHotels();
-      res.status(200).json({ data: hotels });
+      const amenities = await amenityController.getAllAmenities();
+      res.status(200).json({ data: amenities });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
@@ -21,10 +23,10 @@ const hotelRouter = (hotelController, roomController) => {
 
   router.get("/:id", protect, async (req, res) => {
     try {
-      const hotel = await hotelController.getHotelById(req.params.id);
+      const amenity = await amenityController.getAmenityById(req.params.id);
+      if (!amenity) throw new notFoundError("this amenity does not exist");
 
-      if (!hotel) throw new notFoundError("this amenty does not exist");
-      res.status(200).json({ data: hotel });
+      res.status(200).json({ data: amenity });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
@@ -34,14 +36,15 @@ const hotelRouter = (hotelController, roomController) => {
     "/",
     protect,
     restrictTo("admin"),
+
     uploadMultiple,
     uploadImage,
     async (req, res) => {
       try {
-        const { error } = ValidateAddHotel(req.boby);
+        const { error } = ValidateAddAmenity(req.boby);
         if (error) throw new badRequestError(error.message);
-        await hotelController.addHotel(req.body);
-        res.status(201).json({ message: "the hotel added successfully" });
+        await amenityController.addAmenity(req.body);
+        res.status(201).json({ message: "the amenity added successfully" });
       } catch (error) {
         res.status(error.statusCode || 500).json({ message: error.message });
       }
@@ -50,15 +53,14 @@ const hotelRouter = (hotelController, roomController) => {
 
   router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
-      const hotel = await hotelController.getHotelById(req.params.id);
-
-      if (!hotel) throw new notFoundError("This hotel does not exist");
+      const amenity = await amenityController.getAmenityById(req.params.id);
+      if (!amenity) throw new notFoundError("this amenity does not exist");
 
       if (req.body.images) {
         await deleteImages(room.images);
       }
-      await hotelController.deleteHotel(req.params.id);
-      res.status(200).json({ message: "The hotel was deleted successfully" });
+      await amenityController.deleteAmenity(req.params.id);
+      res.status(200).json({ message: "The amenity deleted successfully" });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
@@ -68,20 +70,18 @@ const hotelRouter = (hotelController, roomController) => {
     "/:id",
     protect,
     restrictTo("admin"),
-    uploadMultiple,
     uploadImage,
     async (req, res) => {
       try {
-        const hotel = await hotelController.getHotelById(req.params.id);
-        if (!hotel) throw new notFoundError("this hotel does not exist");
-
+        const { error } = ValidateEditAmenity(req.boby);
+        if (error) throw new badRequestError(error.message);
+        const amenity = await amenityController.getAmenityById(req.params.id);
+        if (!amenity) throw new notFoundError("this amenity does not exist");
         if (req.body.images) {
           await deleteImages(room.images);
         }
-        const { error } = ValidateEditHotel(req.boby);
-        if (error) throw new badRequestError(error.message);
-        await hotelController.editHotel(req.params.id, req.body);
-        res.status(200).json({ message: "the hotel updated successfully" });
+        await amenityController.editAmenity(req.params.id, req.body);
+        res.status(200).json({ message: "The amenity updated successfully" });
       } catch (error) {
         res.status(error.statusCode || 500).json({ message: error.message });
       }
@@ -91,4 +91,4 @@ const hotelRouter = (hotelController, roomController) => {
   return router;
 };
 
-module.exports = hotelRouter;
+module.exports = amenityRouter;
