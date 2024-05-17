@@ -4,6 +4,8 @@ const { uploadMultiple } = require('../middlewares/multer')
 const { uploadImage, deleteImages } = require('../middlewares/firebase')
 const router = express.Router()
 const NotFoundError = require('../handleErrors/notFoundError')
+const { validateNewUser, validateUpdateUser } = require('../validations/user')
+const BadRequestError = require('../handleErrors/badRequestError')
 
 const userRouter = (userController, authController) => {
   router.get('/', protect, restrictTo('admin'), async (req, res) => {
@@ -28,8 +30,12 @@ const userRouter = (userController, authController) => {
     }
   })
 
-  router.post('/signup', uploadMultiple, uploadImage, async (req, res) => {
+  router.post('/signup',async (req, res) => {
     try {
+      const { error } = validateNewUser(req.body)
+      if (error) {
+        throw new BadRequestError(error.message)
+      }
       const user = req.body
       await authController.signup(user)
       res.json({ message: 'signup is successfully , you must login ' })
@@ -72,6 +78,11 @@ const userRouter = (userController, authController) => {
     uploadImage,
     async (req, res) => {
       try {
+
+        const { error } = validateUpdateUser(req.body)
+        if (error) {
+          throw new BadRequestError(error.message)
+        }
         const id = req.params.id
         const user = await userController.getUserById(id)
         const userBody = req.body

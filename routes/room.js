@@ -49,26 +49,7 @@ const roomRouter = (roomController) => {
         req.query.checkIn &&
         req.query.checkOut
       ) {
-        const getRoomReservations = await Reservation.find({
-          $or: [
-            {
-              checkIn: { $lte: req.query.checkIn },
-              checkOut: { $gte: req.query.checkIn },
-            },
-            {
-              checkIn: { $lte: req.query.checkOut },
-              checkOut: { $gte: req.query.checkOut },
-            },
-            {
-              checkIn: { $gte: req.query.checkIn },
-              checkOut: { $lte: req.query.checkOut },
-            },
-            {
-              checkIn: { $lte: req.query.checkIn },
-              checkOut: { $gte: req.query.checkOut },
-            },
-          ],
-        })
+        const getRoomReservations = await roomController.getRoomNotReservations(req.query.checkIn, req.query.checkOut)
         const roomIds = getRoomReservations.map((RES) => {
           return RES.roomId
         })
