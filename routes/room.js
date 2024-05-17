@@ -5,7 +5,7 @@ const Room = require('../models/room')
 const Reservation = require('../models/reservation')
 const { uploadMultiple } = require('../middlewares/multer')
 const { validateNewROOm, validateUpdateRoom } = require('../validations/room')
-const BadRequestError = require('../utils/badRequestError')
+const BadRequestError = require('../handleErrors/badRequestError')
 
 const router = express.Router()
 //router

@@ -1,6 +1,6 @@
 const joi = require('joi')
 
-const validateNewReservationStatus= (reservationStatus) => {
+const validateNewReservationStatus = (reservationStatus) => {
   const schema = joi.object({
     name_en: joi.string().required(),
     name_ar: joi.string().required(),
@@ -8,7 +8,7 @@ const validateNewReservationStatus= (reservationStatus) => {
   return schema.validate(reservationStatus)
 }
 
-const validateUpdateReservationStatus= (reservationStatus) => {
+const validateUpdateReservationStatus = (reservationStatus) => {
   const schema = joi.object({
     name_en: joi.string(),
     name_ar: joi.string(),
@@ -16,4 +16,7 @@ const validateUpdateReservationStatus= (reservationStatus) => {
   return schema.validate(reservationStatus)
 }
 
-module.exports = { validateNewReservationStatus, validateUpdateReservationStatus }
+module.exports = {
+  validateNewReservationStatus,
+  validateUpdateReservationStatus,
+}

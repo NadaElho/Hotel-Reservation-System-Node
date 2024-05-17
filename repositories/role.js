@@ -1,5 +1,5 @@
 const Role = require('../models/role')
-const NotFoundError = require('../utils/notFoundError')
+const NotFoundError = require('../handleErrors/notFoundError')
 
 class RoleRepository {
   async getRoles() {

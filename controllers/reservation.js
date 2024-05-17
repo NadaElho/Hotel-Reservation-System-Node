@@ -2,7 +2,7 @@ const Reservation = require('../models/reservation')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 var cron = require('node-cron')
-const BadRequestError = require('../utils/badRequestError')
+const BadRequestError = require('../handleErrors/badRequestError')
 
 cron.schedule('0 0 * * *', async () => {
   //MIN H D MON DWeek
