@@ -1,5 +1,6 @@
 const Room = require('../models/room')
 const NotFoundError = require('../handleErrors/notFoundError')
+const Reservation = require('../models/reservation')
 class roomRepository {
   async getAllRooms(query, sortBy, skip, limit) {
     const documentCount = await Room.countDocuments(query)
@@ -36,6 +37,28 @@ class roomRepository {
   }
   async deleteRoom(id) {
     return await Room.deleteOne(id)
+  }
+  async getRoomNotReservations(checkIn,checkOut ){
+    return await Reservation.find({
+      $or: [
+        {
+          checkIn: { $lte: checkIn },
+          checkOut: { $gte: checkIn },
+        },
+        {
+          checkIn: { $lte: checkOut },
+          checkOut: { $gte: checkOut },
+        },
+        {
+          checkIn: { $gte: checkIn },
+          checkOut: { $lte: checkOut },
+        },
+        {
+          checkIn: { $lte: checkIn },
+          checkOut: { $gte: checkOut },
+        },
+      ],
+    })
   }
 }
 
