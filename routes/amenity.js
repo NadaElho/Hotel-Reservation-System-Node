@@ -57,7 +57,7 @@ const amenityRouter = (amenityController) => {
       if (!amenity) throw new notFoundError("this amenity does not exist");
 
       if (req.body.images) {
-        await deleteImages(room.images);
+        await deleteImages(amenity.images);
       }
       await amenityController.deleteAmenity(req.params.id);
       res.status(200).json({ message: "The amenity deleted successfully" });
@@ -78,7 +78,7 @@ const amenityRouter = (amenityController) => {
         const amenity = await amenityController.getAmenityById(req.params.id);
         if (!amenity) throw new notFoundError("this amenity does not exist");
         if (req.body.images) {
-          await deleteImages(room.images);
+          await deleteImages(amenity.images);
         }
         await amenityController.editAmenity(req.params.id, req.body);
         res.status(200).json({ message: "The amenity updated successfully" });

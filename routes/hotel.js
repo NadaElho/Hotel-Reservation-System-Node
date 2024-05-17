@@ -52,7 +52,7 @@ const hotelRouter = (hotelController, roomController) => {
       if (!hotel) throw new notFoundError("This hotel does not exist");
 
       if (req.body.images) {
-        await deleteImages(room.images);
+        await deleteImages(hotel.images);
       }
       await hotelController.deleteHotel(req.params.id);
       res.status(200).json({ message: "The hotel was deleted successfully" });
@@ -73,7 +73,7 @@ const hotelRouter = (hotelController, roomController) => {
         if (!hotel) throw new notFoundError("this hotel does not exist");
 
         if (req.body.images) {
-          await deleteImages(room.images);
+          await deleteImages(hotel.images);
         }
         const { error } = ValidateEditHotel(req.boby);
         if (error) throw new badRequestError(error.message);
