@@ -1,25 +1,25 @@
 class AmenityController {
     constructor(amenityRepository) {
-      this.amenityRepository = amenityRepository;
+    this.amenityRepository = amenityRepository;
     }
-    getAllAmenities() {
-      return this.amenityRepository.getAllAmenities();
-    }
-    
-    getAmenityById(id){
-      return this.amenityRepository.getAmenityById(id);
+    async getAllAmenities() {
+      return await this.amenityRepository.getAllAmenities();
     }
     
-    addAmenity(NewAmenity){
-     return this.amenityRepository.addAmenity(NewAmenity)
+   async getAmenityById(id){
+      return await this.amenityRepository.getAmenityById(id);
     }
     
-    editAmenity(id,body){
-     return this.amenityRepository.editAmenity(id,body)
+    async addAmenity(NewAmenity){
+     return await this.amenityRepository.addAmenity(NewAmenity)
     }
     
-    deleteAmenity(id) {
-     return this.amenityRepository.deleteAmenity(id);
+    async editAmenity(id,body){
+     return await this.amenityRepository.editAmenity(id,body)
+    }
+    
+    async deleteAmenity(id) {
+     return await this.amenityRepository.deleteAmenity(id);
     }
   }
   module.exports = AmenityController;
