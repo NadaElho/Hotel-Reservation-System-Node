@@ -4,7 +4,7 @@ const {
   validateNewReservation,
   validateUpdateReservation,
 } = require('../validations/reservation')
-const BadRequestError = require('../utils/badRequestError')
+const BadRequestError = require('../handleErrors/badRequestError')
 const router = express.Router()
 
 const reservationRouter = (reservationController) => {

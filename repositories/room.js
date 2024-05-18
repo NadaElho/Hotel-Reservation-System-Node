@@ -1,42 +1,65 @@
-const Room = require("../models/room");
-const NotFoundError = require("../utils/notFoundError");
+const Room = require('../models/room')
+const NotFoundError = require('../handleErrors/notFoundError')
+const Reservation = require('../models/reservation')
 class roomRepository {
   async getAllRooms(query, sortBy, skip, limit) {
-    const documentCount = await Room.countDocuments(query);
+    const documentCount = await Room.countDocuments(query)
     const data = await Room.find(query)
-      .populate("roomTypeId")
+      .populate('roomTypeId')
       .sort(sortBy)
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
 
     if (!data) {
-      throw new NotFoundError("No rooms found");
+      throw new NotFoundError('No rooms found')
     }
 
-    return { data, documentCount };
+    return { data, documentCount }
   }
 
   async getRoomById(id) {
     const room = await Room.findOne(id)
-      .populate("amentiesIds")
-      .populate("hotelId")
-      .populate("roomTypeId");
+      .populate('amentiesIds')
+      .populate('hotelId')
+      .populate('roomTypeId')
 
     if (!room) {
-      throw new NotFoundError("The room with this ID was not found");
+      throw new NotFoundError('The room with this ID was not found')
     }
-    return room;
+    return room
   }
 
   async addRoom(req) {
-    return await Room.create(req);
+    return await Room.create(req)
   }
   async editRoom(id, req) {
-    return await Room.updateOne(id, req);
+    return await Room.updateOne(id, req)
   }
   async deleteRoom(id) {
-    return await Room.deleteOne(id);
+    return await Room.deleteOne(id)
+  }
+  async getRoomNotReservations(checkIn,checkOut ){
+    return await Reservation.find({
+      $or: [
+        {
+          checkIn: { $lte: checkIn },
+          checkOut: { $gte: checkIn },
+        },
+        {
+          checkIn: { $lte: checkOut },
+          checkOut: { $gte: checkOut },
+        },
+        {
+          checkIn: { $gte: checkIn },
+          checkOut: { $lte: checkOut },
+        },
+        {
+          checkIn: { $lte: checkIn },
+          checkOut: { $gte: checkOut },
+        },
+      ],
+    })
   }
 }
 
-module.exports = roomRepository;
+module.exports = roomRepository

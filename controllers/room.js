@@ -7,8 +7,8 @@ class RoomController {
     return await this.roomRepository.addRoom(newRoom)
   }
 
-  async getAllRooms() {
-    return await this.roomRepository.getAllRooms()
+  async getAllRooms(query, sortBy, skip, limit) {
+    return await this.roomRepository.getAllRooms(query, sortBy, skip, limit)
   }
 
   async getRoomById(roomId) {
@@ -20,8 +20,11 @@ class RoomController {
   }
 
   async deleteRoom(id) {
-    return await this.roomRepository.deleteRoom(id)
+    return await this.roomRepository.deleteRoom(id);
   }
+  async getRoomNotReservations(checkIn,checkOut ){
+    return await this.roomRepository.getRoomNotReservations(checkIn,checkOut );
+  } 
 }
 
 module.exports = RoomController

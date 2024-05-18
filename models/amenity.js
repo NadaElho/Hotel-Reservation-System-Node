@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const amenitySchema = mongoose.Schema({
   name_ar: {
@@ -9,10 +9,12 @@ const amenitySchema = mongoose.Schema({
     type: String,
     required: [true, "name in english is required"],
   },
-  icon:{
+  icon: {
     type: String,
     required: [true, 'icon is required']
   }
 });
+
 const Amenity = mongoose.model("Amenity", amenitySchema);
 module.exports = Amenity;
+
