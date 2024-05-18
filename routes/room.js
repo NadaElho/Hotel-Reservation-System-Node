@@ -1,16 +1,13 @@
 const express = require('express')
 const { uploadImage, deleteImages } = require('../middlewares/firebase')
 const { protect, restrictTo } = require('../middlewares/auth')
-const Room = require('../models/room')
-const Reservation = require('../models/reservation')
 const { uploadMultiple } = require('../middlewares/multer')
 const { validateNewROOm, validateUpdateRoom } = require('../validations/room')
-const BadRequestError = require('../utils/badRequestError')
+const BadRequestError = require('../handleErrors/badRequestError')
 
 const router = express.Router()
 //router
 const roomRouter = (roomController) => {
-  //-------------------------------------------Find All  Room--------------------------------------------------------------
   router.get(['/:hotelId/hotelRooms', '/'], async (req, res) => {
     try {
       let filterObj = {}
@@ -40,7 +37,7 @@ const roomRouter = (roomController) => {
       const endIndex = page * limit
       let query = {}
       let sortBy
-      let queruRomm = {}
+      let queryRoom = {}
 
       //search
       if (
@@ -49,30 +46,14 @@ const roomRouter = (roomController) => {
         req.query.checkIn &&
         req.query.checkOut
       ) {
-        const getRoomReservations = await Reservation.find({
-          $or: [
-            {
-              checkIn: { $lte: req.query.checkIn },
-              checkOut: { $gte: req.query.checkIn },
-            },
-            {
-              checkIn: { $lte: req.query.checkOut },
-              checkOut: { $gte: req.query.checkOut },
-            },
-            {
-              checkIn: { $gte: req.query.checkIn },
-              checkOut: { $lte: req.query.checkOut },
-            },
-            {
-              checkIn: { $lte: req.query.checkIn },
-              checkOut: { $gte: req.query.checkOut },
-            },
-          ],
+        const getRoomReservations = await roomController.getRoomNotReservations(
+          req.query.checkIn,
+          req.query.checkOut,
+        )
+        const roomIds = getRoomReservations.map((res) => {
+          return res.roomId
         })
-        const roomIds = getRoomReservations.map((RES) => {
-          return RES.roomId
-        })
-        queruRomm = {
+        queryRoom = {
           _id: { $nin: roomIds },
           roomTypeId: req.query.roomTypeId,
           hotelId: req.query.hotelId,
@@ -88,11 +69,13 @@ const roomRouter = (roomController) => {
       if (req.params.hotelId) {
         query = { ...filterObj }
       }
-      query = { ...queruRomm, ...query, ...parse, ...amenties }
+      query = { ...queryRoom, ...query, ...parse, ...amenties }
+
       //sort
       if (req.query.sort) {
         sortBy = req.query.sort.split(',').join(' ')
       }
+
       // find data
       let result = await roomController.getAllRooms(query, sortBy, skip, limit)
       const { data, documentCount } = result
@@ -118,21 +101,21 @@ const roomRouter = (roomController) => {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
-  //-------------------------------------------Find Romm BY Id --------------------------------------------------------------
+
   router.get('/:id', async (req, res) => {
     try {
       const { id } = req.params
       const room = await roomController.getRoomById({ _id: id })
       res.status(200).json({
         status: 'success',
-        message: ' Room  updated successfully',
+        message: 'Room  updated successfully',
         room: room,
       })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
-  //-------------------------------------------Create  Room--------------------------------------------------------------
+
   router.post(
     '/',
     protect,
@@ -156,7 +139,7 @@ const roomRouter = (roomController) => {
       }
     },
   )
-  //-------------------------------------------Edit  Room--------------------------------------------------------------
+
   router.patch(
     '/:id',
     protect,
@@ -171,17 +154,20 @@ const roomRouter = (roomController) => {
         if (error) {
           throw new BadRequestError(error.message)
         }
+
         if (req.body.images) {
           await deleteImages(room.images)
         }
+
         await roomController.editRoom({ _id: id }, { ...req.body })
 
         const findNewRoom = await roomController.getRoomById({
           _id: id,
         })
+
         res.status(200).json({
-          status: 'success',
-          message: ' Room updated successfully',
+          status:  'success',
+          message: 'Room updated successfully',
           room: findNewRoom,
         })
       } catch (error) {
@@ -189,7 +175,7 @@ const roomRouter = (roomController) => {
       }
     },
   )
-  //-------------------------------------------Delete  Room--------------------------------------------------------------
+
   router.delete('/:id', protect, restrictTo('admin'), async (req, res) => {
     try {
       const { id } = req.params
@@ -199,7 +185,7 @@ const roomRouter = (roomController) => {
 
       res.status(200).json({
         status: 'success',
-        message: ' Room deleted successfully',
+        message: 'Room deleted successfully',
       })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })

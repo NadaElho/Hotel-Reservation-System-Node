@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const BadRequestError = require('../handleErrors/badRequestError')
 
 class AuthController {
   constructor(authRepository) {
@@ -11,18 +12,22 @@ class AuthController {
   }
 
   async login(user) {
+    if (!user.password && !user.email) {
+      throw new BadRequestError('must write your email and your password')
+    }
+
     if (!user.password) {
-      throw new Error('must write your password')
+      throw new BadRequestError('must write your password')
     }
 
     if (!user.email) {
-      throw new Error('must write your email')
+      throw new BadRequestError('must write your email')
     }
 
     const loggedUser = await this.authRepository.login(user)
 
     if (!loggedUser) {
-      throw new Error('invalid email or password')
+      throw new BadRequestError('invalid email or password')
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -31,7 +36,7 @@ class AuthController {
     )
 
     if (!passwordMatch) {
-      throw new Error('invalid email or password')
+      throw new BadRequestError('invalid email or password')
     }
 
     const token = jwt.sign(
