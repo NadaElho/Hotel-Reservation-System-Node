@@ -20,7 +20,7 @@ const roomRouter = (roomController) => {
         'fields',
         'checkIn',
         'checkOut',
-        'amentiesIds',
+        'amenitiesIds',
         'hotelId',
         'roomTypeId',
       ]
@@ -61,15 +61,15 @@ const roomRouter = (roomController) => {
       }
 
       //filter
-      let amenties
-      if (req.query.amentiesIds) {
-        const fields = req.query.amentiesIds.split(',')
-        amenties = { amentiesIds: { $all: fields } }
+      let amenities
+      if (req.query.amenitiesIds) {
+        const fields = req.query.amenitiesIds.split(',')
+        amenities = { amenitiesIds: { $all: fields } }
       }
       if (req.params.hotelId) {
         query = { ...filterObj }
       }
-      query = { ...queryRoom, ...query, ...parse, ...amenties }
+      query = { ...queryRoom, ...query, ...parse, ...amenities }
 
       //sort
       if (req.query.sort) {
