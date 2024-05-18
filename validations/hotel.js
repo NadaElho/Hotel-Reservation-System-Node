@@ -5,6 +5,7 @@ const ValidateAddHotel = (hotel) => {
     name_en: joi.string().required(),
     address_ar: joi.string().required(),
     address_en: joi.string().required(),
+    images: joi.array().items(joi.string()).required(),
     description_ar: joi.string().required(),
     description_en: joi.string().required(),
     phoneNumber: joi.string().required().max(11)
@@ -18,6 +19,7 @@ const ValidateEditHotel = (hotel) => {
     name_en: joi.string(),
     address_ar: joi.string(),
     address_en: joi.string(),
+    images: joi.array().items(joi.string()),
     description_ar: joi.string(),
     description_en: joi.string(),
     phoneNumber: joi.string().max(11)

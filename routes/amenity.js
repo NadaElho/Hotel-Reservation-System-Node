@@ -40,7 +40,7 @@ const amenityRouter = (amenityController) => {
     uploadImage,
     async (req, res) => {
       try {
-        const { error } = ValidateAddAmenity(req.boby);
+        const { error } = ValidateAddAmenity(req.body);
         if (error) throw new badRequestError(error.message);
         await amenityController.addAmenity(req.body);
         res.status(201).json({ message: "the amenity added successfully" });
@@ -69,7 +69,7 @@ const amenityRouter = (amenityController) => {
     uploadImage,
     async (req, res) => {
       try {
-        const { error } = ValidateEditAmenity(req.boby);
+        const { error } = ValidateEditAmenity(req.body);
         if (error) throw new badRequestError(error.message);
         const amenity = await amenityController.getAmenityById(req.params.id);
         if (!amenity) throw new notFoundError("this amenity does not exist");

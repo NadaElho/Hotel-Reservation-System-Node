@@ -35,7 +35,7 @@ const hotelRouter = (hotelController, roomController) => {
     uploadImage,
     async (req, res) => {
       try {
-        const { error } = ValidateAddHotel(req.boby);
+        const { error } = ValidateAddHotel(req.body);
         if (error) throw new BadRequestError(error.message);
         await hotelController.addHotel(req.body);
         res.status(201).json({ message: "the hotel added successfully" });
@@ -71,7 +71,7 @@ const hotelRouter = (hotelController, roomController) => {
         if (req.body.images) {
           await deleteImages(hotel.images);
         }
-        const { error } = ValidateEditHotel(req.boby);
+        const { error } = ValidateEditHotel(req.body);
         if (error) throw new BadRequestError(error.message);
         await hotelController.editHotel(req.params.id, req.body);
         res.status(200).json({ message: "the hotel updated successfully" });
