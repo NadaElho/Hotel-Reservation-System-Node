@@ -2,24 +2,24 @@ class HotelController {
   constructor(hotelRepository) {
     this.hotelRepository = hotelRepository
   }
-  getAllHotels() {
-    return this.hotelRepository.getAllHotels()
+ async getAllHotels() {
+    return await this.hotelRepository.getAllHotels()
   }
 
-  getHotelById(id) {
-    return this.hotelRepository.getHotelById(id)
+ async getHotelById(id) {
+    return await this.hotelRepository.getHotelById(id)
   }
 
-  addHotel(newHotel) {
-    return this.hotelRepository.addHotel(newHotel)
+ async addHotel(newHotel) {
+    return await this.hotelRepository.addHotel(newHotel)
   }
 
-  editHotel(id, body) {
-    return this.hotelRepository.editHotel(id, body)
+ async editHotel(id, body) {
+    return await this.hotelRepository.editHotel(id, body)
   }
 
-  deleteHotel(id) {
-    return this.hotelRepository.deleteHotel(id)
+  async deleteHotel(id) {
+    return await this.hotelRepository.deleteHotel(id)
   }
 }
 module.exports = HotelController
