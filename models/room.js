@@ -17,10 +17,10 @@ const roomSchema = mongoose.Schema({
     type: String,
     required: [true, 'Room must have Description'],
   },
-  amentiesIds: [
+  amenitiesIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Amenty',
+      ref: 'Amenity',
     },
   ],
   roomTypeId: {
