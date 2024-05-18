@@ -7,7 +7,7 @@ const ValidateAddHotel = (hotel) => {
     address_en: joi.string().required(),
     description_ar: joi.string().required(),
     description_en: joi.string().required(),
-    phoneNumber: joi.string().max(11).required(),
+    phoneNumber: joi.string().required().max(11)
   });
   return schema.validate(hotel);
 };
@@ -20,7 +20,7 @@ const ValidateEditHotel = (hotel) => {
     address_en: joi.string(),
     description_ar: joi.string(),
     description_en: joi.string(),
-    phoneNumber: joi.string().max(11),
+    phoneNumber: joi.string().max(11)
   });
   return schema.validate(hotel);
 };

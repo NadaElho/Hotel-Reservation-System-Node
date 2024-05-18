@@ -36,7 +36,6 @@ const amenityRouter = (amenityController) => {
     "/",
     protect,
     restrictTo("admin"),
-
     uploadMultiple,
     uploadImage,
     async (req, res) => {
@@ -55,10 +54,7 @@ const amenityRouter = (amenityController) => {
     try {
       const amenity = await amenityController.getAmenityById(req.params.id);
       if (!amenity) throw new notFoundError("this amenity does not exist");
-
-      if (req.body.images) {
-        await deleteImages(amenity.images);
-      }
+      await deleteImages(amenity.images);
       await amenityController.deleteAmenity(req.params.id);
       res.status(200).json({ message: "The amenity deleted successfully" });
     } catch (error) {
