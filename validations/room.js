@@ -9,7 +9,7 @@ const validateNewROOm = (room) => {
     description_en: joi.string().required(),
     description_ar: joi.string().required(),
     price: joi.number().required(),
-    currency: joi.string().required(),
+    currency: joi.string(),
     images:joi.array().items(joi.string()).min(1).required(),
   })
   return schema.validate(room)
@@ -20,7 +20,7 @@ const validateUpdateRoom = (room) => {
     hotelId: joi.string(),
     roomTypeId: joi.string(),
     amenitiesIds: joi.array(),
-    roomNumber: joi.number(),
+    roomNumber: joi.number().unique(),
     description_en: joi.string(),
     description_ar: joi.string(),
     price: joi.number(),
