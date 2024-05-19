@@ -7,7 +7,7 @@ const ValidateAddHotel = (hotel) => {
     address_en: joi.string().required(),
     description_ar: joi.string().required(),
     description_en: joi.string().required(),
-    phoneNumber: joi.string().max(11).required(),
+    phoneNumber: joi.array().items(joi.string()).max(11).required(),
   })
   return schema.validate(hotel)
 }

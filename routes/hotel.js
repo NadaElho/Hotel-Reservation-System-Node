@@ -4,9 +4,9 @@ const { protect, restrictTo } = require('../middlewares/auth')
 const { uploadMultiple } = require('../middlewares/multer')
 const { uploadImage } = require('../middlewares/firebase')
 const { deleteImages } = require('../middlewares/firebase')
+const { ValidateAddHotel, ValidateEditHotel } = require('../validations/hotel')
 
 const notFoundError = require('../handleErrors/notFoundError')
-const { ValidateAddHotel, ValidateEditHotel } = require('../validations/hotel')
 const badRequestError = require('../handleErrors/badRequestError')
 
 const hotelRouter = (hotelController, roomController) => {

@@ -38,25 +38,30 @@ class roomRepository {
   async deleteRoom(id) {
     return await Room.deleteOne(id)
   }
-  async getRoomNotReservations(checkIn,checkOut ){
+  async getReservationsBetweenDates(checkIn, checkOut) {
     return await Reservation.find({
-      $or: [
+      $and: [
         {
-          checkIn: { $lte: checkIn },
-          checkOut: { $gte: checkIn },
+          $or: [
+            {
+              checkIn: { $lte: checkIn },
+              checkOut: { $gte: checkIn },
+            },
+            {
+              checkIn: { $lte: checkOut },
+              checkOut: { $gte: checkOut },
+            },
+            {
+              checkIn: { $gte: checkIn },
+              checkOut: { $lte: checkOut },
+            },
+            {
+              checkIn: { $lte: checkIn },
+              checkOut: { $gte: checkOut },
+            },
+          ],
         },
-        {
-          checkIn: { $lte: checkOut },
-          checkOut: { $gte: checkOut },
-        },
-        {
-          checkIn: { $gte: checkIn },
-          checkOut: { $lte: checkOut },
-        },
-        {
-          checkIn: { $lte: checkIn },
-          checkOut: { $gte: checkOut },
-        },
+        { status: { $ne: '663a8158e3427acea0ef0b54' } },
       ],
     })
   }

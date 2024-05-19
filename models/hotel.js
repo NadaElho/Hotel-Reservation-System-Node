@@ -29,10 +29,10 @@ const hotelSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  phoneNumber: {
+  phoneNumber: [{
     type: [String],
     required: true,
-  },
+  }],
 })
 
 const hotel = mongoose.model('Hotel', hotelSchema)

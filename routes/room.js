@@ -46,7 +46,7 @@ const roomRouter = (roomController) => {
         req.query.checkIn &&
         req.query.checkOut
       ) {
-        const getRoomReservations = await roomController.getRoomNotReservations(
+        const getRoomReservations = await roomController.getReservationsBetweenDates(
           req.query.checkIn,
           req.query.checkOut,
         )
@@ -166,7 +166,7 @@ const roomRouter = (roomController) => {
         })
 
         res.status(200).json({
-          status:  'success',
+          status: 'success',
           message: 'Room updated successfully',
           room: findNewRoom,
         })

@@ -22,8 +22,9 @@ class RoomController {
   async deleteRoom(id) {
     return await this.roomRepository.deleteRoom(id);
   }
-  async getRoomNotReservations(checkIn,checkOut ){
-    return await this.roomRepository.getRoomNotReservations(checkIn,checkOut );
+  
+  async getReservationsBetweenDates(checkIn,checkOut ){
+    return await this.roomRepository.getReservationsBetweenDates(checkIn,checkOut );
   } 
 }
 

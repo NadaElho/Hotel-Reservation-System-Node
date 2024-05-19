@@ -8,6 +8,7 @@ class HotelRepository {
   async getHotelById(id) {
     return await Hotel.findOne({ _id: id })
   }
+  
   async addHotel(newHotel) {
     return await Hotel.create(newHotel)
   }

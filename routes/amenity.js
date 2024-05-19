@@ -25,7 +25,6 @@ const amenityRouter = (amenityController) => {
     try {
       const amenity = await amenityController.getAmenityById(req.params.id)
       if (!amenity) throw new notFoundError('this amenity does not exist')
-
       res.status(200).json({ data: amenity })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })
@@ -36,12 +35,11 @@ const amenityRouter = (amenityController) => {
     '/',
     protect,
     restrictTo('admin'),
-
     uploadMultiple,
     uploadImage,
     async (req, res) => {
       try {
-        const { error } = ValidateAddAmenity(req.boby)
+        const { error } = ValidateAddAmenity(req.body)
         if (error) throw new badRequestError(error.message)
         await amenityController.addAmenity(req.body)
         res.status(201).json({ message: 'the amenity added successfully' })
