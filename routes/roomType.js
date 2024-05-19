@@ -8,7 +8,6 @@ const BadRequestError = require('../handleErrors/badRequestError')
 const router = express.Router()
 
 const roomTypeRouter = (roomTypeController) => {
-  //--------------------------------------------Find All  Room--------------------------------------------------------------
   router.get('/', async (req, res) => {
     try {
       const roomsType = await roomTypeController.getAllRoomsType()
@@ -20,7 +19,6 @@ const roomTypeRouter = (roomTypeController) => {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
-  //-------------------------------------------Create  Room--------------------------------------------------------------
   router.post('/', protect, restrictTo('admin'), async (req, res) => {
     try {
       const { error } = validateNewRoomType(req.body)
@@ -39,7 +37,6 @@ const roomTypeRouter = (roomTypeController) => {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
-  //-------------------------------------------Edit  Room--------------------------------------------------------------
   router.patch('/:id', protect, restrictTo('admin'), async (req, res) => {
     try {
       const { id } = req.params
@@ -65,7 +62,6 @@ const roomTypeRouter = (roomTypeController) => {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
   })
-  //-------------------------------------------Delete  Room--------------------------------------------------------------
   router.delete('/:id', protect, restrictTo('admin'), async (req, res) => {
     try {
       const { id } = req.params
