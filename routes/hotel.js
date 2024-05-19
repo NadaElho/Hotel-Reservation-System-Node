@@ -3,9 +3,9 @@ const router = express.Router();
 const { protect, restrictTo } = require("../middlewares/auth");
 const { uploadMultiple } = require("../middlewares/multer");
 const { uploadImage, deleteImages } = require("../middlewares/firebase");
-const notFoundError = require("../utils/notFoundError");
+const notFoundError = require("../handleErrors/notFoundError");
 const { ValidateAddHotel, ValidateEditHotel } = require("../validations/hotel");
-const BadRequestError = require("../utils/badRequestError");
+const BadRequestError = require("../handleErrors/badRequestError");
 
 const hotelRouter = (hotelController, roomController) => {
   router.get('/', async (req, res) => {

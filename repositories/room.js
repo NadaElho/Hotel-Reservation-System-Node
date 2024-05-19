@@ -23,7 +23,7 @@ class roomRepository {
       .populate('hotelId')
       .populate('roomTypeId')
 
-    if (!room) {
+    if (!room && id._id) {
       throw new NotFoundError('The room with this ID was not found')
     }
     return room
