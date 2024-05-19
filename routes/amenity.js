@@ -25,7 +25,6 @@ const amenityRouter = (amenityController) => {
     try {
       const amenity = await amenityController.getAmenityById(req.params.id)
       if (!amenity) throw new notFoundError('this amenity does not exist')
-
       res.status(200).json({ data: amenity })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })

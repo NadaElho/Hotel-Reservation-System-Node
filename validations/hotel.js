@@ -8,10 +8,10 @@ const ValidateAddHotel = (hotel) => {
     images: joi.array().items(joi.string()).min(1),
     description_ar: joi.string().required(),
     description_en: joi.string().required(),
-    phoneNumber: joi.string().min(1).max(11)
-  });
-  return schema.validate(hotel);
-};
+    phoneNumber: joi.array().items(joi.string().max(11)).min(1),
+  })
+  return schema.validate(hotel)
+}
 
 const ValidateEditHotel = (hotel) => {
   const schema = joi.object({
@@ -22,7 +22,7 @@ const ValidateEditHotel = (hotel) => {
     images: joi.array().items(joi.string()).min(1),
     description_ar: joi.string(),
     description_en: joi.string(),
-    phoneNumber: joi.string().min(1).max(11)
+    phoneNumber: joi.array().items(joi.string().max(11)).min(1),
   });
   return schema.validate(hotel);
 };
