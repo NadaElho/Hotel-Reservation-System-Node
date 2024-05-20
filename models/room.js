@@ -8,7 +8,7 @@ const roomSchema = mongoose.Schema({
   roomNumber: {
     type: Number,
     required: [true, 'Room must have Room Number'],
-    unique: true
+    unique: [true, 'Room number must be unique']
   },
   description_en: {
     type: String,

@@ -116,6 +116,15 @@ const roomRouter = (roomController) => {
     }
   })
 
+  router.get('/:id/roomReserved', async (req, res)=>{
+    try{
+      let roomNotAvailable = await roomController.getNotAvailableDays(req.params.id)
+      res.status(200).json({data: roomNotAvailable})
+    }catch(error){
+      console.log(error);
+    }
+  })
+
   router.post(
     '/',
     protect,
