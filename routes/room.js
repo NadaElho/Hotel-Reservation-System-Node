@@ -20,7 +20,7 @@ const roomRouter = (roomController) => {
         'fields',
         'checkIn',
         'checkOut',
-        'amentiesIds',
+        'amenitiesIds',
         'hotelId',
         'roomTypeId',
       ]
@@ -61,15 +61,15 @@ const roomRouter = (roomController) => {
       }
 
       //filter
-      let amenties
-      if (req.query.amentiesIds) {
-        const fields = req.query.amentiesIds.split(',')
-        amenties = { amentiesIds: { $all: fields } }
+      let amenities
+      if (req.query.amenitiesIds) {
+        const fields = req.query.amenitiesIds.split(',')
+        amenities = { amenitiesIds: { $all: fields } }
       }
       if (req.params.hotelId) {
         query = { ...filterObj }
       }
-      query = { ...queryRoom, ...query, ...parse, ...amenties }
+      query = { ...queryRoom, ...query, ...parse, ...amenities }
 
       //sort
       if (req.query.sort) {
@@ -136,13 +136,18 @@ const roomRouter = (roomController) => {
         const { error } = validateNewROOm(req.body)
         if (error) {
           throw new BadRequestError(error.message)
+        }       
+        const roomByNumber = await roomController.getRoomById({ roomNumber: req.body.roomNumber })
+        if(roomByNumber){
+          throw new BadRequestError("Room number is already exists")
+        }else{
+          const room = await roomController.addRoom({ ...req.body })
+          res.status(201).json({
+            status: 'success',
+            message: 'Rome added successfully',
+            room: room,
+          })
         }
-        const room = await roomController.addRoom({ ...req.body })
-        res.status(201).json({
-          status: 'success',
-          message: 'Rome added successfully',
-          room: room,
-        })
       } catch (error) {
         res.status(error.statusCode || 500).json({ message: error.message })
       }

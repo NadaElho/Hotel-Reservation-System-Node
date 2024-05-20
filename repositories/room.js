@@ -5,12 +5,12 @@ class roomRepository {
   async getAllRooms(query, sortBy, skip, limit) {
     const documentCount = await Room.countDocuments(query)
     const data = await Room.find(query)
-      .populate('roomTypeId')
+      .populate('roomTypeId').populate('hotelId').populate('amenitiesIds')
       .sort(sortBy)
       .skip(skip)
       .limit(limit)
 
-    if (!data) {
+    if (!data || data.length === 0) {
       throw new NotFoundError('No rooms found')
     }
 
@@ -19,11 +19,11 @@ class roomRepository {
 
   async getRoomById(id) {
     const room = await Room.findOne(id)
-      .populate('amentiesIds')
+      .populate('amenitiesIds')
       .populate('hotelId')
       .populate('roomTypeId')
 
-    if (!room) {
+    if (!room && id._id) {
       throw new NotFoundError('The room with this ID was not found')
     }
     return room

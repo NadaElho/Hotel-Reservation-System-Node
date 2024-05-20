@@ -12,16 +12,16 @@ const roomSchema = mongoose.Schema({
   },
   description_en: {
     type: String,
-    required: [true, 'Room must have Description'],
+    required: [true, 'Room must have English Description'],
   },
   description_ar: {
     type: String,
-    required: [true, 'Room must have Description'],
+    required: [true, 'Room must have Arabic Description'],
   },
-  amentiesIds: [
+  amenitiesIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Amenty',
+      ref: 'Amenity',
     },
   ],
   roomTypeId: {
@@ -35,7 +35,6 @@ const roomSchema = mongoose.Schema({
   },
   currency: {
     type: String,
-    required: [true, 'Room must have currency'],
   },
   images: [
     {
