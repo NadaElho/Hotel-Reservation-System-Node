@@ -1,22 +1,6 @@
-const Reservation = require('../models/reservation')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-
-var cron = require('node-cron')
 const BadRequestError = require('../handleErrors/badRequestError')
-
-cron.schedule('0 0 * * *', async () => {
-  //MIN H D MON DWeek
-  const allResevations = await Reservation.find()
-  let todayDate = new Date()
-  allResevations.forEach(async (reservation) => {
-    if (todayDate >= reservation.checkOut) {
-      await Reservation.updateOne(
-        { _id: reservation.id },
-        { $set: { status: '663a81a4e3427acea0ef0b58' } },
-      )
-    }
-  })
-})
+const Room = require('../models/room')
 
 class ReservationController {
   constructor(reservationRepository) {
@@ -46,7 +30,16 @@ class ReservationController {
     ) {
       throw new BadRequestError('This room already reserved')
     }
-    return await this.reservationRepository.addNewReservation(body)
+    const differenceBetweenDays =
+      new Date(body.checkOut).getTime() - new Date(body.checkIn).getTime()
+    const calcNoOfNights =
+      Math.round(differenceBetweenDays) / (1000 * 3600 * 24)
+    const room = await Room.findOne({ _id: body.roomId })
+    const calcTotalPrice = calcNoOfNights * room.price
+    return await this.reservationRepository.addNewReservation({
+      ...body,
+      totalPrice: calcTotalPrice,
+    })
   }
 
   async editReservation(id, body) {
@@ -61,7 +54,16 @@ class ReservationController {
     ) {
       throw new BadRequestError('This room already reserved')
     }
-    return await this.reservationRepository.editReservation(id, body)
+    const differenceBetweenDays =
+      new Date(body.checkOut).getTime() - new Date(body.checkIn).getTime()
+    const calcNoOfNights =
+      Math.round(differenceBetweenDays) / (1000 * 3600 * 24)
+    const room = await Room.findOne({ _id: body.roomId })
+    const calcTotalPrice = calcNoOfNights * room.price
+    return await this.reservationRepository.editReservation(id, {
+      ...body,
+      calcTotalPrice,
+    })
   }
 
   async cancelReservation(id) {

@@ -3,8 +3,8 @@ class RoleController {
     this.roleRepository = roleRepository
   }
 
-  async getRole() {
-    return await this.roleRepository.getRole()
+  async getRoles() {
+    return await this.roleRepository.getRoles()
   }
 
   async addRole(body) {

@@ -5,7 +5,7 @@ const router = express.Router()
 const roleRouter = (roleController) => {
   router.get('/', protect, restrictTo('admin'), async (req, res) => {
     try {
-      const getAllRoles = await roleController.getRole()
+      const getAllRoles = await roleController.getRoles()
       res.status(200).json({ data: getAllRoles })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })
