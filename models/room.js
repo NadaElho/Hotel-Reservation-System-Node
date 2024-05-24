@@ -5,6 +5,14 @@ const roomSchema = mongoose.Schema({
     ref: 'Hotel',
     required: [true, 'Rome must have Hotel Id'],
   },
+  title_ar:{
+    type: String,
+    required: [true, 'Room must have Arabic title'],
+  },
+  title_en:{
+    type: String,
+    required: [true, 'Room must have English title'],
+  },
   roomNumber: {
     type: Number,
     required: [true, 'Room must have Room Number'],
