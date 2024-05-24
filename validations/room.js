@@ -3,6 +3,8 @@ const joi = require('joi')
 const validateNewROOm = (room) => {
   const schema = joi.object({
     hotelId: joi.string().required(),
+    title_ar:joi.string().required(),
+    title_en:joi.string().required(),
     roomTypeId: joi.string().required(),
     amenitiesIds: joi.array().items(joi.string()),
     roomNumber: joi.number().required(),
@@ -18,6 +20,8 @@ const validateNewROOm = (room) => {
 const validateUpdateRoom = (room) => {
   const schema = joi.object({
     hotelId: joi.string(),
+    title_ar:joi.string(),
+    title_en:joi.string(),
     roomTypeId: joi.string(),
     amenitiesIds: joi.array(),
     roomNumber: joi.number().unique(),
