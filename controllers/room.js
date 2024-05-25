@@ -1,3 +1,5 @@
+const Reservation = require("../models/reservation")
+
 class RoomController {
   constructor(roomRepository) {
     this.roomRepository = roomRepository
@@ -20,12 +22,32 @@ class RoomController {
   }
 
   async deleteRoom(id) {
-    return await this.roomRepository.deleteRoom(id);
+    return await this.roomRepository.deleteRoom(id)
   }
-  
-  async getReservationsBetweenDates(checkIn,checkOut ){
-    return await this.roomRepository.getReservationsBetweenDates(checkIn,checkOut );
-  } 
+
+  async getReservationsBetweenDates(checkIn, checkOut) {
+    return await this.roomRepository.getReservationsBetweenDates(
+      checkIn,
+      checkOut,
+    )
+  }
+
+  async getNotAvailableDays(roomId) {
+    const roomReservations = await Reservation.find({ roomId })
+    let notAvailableDays = []
+
+    roomReservations.forEach((reservation) => {
+      let currentDate = new Date(reservation.checkIn)
+      const checkoutDate = new Date(reservation.checkOut)
+
+      while (currentDate < checkoutDate) {
+        notAvailableDays.push(currentDate)
+        currentDate.setDate(currentDate.getDate() + 1)
+      }
+    })
+
+    return notAvailableDays
+  }
 }
 
 module.exports = RoomController

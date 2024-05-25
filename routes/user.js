@@ -5,6 +5,7 @@ const { uploadImage, deleteImages } = require('../middlewares/firebase')
 const { validateNewUser, validateUpdateUser } = require('../validations/user')
 const NotFoundError = require('../handleErrors/notFoundError')
 const BadRequestError = require('../handleErrors/badRequestError')
+const ForbiddenError = require('../handleErrors/forbiddenError')
 
 const router = express.Router()
 
@@ -38,8 +39,11 @@ const userRouter = (userController, authController) => {
         throw new BadRequestError(error.message)
       }
       const user = req.body
+      if(user.role == "6642764acd637f7c34eb4b97"){
+        throw new ForbiddenError("You aren't allowed to be admin")
+      }
       await authController.signup(user)
-      res.json({ message: 'signup is successfully , you must login' })
+      res.json({ message: 'you signed up successfully, you must login' })
     } catch (error) {
       res.status(500).json({ message: 'Server Error: ' + error.message })
     }
@@ -49,7 +53,6 @@ const userRouter = (userController, authController) => {
     try {
       const user = req.body
       const token = await authController.login(user)
-
       res.json({ message: 'loggin successfully', token })
     } catch (error) {
       res.status(500).json({ message: 'Server Error: ' + error.message })

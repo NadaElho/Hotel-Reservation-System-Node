@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const { promisify } = require('util')
 const NotFoundError = require('../handleErrors/notFoundError')
-const AuthError = require('../handleErrors/AuthError')
-const ForbiddenError = require('../handleErrors/ForbiddenError')
+const AuthError = require('../handleErrors/authError')
+const ForbiddenError = require('../handleErrors/forbiddenError')
 
 exports.protect = async (req, res, next) => {
   try {

@@ -92,7 +92,7 @@ const reservationRouter = (reservationController) => {
 
   router.post('/:id/payment', protect, async (req, res) => {
     try {
-      await reservationController.payWithStripe(req, req.params.id)
+      let response = await reservationController.payWithStripe(req, req.params.id)
       res.status(200).json({ status: 'success', session: response })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })
