@@ -7,7 +7,7 @@ const notFoundError = require("../handleErrors/notFoundError");
 const { ValidateAddHotel, ValidateEditHotel } = require("../validations/hotel");
 const BadRequestError = require("../handleErrors/badRequestError");
 
-const hotelRouter = (hotelController, roomController) => {
+const hotelRouter = (hotelController) => {
   router.get('/', async (req, res) => {
     try {
       const hotels = await hotelController.getAllHotels()

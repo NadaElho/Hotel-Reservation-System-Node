@@ -4,7 +4,7 @@ class RoleController {
   }
 
   async getRole() {
-    return await this.roleRepository.getRole()
+    return await this.roleRepository.getRoles()
   }
 
   async addRole(body) {

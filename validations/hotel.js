@@ -5,7 +5,7 @@ const ValidateAddHotel = (hotel) => {
     name_en: joi.string().required(),
     address_ar: joi.string().required(),
     address_en: joi.string().required(),
-    images: joi.array().items(joi.string()).min(1),
+    images:joi.array().items(joi.string()).min(1).required(),
     description_ar: joi.string().required(),
     description_en: joi.string().required(),
     phoneNumber: joi.array().items(joi.string().max(11)).min(1),
@@ -19,10 +19,10 @@ const ValidateEditHotel = (hotel) => {
     name_en: joi.string(),
     address_ar: joi.string(),
     address_en: joi.string(),
-    images: joi.array().items(joi.string()).min(1),
+    images: joi.array().items(joi.string()),
     description_ar: joi.string(),
     description_en: joi.string(),
-    phoneNumber: joi.array().items(joi.string().max(11)).min(1),
+    phoneNumber: joi.array().items(joi.string().max(11)),
   });
   return schema.validate(hotel);
 };
