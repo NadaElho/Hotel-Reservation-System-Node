@@ -72,7 +72,7 @@ class ReservationController {
 
   async payWithStripe(req, id) {
     const reservation = await this.reservationRepository.getReservation(id)
-
+console.log(reservation.roomId.roomNumber);
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
