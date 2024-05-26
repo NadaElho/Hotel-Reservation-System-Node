@@ -20,7 +20,9 @@ const roomRouter = (roomController) => {
         'fields',
         'checkIn',
         'checkOut',
-        'amenitiesIds'
+        'amenitiesIds',
+        'roomTypeId',
+        'hotelId'
       ]
       excludedFields.forEach((el) => delete queryObj[el])
       let queryStr = JSON.stringify(queryObj)
@@ -49,8 +51,20 @@ const roomRouter = (roomController) => {
         const roomIds = getRoomReservations.map((res) => {
           return res.roomId
         })
+        let roomTypeId;
+        let hotelId;
+        if(req.query.roomTypeId){
+          roomTypeId = req.query.roomTypeId;
+
+        }
+        if(req.query.hotelId){
+          hotelId = req.query.hotelId;
+
+        }
         queryRoom = {
-          _id: { $nin: roomIds }
+          _id: { $nin: roomIds },
+          roomTypeId: roomTypeId,
+          hotelId: hotelId,
         }
       }
 
