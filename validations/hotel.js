@@ -19,7 +19,7 @@ const ValidateEditHotel = (hotel) => {
     name_en: joi.string(),
     address_ar: joi.string(),
     address_en: joi.string(),
-    images: joi.array().items(joi.string()).min(1),
+    images: joi.array().items(joi.string()),
     description_ar: joi.string(),
     description_en: joi.string(),
     phoneNumber: joi.array().items(joi.string().max(11)).min(1),
