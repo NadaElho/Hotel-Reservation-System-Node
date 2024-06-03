@@ -2,16 +2,18 @@ const Reservation = require('../models/reservation')
 const NotFoundError = require('../handleErrors/notFoundError')
 
 class ReservationRepository {
-  async getAllReservations() {
-    const reservations = await Reservation.find()
+  async getAllReservations(skip,limit) {
+    const documentCount = await Reservation.countDocuments();
+    const data = await Reservation.find()
       .populate('roomId')
       .populate('status')
-      .populate('userId')
+      .populate('userId').skip(skip).limit(limit);
 
-    if (!reservations.length) {
+    if (!data.length) {
       throw new NotFoundError('No reservations found')
     }
-    return reservations
+    return { data, documentCount };
+    // return reservations
   }
 
   async getUserReservations(userId) {
@@ -50,8 +52,22 @@ class ReservationRepository {
     return roomReservations
   }
 
-  async addNewReservation(body) {
-    await Reservation.create(body)
+  async addNewReservation({
+    userId,
+    roomId,
+    status,
+    checkIn,
+    checkOut,
+    totalPrice,
+  }) {
+    await Reservation.create({
+      userId,
+      roomId,
+      status,
+      checkIn,
+      checkOut,
+      totalPrice,
+    })
   }
 
   async editReservation(id, { checkIn, checkOut }) {

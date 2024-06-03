@@ -9,7 +9,7 @@ class roomRepository {
       .sort(sortBy)
       .skip(skip)
       .limit(limit)
-
+//TODO:
     if (!data || data.length === 0) {
       throw new NotFoundError('No rooms found')
     }

@@ -43,6 +43,7 @@ const roomSchema = mongoose.Schema({
   },
   currency: {
     type: String,
+    default:'$',
   },
   images: [
     {

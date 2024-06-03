@@ -24,7 +24,7 @@ const validateUpdateRoom = (room) => {
     title_en:joi.string(),
     roomTypeId: joi.string(),
     amenitiesIds: joi.array(),
-    roomNumber: joi.number().unique(),
+    roomNumber: joi.number(),
     description_en: joi.string(),
     description_ar: joi.string(),
     price: joi.number(),

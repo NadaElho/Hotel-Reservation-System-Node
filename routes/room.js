@@ -21,8 +21,8 @@ const roomRouter = (roomController) => {
         'checkIn',
         'checkOut',
         'amenitiesIds',
-        'hotelId',
         'roomTypeId',
+        'hotelId'
       ]
       excludedFields.forEach((el) => delete queryObj[el])
       let queryStr = JSON.stringify(queryObj)
@@ -41,8 +41,6 @@ const roomRouter = (roomController) => {
 
       //search
       if (
-        req.query.roomTypeId &&
-        req.query.hotelId &&
         req.query.checkIn &&
         req.query.checkOut
       ) {
@@ -53,10 +51,20 @@ const roomRouter = (roomController) => {
         const roomIds = getRoomReservations.map((res) => {
           return res.roomId
         })
+        let roomTypeId;
+        let hotelId;
+        if(req.query.roomTypeId){
+          roomTypeId = req.query.roomTypeId;
+
+        }
+        if(req.query.hotelId){
+          hotelId = req.query.hotelId;
+
+        }
         queryRoom = {
           _id: { $nin: roomIds },
-          roomTypeId: req.query.roomTypeId,
-          hotelId: req.query.hotelId,
+          roomTypeId: roomTypeId,
+          hotelId: hotelId,
         }
       }
 

@@ -35,6 +35,10 @@ class AuthController {
       loggedUser.password,
     )
 
+    const userByEmail = await this.authRepository.getUserByEmail(user.email);
+
+    const { role, _id } = userByEmail
+
     if (!passwordMatch) {
       throw new BadRequestError('invalid email or password')
     }
@@ -43,7 +47,7 @@ class AuthController {
       { id: loggedUser._id, email: loggedUser.email },
       process.env.JWT_SECRET_KEY,
     )
-    return token
+    return {token, role, id:_id}
   }
 }
 

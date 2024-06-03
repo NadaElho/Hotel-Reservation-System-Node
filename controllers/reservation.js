@@ -1,14 +1,28 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const BadRequestError = require('../handleErrors/badRequestError')
 const Room = require('../models/room')
+var cron = require('node-cron')
 
+cron.schedule('0 0 * * *', async () => {
+  //MIN H D MON DWeek
+  const allResevations = await Reservation.find()
+  let todayDate = new Date()
+  allResevations.forEach(async (reservation) => {
+    if (todayDate >= reservation.checkOut) {
+      await Reservation.updateOne(
+        { _id: reservation.id },
+        { $set: { status: '663a81a4e3427acea0ef0b58' } },
+      )
+    }
+  })
+})
 class ReservationController {
   constructor(reservationRepository) {
     this.reservationRepository = reservationRepository
   }
 
-  async getAllReservations() {
-    return await this.reservationRepository.getAllReservations()
+  async getAllReservations(skip,limit) {
+    return await this.reservationRepository.getAllReservations(skip,limit)
   }
 
   async getUserReservations(userId) {
@@ -72,12 +86,11 @@ class ReservationController {
 
   async payWithStripe(req, id) {
     const reservation = await this.reservationRepository.getReservation(id)
-
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
           price_data: {
-            currency: 'egp',
+            currency: 'usd',
             unit_amount: reservation.totalPrice * 100,
             product_data: {
               name: `Room Number: ${reservation.roomId.roomNumber}`,
@@ -88,12 +101,8 @@ class ReservationController {
         },
       ],
       mode: 'payment',
-      success_url: `${req.protocol}://${req.get(
-        'host',
-      )}/reservations?success=true`,
-      cancel_url: `${req.protocol}://${req.get(
-        'host',
-      )}/reservations?canceled=true`,
+      success_url: `http://localhost:5173/payment-result?success=true&total=${reservation.totalPrice}`,
+      cancel_url: `http://localhost:5173/payment-result?canceled=true`,
       customer_email: reservation.userId.email,
     })
     return session

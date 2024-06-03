@@ -1,8 +1,11 @@
 const Amenity = require('../models/amenity')
 
 class AmenityRepository {
-  async getAllAmenities() {
-    return await Amenity.find()
+  async getAllAmenities(skip,limit) {
+    const documentCount = await Amenity.countDocuments();
+    const data= await Amenity.find().skip(skip).limit(limit);
+
+    return { data, documentCount }
   }
 
   async getAmenityById(id) {
