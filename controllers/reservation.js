@@ -7,8 +7,8 @@ class ReservationController {
     this.reservationRepository = reservationRepository
   }
 
-  async getAllReservations() {
-    return await this.reservationRepository.getAllReservations()
+  async getAllReservations(skip,limit) {
+    return await this.reservationRepository.getAllReservations(skip,limit)
   }
 
   async getUserReservations(userId) {

@@ -2,8 +2,8 @@ class AmenityController {
     constructor(amenityRepository) {
       this.amenityRepository = amenityRepository;
     }
-   async getAllAmenities() {
-      return await this.amenityRepository.getAllAmenities();
+   async getAllAmenities(skip,limit) {
+      return await this.amenityRepository.getAllAmenities(skip,limit);
     }
     
     async getAmenityById(id){
