@@ -17,6 +17,10 @@ class AuthRepository {
   async login(user) {
     return await User.findOne({ email: user.email })
   }
+  
+  async getUserByEmail(email){
+    return await User.findOne({email})
+  }
 }
 
 module.exports = AuthRepository
