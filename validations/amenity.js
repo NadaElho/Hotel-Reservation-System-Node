@@ -4,7 +4,8 @@ const ValidateAddAmenity = (amenity) => {
     name_ar: joi.string().required(),
     name_en: joi.string().required(),
     description_en:joi.string().required(),
-    description_ar:joi.string().required()
+    description_ar:joi.string().required(),
+    
   })
   return schema.validate(amenity)
 }
