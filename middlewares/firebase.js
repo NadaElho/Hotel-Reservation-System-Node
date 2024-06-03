@@ -42,7 +42,7 @@ const uploadImage = async (req, res, next) => {
     console.log('Error happened', err.message)
     res.status(500).json({
       status: 'failed',
-      message: err.message,
+      message: 'updat'+err.message ,
     })
   }
 }
@@ -60,7 +60,7 @@ const deleteImages = async (images) => {
       await deleteObject(storageRef)
     })
   } catch (err) {
-    console.log('error in deleted Image from firebase', err.message)
+    console.log(' Del error in deleted Image from firebase', err.message)
   }
 }
 module.exports = {
