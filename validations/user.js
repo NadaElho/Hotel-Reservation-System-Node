@@ -14,6 +14,7 @@ const validateNewUser = (user) => {
       .required(),
     role: joi.string().required(),
     password: joi.string().required(),
+    images: joi.array().items(joi.string()),
   })
   return schema.validate(user)
 }

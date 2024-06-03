@@ -3,8 +3,8 @@ class UserController {
     this.userRepository = userRepository
   }
 
-  async getAllUsers() {
-    return await this.userRepository.getAllUsers()
+  async getAllUsers( skip, limit) {
+    return await this.userRepository.getAllUsers(skip, limit)
   }
 
   async getUserById(id) {
