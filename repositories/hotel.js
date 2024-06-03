@@ -1,8 +1,10 @@
 const Hotel = require('../models/hotel')
 
 class HotelRepository {
-  async getAllHotels() {
-    return await Hotel.find()
+  async getAllHotels(skip,limit) {
+    const documentCount = await Hotel.countDocuments();
+    const data =await Hotel.find().skip(skip).limit(limit);
+    return { data, documentCount };
   }
 
   async getHotelById(id) {

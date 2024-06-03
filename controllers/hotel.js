@@ -2,8 +2,8 @@ class HotelController {
   constructor(hotelRepository) {
     this.hotelRepository = hotelRepository
   }
- async getAllHotels() {
-    return await this.hotelRepository.getAllHotels()
+ async getAllHotels(skip,limit) {
+    return await this.hotelRepository.getAllHotels(skip,limit)
   }
 
  async getHotelById(id) {
