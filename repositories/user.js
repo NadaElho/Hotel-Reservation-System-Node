@@ -16,6 +16,7 @@ class UserRepository {
   async deleteUser(id) {
     return await User.deleteOne({ _id: id })
   }
+
 }
 
 module.exports = UserRepository
