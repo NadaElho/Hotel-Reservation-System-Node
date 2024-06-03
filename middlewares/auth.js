@@ -12,7 +12,7 @@ exports.protect = async (req, res, next) => {
     if (auth && auth.startsWith('Bearer ')) {
       token = auth.split(' ')[1]
 
-      const decoded = await promisify(jwt.verify)(
+      const decoded = await (jwt.verify)(
         token,
         process.env.JWT_SECRET_KEY,
       )

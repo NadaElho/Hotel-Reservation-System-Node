@@ -41,11 +41,10 @@ class RoomController {
       const checkoutDate = new Date(reservation.checkOut)
 
       while (currentDate < checkoutDate) {
-        notAvailableDays.push(currentDate)
+        notAvailableDays.push(new Date(currentDate))
         currentDate.setDate(currentDate.getDate() + 1)
       }
     })
-
     return notAvailableDays
   }
 }
