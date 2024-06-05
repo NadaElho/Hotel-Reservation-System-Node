@@ -38,7 +38,8 @@ const roomRouter = (roomController) => {
       let query = {}
       let sortBy
       let queryRoom = {}
-
+      let roomTypeId;
+      let hotelId;
       //search
       if (
         req.query.checkIn &&
@@ -51,20 +52,18 @@ const roomRouter = (roomController) => {
         const roomIds = getRoomReservations.map((res) => {
           return res.roomId
         })
-        let roomTypeId;
-        let hotelId;
+      
         if(req.query.roomTypeId){
           roomTypeId = req.query.roomTypeId;
-
         }
+
         if(req.query.hotelId){
           hotelId = req.query.hotelId;
-
         }
+
         queryRoom = {
           _id: { $nin: roomIds },
-          roomTypeId: roomTypeId,
-          hotelId: hotelId,
+        
         }
       }
 
@@ -77,7 +76,16 @@ const roomRouter = (roomController) => {
       if (req.params.hotelId) {
         query = { ...filterObj }
       }
-      query = { ...queryRoom, ...query, ...parse, ...amenities }
+      
+      if(hotelId && roomTypeId){
+        query = { ...queryRoom,roomTypeId ,hotelId, ...query, ...parse, ...amenities }
+      }else if(roomTypeId){
+        query = { ...queryRoom,roomTypeId , ...query, ...parse, ...amenities }
+      }else if(hotelId){
+        query = { ...queryRoom,hotelId , ...query, ...parse, ...amenities }
+      }else{
+        query = { ...queryRoom,...query, ...parse, ...amenities }
+      }
 
       //sort
       if (req.query.sort) {
