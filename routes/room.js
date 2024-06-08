@@ -214,7 +214,7 @@ const roomRouter = (roomController) => {
     try {
       const { id } = req.params
       const room = await roomController.getRoomById({ _id: id })
-      await deleteImages(room.images)
+      // await deleteImages(room.images)
       await roomController.deleteRoom({ _id: id })
 
       res.status(200).json({
