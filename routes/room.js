@@ -78,14 +78,18 @@ const roomRouter = (roomController) => {
       }
       
       if(hotelId && roomTypeId){
+
         query = { ...queryRoom,roomTypeId ,hotelId, ...query, ...parse, ...amenities }
       }else if(roomTypeId){
+
         query = { ...queryRoom,roomTypeId , ...query, ...parse, ...amenities }
       }else if(hotelId){
+
         query = { ...queryRoom,hotelId , ...query, ...parse, ...amenities }
       }else{
         query = { ...queryRoom,...query, ...parse, ...amenities }
       }
+
 
       //sort
       if (req.query.sort) {
@@ -185,9 +189,9 @@ const roomRouter = (roomController) => {
           throw new BadRequestError(error.message)
         }
 
-        if (req.body.images) {
-          await deleteImages(room.images)
-        }
+        // if (req.body.images) {
+        //   await deleteImages(room.images)
+        // }
 
         await roomController.editRoom({ _id: id }, { ...req.body })
 
@@ -210,7 +214,7 @@ const roomRouter = (roomController) => {
     try {
       const { id } = req.params
       const room = await roomController.getRoomById({ _id: id })
-      await deleteImages(room.images)
+      // await deleteImages(room.images)
       await roomController.deleteRoom({ _id: id })
 
       res.status(200).json({

@@ -32,7 +32,7 @@ const validateUpdateUser = (user) => {
     phoneNumber: joi.string().regex(/^[0-9]{10}$/),
     role: joi.string(),
     password: joi.string(),
-    images: joi.array().items(joi.string()).min(1),
+    images: joi.array().items(joi.string()),
   })
   return schema.validate(user)
 }

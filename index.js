@@ -18,6 +18,8 @@ const AmenityRepository = require('./repositories/amenity')
 const UserRepository = require('./repositories/user')
 const AuthRepository = require('./repositories/auth')
 const RoleRepository = require('./repositories/role')
+const SubscriptionAdvantageRepository = require('./repositories/subscriptionAdvantage')
+const SubscriptionRepository = require('./repositories/subscription')
 
 // Importing controllers
 const ReservationController = require('./controllers/reservation')
@@ -29,6 +31,8 @@ const AmenityController = require('./controllers/amenity')
 const AuthController = require('./controllers/auth')
 const UserController = require('./controllers/user')
 const RoleController = require('./controllers/role')
+const SubscriptionAdvantageController = require('./controllers/subscriptionAdvantage')
+const SubscriptionController = require('./controllers/subscription')
 
 // Importing routers
 const reservationRouter = require('./routes/reservation')
@@ -39,6 +43,10 @@ const hotelRouter = require('./routes/hotel')
 const amenityRouter = require('./routes/amenity')
 const userRouter = require('./routes/user')
 const roleRouter = require('./routes/role')
+const SubscriptionAdvantagerRouter = require('./routes/subscriptionAdvantage')
+const SubscriptionRouter = require('./routes/subscription')
+const subscriptionAdvantageRouter = require('./routes/subscriptionAdvantage')
+const subscriptionRouter = require('./routes/subscription')
 
 app.use(express.json())
 app.use(cors())
@@ -54,6 +62,8 @@ const amenityRepository = new AmenityRepository()
 const userRepository = new UserRepository()
 const authRepository = new AuthRepository()
 const roleRepository = new RoleRepository()
+const subscriptionAdvantageRepository = new SubscriptionAdvantageRepository()
+const subscriptionRepository = new SubscriptionRepository()
 
 // Creating instances of controllers
 const reservationController = new ReservationController(reservationRepository)
@@ -67,6 +77,8 @@ const amenityController = new AmenityController(amenityRepository)
 const authController = new AuthController(authRepository)
 const userController = new UserController(userRepository)
 const roleController = new RoleController(roleRepository)
+const subscriptionAdvantageController = new SubscriptionAdvantageController(subscriptionAdvantageRepository)
+const subscriptionController = new SubscriptionController(subscriptionRepository)
 
 // routers with controllers
 mainRouter.use('/reservations', reservationRouter(reservationController))
@@ -80,6 +92,8 @@ mainRouter.use('/hotels', hotelRouter(hotelController))
 mainRouter.use('/amenities', amenityRouter(amenityController))
 mainRouter.use('/users', userRouter(userController, authController))
 mainRouter.use('/roles', roleRouter(roleController))
+mainRouter.use('/subscription-advantage', subscriptionAdvantageRouter(subscriptionAdvantageController))
+mainRouter.use('/subscriptions', subscriptionRouter(subscriptionController))
 
 //if router not found will display this message
 app.all('*', (req, res, next) => {
