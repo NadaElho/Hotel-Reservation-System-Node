@@ -8,8 +8,10 @@ const notFoundError = require("../handleErrors/notFoundError");
 const {
   ValidateAddAmenity,
   ValidateEditAmenity,
-} = require("../validations/amenity");
-const badRequestError = require("../handleErrors/badRequestError");
+
+} = require('../validations/amenity')
+const BadRequestError = require('../handleErrors/badRequestError')
+
 
 const amenityRouter = (amenityController) => {
   router.get("/", async (req, res) => {
@@ -39,7 +41,11 @@ const amenityRouter = (amenityController) => {
     }
   });
 
-  router.get("/:id", protect, async (req, res) => {
+
+  router.get('/:id',
+   protect,
+   async (req, res) => {
+
     try {
       const amenity = await amenityController.getAmenityById(req.params.id);
       if (!amenity) throw new notFoundError("this amenity does not exist");
@@ -58,7 +64,7 @@ const amenityRouter = (amenityController) => {
     async (req, res) => {
       try {
         const { error } = ValidateAddAmenity(req.body);
-        if (error) throw new badRequestError(error.message);
+        if (error) throw new BadRequestError(error.message);
         await amenityController.addAmenity(req.body);
         res.status(201).json({ message: "the amenity added successfully" });
       } catch (error) {
@@ -67,7 +73,10 @@ const amenityRouter = (amenityController) => {
     }
   );
 
-  router.delete("/:id", protect, restrictTo("admin"), async (req, res) => {
+
+  router.delete('/:id',
+   protect, restrictTo('admin'),
+   async (req, res) => {
     try {
       const amenity = await amenityController.getAmenityById(req.params.id);
       if (!amenity) throw new notFoundError("this amenity does not exist");
@@ -82,19 +91,23 @@ const amenityRouter = (amenityController) => {
   router.patch(
     "/:id",
     protect,
-    restrictTo("admin"),
-    uploadImage,
+
+    restrictTo('admin'),
+    uploadMultiple,
+
     async (req, res) => {
       try {
-        const { error } = ValidateEditAmenity(req.body);
-        if (error) throw new badRequestError(error.message);
         const amenity = await amenityController.getAmenityById(req.params.id);
         if (!amenity) throw new notFoundError("this amenity does not exist");
         if (req.body.images) {
           await deleteImages(amenity.images);
         }
-        await amenityController.editAmenity(req.params.id, req.body);
-        res.status(200).json({ message: "The amenity updated successfully" });
+
+        const { error } = ValidateEditAmenity(req.body);
+        if (error) throw new BadRequestError(error.message);
+        await amenityController.editAmenity(req.params.id, req.body)
+        res.status(200).json({ message: 'The amenity updated successfully' })
+
       } catch (error) {
         res.status(error.statusCode || 500).json({ message: error.message });
       }
