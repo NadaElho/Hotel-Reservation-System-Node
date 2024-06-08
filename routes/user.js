@@ -38,6 +38,30 @@ const userRouter = (userController, authController) => {
     }
   });
 
+  router.post("/forgotPassword", async (req, res) => {
+    try {
+      const { email } = req.body;
+      const response = await authController.forgotPassword(email);
+      res.json(response);
+    } catch (error) {
+      res.status(500).json({ message: "Server Error: " + error.message });
+    }
+  });
+
+  router.patch("/resetPassword/:token", async (req, res) => {
+    try {
+      const resetToken = req.params.token;
+      const { newPassword } = req.body;
+      const response = await authController.resetPassword(
+        resetToken,
+        newPassword
+      );
+      res.json(response);
+    } catch (error) {
+      res.status(500).json({ message: "Server Error: " + error.message });
+    }
+  });
+
   router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
     try {
       const id = req.params.id;
@@ -70,11 +94,9 @@ const userRouter = (userController, authController) => {
 
   router.post("/login", async (req, res) => {
     try {
-
       const user = req.body;
       const token = await authController.login(user);
       res.json({ message: "loggin successfully", token });
-
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
