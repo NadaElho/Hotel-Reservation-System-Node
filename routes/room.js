@@ -38,7 +38,8 @@ const roomRouter = (roomController) => {
       let query = {}
       let sortBy
       let queryRoom = {}
-
+      let roomTypeId;
+      let hotelId;
       //search
       if (
         req.query.checkIn &&
@@ -51,8 +52,7 @@ const roomRouter = (roomController) => {
         const roomIds = getRoomReservations.map((res) => {
           return res.roomId
         })
-        let roomTypeId;
-        let hotelId;
+      
         if(req.query.roomTypeId){
           roomTypeId = req.query.roomTypeId;
 
@@ -63,8 +63,7 @@ const roomRouter = (roomController) => {
         }
         queryRoom = {
           _id: { $nin: roomIds },
-          roomTypeId: roomTypeId,
-          hotelId: hotelId,
+        
         }
       }
 
@@ -77,7 +76,20 @@ const roomRouter = (roomController) => {
       if (req.params.hotelId) {
         query = { ...filterObj }
       }
-      query = { ...queryRoom, ...query, ...parse, ...amenities }
+      
+      if(hotelId && roomTypeId){
+
+        query = { ...queryRoom,roomTypeId ,hotelId, ...query, ...parse, ...amenities }
+      }else if(roomTypeId){
+
+        query = { ...queryRoom,roomTypeId , ...query, ...parse, ...amenities }
+      }else if(hotelId){
+
+        query = { ...queryRoom,hotelId , ...query, ...parse, ...amenities }
+      }else{
+        query = { ...queryRoom,...query, ...parse, ...amenities }
+      }
+
 
       //sort
       if (req.query.sort) {
@@ -177,9 +189,9 @@ const roomRouter = (roomController) => {
           throw new BadRequestError(error.message)
         }
 
-        if (req.body.images) {
-          await deleteImages(room.images)
-        }
+        // if (req.body.images) {
+        //   await deleteImages(room.images)
+        // }
 
         await roomController.editRoom({ _id: id }, { ...req.body })
 
@@ -202,7 +214,7 @@ const roomRouter = (roomController) => {
     try {
       const { id } = req.params
       const room = await roomController.getRoomById({ _id: id })
-      await deleteImages(room.images)
+      // await deleteImages(room.images)
       await roomController.deleteRoom({ _id: id })
 
       res.status(200).json({

@@ -29,7 +29,7 @@ const validateUpdateRoom = (room) => {
     description_ar: joi.string(),
     price: joi.number(),
     currency: joi.string(),
-    images: joi.array().items(joi.string()).min(1),
+    images: joi.array().items(joi.string()),
   })
   return schema.validate(room)
 }
