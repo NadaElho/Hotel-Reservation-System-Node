@@ -53,9 +53,12 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = randomBytes(32).toString("hex");
-  console.log(resetToken);
+  // console.log(resetToken);
+
   this.resetToken = createHash("sha256").update(resetToken).digest("hex");
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  // console.log(this.resetToken);
 
   return resetToken;
 };

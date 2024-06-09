@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const BadRequestError = require("../handleErrors/badRequestError");
 
 class AuthRepository {
   async signup(newUser) {
@@ -28,22 +29,27 @@ class AuthRepository {
       .createHash("sha256")
       .update(resetToken)
       .digest("hex");
+
     return await User.findOne({
       resetToken: hashedToken,
-      // passwordResetExpires: { $gt: Date.now() },
+      passwordResetExpires: { $gt: Date.now() },
     });
   }
 
   async saveUser(user, options) {
-    try {
-      if (options && options.validateBeforeSave === false) {
-        return await user.save({ validateBeforeSave: false });
+    if (options && options.validateBeforeSave === false) {
+      const result = await user.save({ validateBeforeSave: false });
+      if (!result) {
+        throw new BadRequestError("Error saving user");
       }
-      return await user.save();
-    } catch (error) {
-      throw new Error("Error saving user: " + error.message);
+      return result;
+      // } else {
+      //   const result = await user.save();
+      //   if (!result) {
+      //     throw new BadRequestError("Error saving user");
+      //   }
+      //   return result;
     }
   }
 }
-
 module.exports = AuthRepository;
