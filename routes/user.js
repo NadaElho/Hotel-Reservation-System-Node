@@ -6,7 +6,6 @@ const { validateNewUser, validateUpdateUser } = require("../validations/user");
 const NotFoundError = require("../handleErrors/notFoundError");
 const BadRequestError = require("../handleErrors/badRequestError");
 const ForbiddenError = require("../handleErrors/forbiddenError");
-
 const router = express.Router();
 
 const userRouter = (userController, authController) => {
