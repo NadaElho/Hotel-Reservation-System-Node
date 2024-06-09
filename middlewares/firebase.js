@@ -10,7 +10,8 @@ const { auth } = require('../config/firebase')
 
 const uploadImage = async (req, res, next) => {
   try {
-    if (!req.files) {
+    // console.log(req.files.length)
+    if (!req.files.length) {
       return next()
     }
     const storageFB = getStorage()
