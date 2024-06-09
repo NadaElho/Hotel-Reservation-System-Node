@@ -31,7 +31,6 @@ const userRouter = (userController, authController) => {
       if (skip > 0) {
         pagination.prevPage = page - 1;
       }
-      res.status(200).json({ status: "success", pagination, data: data });
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
@@ -40,8 +39,12 @@ const userRouter = (userController, authController) => {
   router.post("/forgotPassword", async (req, res) => {
     try {
       const { email } = req.body;
-      const response = await authController.forgotPassword(email);
+      const response = await authController.forgotPassword(email, req);
       res.json(response);
+      res
+        .status(200)
+        .json({ status: "success", message: "Token sent to email!" });
+      // return { status: "success", message: "Token sent to email!" };
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
