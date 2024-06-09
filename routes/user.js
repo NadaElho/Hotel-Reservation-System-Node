@@ -6,7 +6,6 @@ const { validateNewUser, validateUpdateUser } = require("../validations/user");
 const NotFoundError = require("../handleErrors/notFoundError");
 const BadRequestError = require("../handleErrors/badRequestError");
 const ForbiddenError = require("../handleErrors/forbiddenError");
-
 const router = express.Router();
 
 const userRouter = (userController, authController) => {
@@ -33,6 +32,30 @@ const userRouter = (userController, authController) => {
         pagination.prevPage = page - 1;
       }
       res.status(200).json({ status: "success", pagination, data: data });
+    } catch (error) {
+      res.status(500).json({ message: "Server Error: " + error.message });
+    }
+  });
+
+  router.post("/forgotPassword", async (req, res) => {
+    try {
+      const { email } = req.body;
+      const response = await authController.forgotPassword(email);
+      res.json(response);
+    } catch (error) {
+      res.status(500).json({ message: "Server Error: " + error.message });
+    }
+  });
+
+  router.patch("/resetPassword/:token", async (req, res) => {
+    try {
+      const resetToken = req.params.token;
+      const { newPassword } = req.body;
+      const response = await authController.resetPassword(
+        resetToken,
+        newPassword
+      );
+      res.json(response);
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
@@ -70,7 +93,6 @@ const userRouter = (userController, authController) => {
 
   router.post("/login", async (req, res) => {
     try {
-
       const user = req.body;
       const data = await authController.login(user);
       res.json({ message: "loggin successfully", data });

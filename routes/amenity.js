@@ -91,10 +91,9 @@ const amenityRouter = (amenityController) => {
   router.patch(
     "/:id",
     protect,
-
     restrictTo('admin'),
     uploadMultiple,
-
+    uploadImage,
     async (req, res) => {
       try {
         const amenity = await amenityController.getAmenityById(req.params.id);
