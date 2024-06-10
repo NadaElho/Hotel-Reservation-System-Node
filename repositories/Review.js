@@ -2,17 +2,19 @@ const Review = require('../models/review')
 const NotFoundError = require('../handleErrors/notFoundError')
 
 class ReviewRepository {
-  async getReviews() {
-    const reviews = await Review.find()
+  async getReviews(skip, limit) {
+    const documentCount = await Review.countDocuments();
+    const reviews = await Review.find().skip(skip).limit(limit)
     if (!reviews.length) {
       throw new NotFoundError('No reviews found')
     }
-    return reviews
+    return {reviews, documentCount}
   }
 
-  async getRoomReviews(id){
-    const reviews = await Review.find({roomId: id})
-    return reviews
+  async getRoomReviews(id, skip, limit){
+    const documentCount = await Review.countDocuments({roomId: id});
+    const reviews = await Review.find({roomId: id}).skip(skip).limit(limit)
+    return {reviews, documentCount}
   }
 
   async getReview(id){
