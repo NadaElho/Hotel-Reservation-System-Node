@@ -20,6 +20,7 @@ const AuthRepository = require("./repositories/auth");
 const RoleRepository = require("./repositories/role");
 const SubscriptionAdvantageRepository = require("./repositories/subscriptionAdvantage");
 const SubscriptionRepository = require("./repositories/subscription");
+const ReviewRepository = require("./repositories/Review");
 
 // Importing controllers
 const ReservationController = require("./controllers/reservation");
@@ -33,6 +34,7 @@ const UserController = require("./controllers/user");
 const RoleController = require("./controllers/role");
 const SubscriptionAdvantageController = require("./controllers/subscriptionAdvantage");
 const SubscriptionController = require("./controllers/subscription");
+const ReviewController = require("./controllers/Review");
 
 // Importing routers
 const reservationRouter = require("./routes/reservation");
@@ -43,10 +45,9 @@ const hotelRouter = require("./routes/hotel");
 const amenityRouter = require("./routes/amenity");
 const userRouter = require("./routes/user");
 const roleRouter = require("./routes/role");
-const SubscriptionAdvantagerRouter = require("./routes/subscriptionAdvantage");
-const SubscriptionRouter = require("./routes/subscription");
 const subscriptionAdvantageRouter = require("./routes/subscriptionAdvantage");
 const subscriptionRouter = require("./routes/subscription");
+const reviewRouter = require("./routes/review")
 
 app.use(express.json());
 app.use(cors());
@@ -64,6 +65,7 @@ const authRepository = new AuthRepository();
 const roleRepository = new RoleRepository();
 const subscriptionAdvantageRepository = new SubscriptionAdvantageRepository();
 const subscriptionRepository = new SubscriptionRepository();
+const reviewRepository = new ReviewRepository()
 
 // Creating instances of controllers
 const reservationController = new ReservationController(reservationRepository);
@@ -83,6 +85,7 @@ const subscriptionAdvantageController = new SubscriptionAdvantageController(
 const subscriptionController = new SubscriptionController(
   subscriptionRepository
 );
+const reviewController = new ReviewController(reviewRepository)
 
 // routers with controllers
 mainRouter.use("/reservations", reservationRouter(reservationController));
@@ -101,6 +104,7 @@ mainRouter.use(
   subscriptionAdvantageRouter(subscriptionAdvantageController)
 );
 mainRouter.use("/subscriptions", subscriptionRouter(subscriptionController));
+mainRouter.use("/reviews", reviewRouter(reviewController))
 
 //if router not found will display this message
 app.all("*", (req, res, next) => {
@@ -115,6 +119,7 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT;
+
 app.listen(port, () => {
   console.log(`listening on port ${port} ...`);
 });

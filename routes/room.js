@@ -57,6 +57,7 @@ const roomRouter = (roomController) => {
         if (req.query.hotelId) {
           hotelId = req.query.hotelId;
         }
+
         queryRoom = {
           _id: { $nin: roomIds },
         };

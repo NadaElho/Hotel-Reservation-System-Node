@@ -35,7 +35,7 @@ const roleRouter = (roleController) => {
       await roleController.deleteRole(req.params.id)
       res
         .status(200)
-        .json({ message: 'Reservation status deleted successfully' })
+        .json({ message: 'Role deleted successfully' })
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message })
     }
