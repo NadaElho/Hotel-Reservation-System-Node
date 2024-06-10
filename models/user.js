@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     createdAt: { type: Date, expires: 600, default: Date.now },
   },
+  subscriptionId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Subscription",
+  },
   passwordResetExpires: Date,
 });
 

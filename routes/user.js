@@ -94,8 +94,9 @@ const userRouter = (userController, authController) => {
   router.post("/login", async (req, res) => {
     try {
       const user = req.body;
-      const token = await authController.login(user);
-      res.json({ message: "loggin successfully", token });
+      const data = await authController.login(user);
+      res.json({ message: "loggin successfully", data });
+
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
