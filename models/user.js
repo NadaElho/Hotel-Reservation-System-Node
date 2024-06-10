@@ -57,9 +57,12 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = randomBytes(32).toString("hex");
-  console.log(resetToken);
+  // console.log(resetToken);
+
   this.resetToken = createHash("sha256").update(resetToken).digest("hex");
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  // console.log(this.resetToken);
 
   return resetToken;
 };
@@ -77,7 +80,9 @@ userSchema.methods.addToken = async function (token) {
 // Pre-save hook to hash password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
+
   this.password = await bcrypt.hash(this.password, 12);
+  console.log(this.password);
   next();
 });
 
