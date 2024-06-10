@@ -8,6 +8,10 @@ class ReviewController {
     async getReviews() {
         return await this.reviewRepository.getReviews()
     }
+
+    async getRoomReviews(id) {
+        return await this.reviewRepository.getRoomReviews(id)
+    }
   
     async addReview(body) {
         const {roomId} = body

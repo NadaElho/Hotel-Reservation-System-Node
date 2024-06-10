@@ -1,26 +1,30 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const BadRequestError = require('../handleErrors/badRequestError')
 const Room = require('../models/room')
+const Reservation = require('../models/reservation')
 var cron = require('node-cron')
 
-cron.schedule('0 0 * * *', async () => {
-  //MIN H D MON DWeek
-  const allResevations = await Reservation.find()
-  let todayDate = new Date()
-  allResevations.forEach(async (reservation) => {
-    if (todayDate >= reservation.checkOut) {
-      await Reservation.updateOne(
-        { _id: reservation.id },
-        { $set: { status: '663a81a4e3427acea0ef0b58' } },
-      )
-    }
-  })
-})
 class ReservationController {
   constructor(reservationRepository) {
     this.reservationRepository = reservationRepository
   }
 
+  schedule(){
+    cron.schedule('0 0 * * *', async () => {
+      //MIN H D MON DWeek
+      const allResevations = await Reservation.find()
+      let todayDate = new Date()
+      allResevations.forEach(async (reservation) => {
+        if (todayDate >= reservation.checkOut) {
+          await Reservation.updateOne(
+            { _id: reservation.id },
+            { $set: { status: '663a81a4e3427acea0ef0b58' } },
+          )
+        }
+      })
+    })
+  }
+  
   async getAllReservations(skip,limit) {
     return await this.reservationRepository.getAllReservations(skip,limit)
   }

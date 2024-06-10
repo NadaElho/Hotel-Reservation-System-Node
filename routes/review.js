@@ -12,6 +12,15 @@ const reviewRouter = (reviewController) => {
     }
   })
 
+  router.get('/:roomId', protect, async (req, res) => {
+    try {
+      const roomReviews = await reviewController.getRoomReviews(req.params.roomId)
+      res.status(200).json({ data: roomReviews })
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message })
+    }
+  })
+
   router.post('/', protect, async (req, res) => {
     try {
       await reviewController.addReview(req.body)
