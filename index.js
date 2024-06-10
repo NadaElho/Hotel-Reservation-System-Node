@@ -18,6 +18,7 @@ const AmenityRepository = require("./repositories/amenity");
 const UserRepository = require("./repositories/user");
 const AuthRepository = require("./repositories/auth");
 const RoleRepository = require("./repositories/role");
+const PromotionRepository = require("./repositories/promotion");
 const SubscriptionAdvantageRepository = require("./repositories/subscriptionAdvantage");
 const SubscriptionRepository = require("./repositories/subscription");
 const ReviewRepository = require("./repositories/Review");
@@ -32,6 +33,7 @@ const AmenityController = require("./controllers/amenity");
 const AuthController = require("./controllers/auth");
 const UserController = require("./controllers/user");
 const RoleController = require("./controllers/role");
+const PromotionController = require("./controllers/promotion");
 const SubscriptionAdvantageController = require("./controllers/subscriptionAdvantage");
 const SubscriptionController = require("./controllers/subscription");
 const ReviewController = require("./controllers/Review");
@@ -45,6 +47,7 @@ const hotelRouter = require("./routes/hotel");
 const amenityRouter = require("./routes/amenity");
 const userRouter = require("./routes/user");
 const roleRouter = require("./routes/role");
+const promotionRouter = require("./routes/promotion");
 const subscriptionAdvantageRouter = require("./routes/subscriptionAdvantage");
 const subscriptionRouter = require("./routes/subscription");
 const reviewRouter = require("./routes/review")
@@ -63,6 +66,7 @@ const amenityRepository = new AmenityRepository();
 const userRepository = new UserRepository();
 const authRepository = new AuthRepository();
 const roleRepository = new RoleRepository();
+const promotionRepository = new PromotionRepository();
 const subscriptionAdvantageRepository = new SubscriptionAdvantageRepository();
 const subscriptionRepository = new SubscriptionRepository();
 const reviewRepository = new ReviewRepository()
@@ -79,6 +83,7 @@ const amenityController = new AmenityController(amenityRepository);
 const authController = new AuthController(authRepository);
 const userController = new UserController(userRepository);
 const roleController = new RoleController(roleRepository);
+const promotionController = new PromotionController(promotionRepository);
 const subscriptionAdvantageController = new SubscriptionAdvantageController(
   subscriptionAdvantageRepository
 );
@@ -99,6 +104,7 @@ mainRouter.use("/hotels", hotelRouter(hotelController));
 mainRouter.use("/amenities", amenityRouter(amenityController));
 mainRouter.use("/users", userRouter(userController, authController));
 mainRouter.use("/roles", roleRouter(roleController));
+mainRouter.use("/promotions" , promotionRouter(promotionController))
 mainRouter.use(
   "/subscription-advantage",
   subscriptionAdvantageRouter(subscriptionAdvantageController)
