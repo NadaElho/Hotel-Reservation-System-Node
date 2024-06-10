@@ -21,7 +21,7 @@ const RoleRepository = require("./repositories/role");
 const PromotionRepository = require("./repositories/promotion");
 const SubscriptionAdvantageRepository = require("./repositories/subscriptionAdvantage");
 const SubscriptionRepository = require("./repositories/subscription");
-const ReviewRepository = require("./repositories/Review");
+const ReviewRepository = require("./repositories/review");
 
 // Importing controllers
 const ReservationController = require("./controllers/reservation");
@@ -36,7 +36,7 @@ const RoleController = require("./controllers/role");
 const PromotionController = require("./controllers/promotion");
 const SubscriptionAdvantageController = require("./controllers/subscriptionAdvantage");
 const SubscriptionController = require("./controllers/subscription");
-const ReviewController = require("./controllers/Review");
+const ReviewController = require("./controllers/review");
 
 // Importing routers
 const reservationRouter = require("./routes/reservation");
@@ -73,6 +73,7 @@ const reviewRepository = new ReviewRepository()
 
 // Creating instances of controllers
 const reservationController = new ReservationController(reservationRepository);
+reservationController.schedule()
 const reservationSatusController = new ReservationSatusController(
   reservationSatusRepository
 );

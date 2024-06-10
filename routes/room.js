@@ -22,7 +22,7 @@ const roomRouter = (roomController) => {
         "checkOut",
         "amenitiesIds",
         "roomTypeId",
-        "hotelId",
+        "hotelId"
       ];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
