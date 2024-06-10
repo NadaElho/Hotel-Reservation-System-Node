@@ -1,48 +1,84 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
+const { randomBytes, createHash } = require("crypto");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, 'you must enter a First Name!'],
+    required: [true, "you must enter a First Name!"],
   },
   lastName: {
     type: String,
-    required: [true, 'you must enter a Last Name!'],
+    required: [true, "you must enter a Last Name!"],
   },
   email: {
     type: String,
     unique: true,
-    required: [true, 'you must enter an email!'],
+    required: [true, "you must enter an email!"],
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please enter a valid email',
+      "Please enter a valid email",
     ],
   },
   gender: {
     type: String,
-    enum: ['male', 'female'],
+    enum: ["male", "female"],
   },
   images: [
     {
       type: String,
-      required: [true, 'Room must have Image'],
+      required: [true, "Room must have Image"],
     },
   ],
   phoneNumber: {
     type: String,
-    match: [/^\d{11}$/, 'Phone number must be 11 digits'],
+    match: [/^\d{11}$/, "Phone number must be 11 digits"],
   },
   role: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Role',
+    ref: "Role",
     required: true,
   },
   password: {
     type: String,
-    required: [true, 'you must enter a password!'],
+    required: [true, "you must enter a password!"],
     minlength: 8,
   },
-})
+  resetToken: {
+    type: String,
+    createdAt: { type: Date, expires: 600, default: Date.now },
+  },
+  passwordResetExpires: Date,
+});
 
-const User = mongoose.model('User', userSchema)
-module.exports = User
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = randomBytes(32).toString("hex");
+  // console.log(resetToken);
+
+  this.resetToken = createHash("sha256").update(resetToken).digest("hex");
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  // console.log(this.resetToken);
+
+  return resetToken;
+};
+
+userSchema.methods.resetPassword = async function (newPassword) {
+  this.password = await bcrypt.hash(newPassword, 12);
+  this.resetToken = undefined;
+  this.passwordResetExpires = undefined;
+};
+
+userSchema.methods.addToken = async function (token) {
+  this.resetToken = token;
+};
+
+// Pre-save hook to hash password before saving
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+const User = mongoose.model("User", userSchema);
+module.exports = User;

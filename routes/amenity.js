@@ -80,7 +80,7 @@ const amenityRouter = (amenityController) => {
     try {
       const amenity = await amenityController.getAmenityById(req.params.id);
       if (!amenity) throw new notFoundError("this amenity does not exist");
-      await deleteImages(amenity.images);
+      // await deleteImages(amenity.images);
       await amenityController.deleteAmenity(req.params.id);
       res.status(200).json({ message: "The amenity deleted successfully" });
     } catch (error) {
@@ -91,17 +91,16 @@ const amenityRouter = (amenityController) => {
   router.patch(
     "/:id",
     protect,
-
     restrictTo('admin'),
     uploadMultiple,
-
+    uploadImage,
     async (req, res) => {
       try {
         const amenity = await amenityController.getAmenityById(req.params.id);
         if (!amenity) throw new notFoundError("this amenity does not exist");
-        if (req.body.images) {
-          await deleteImages(amenity.images);
-        }
+        // if (req.body.images) {
+        //   await deleteImages(amenity.images);
+        // }
 
         const { error } = ValidateEditAmenity(req.body);
         if (error) throw new BadRequestError(error.message);

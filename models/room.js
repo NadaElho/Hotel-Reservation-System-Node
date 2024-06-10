@@ -58,6 +58,13 @@ const roomSchema = mongoose.Schema({
     },
   ],
 });
+  ratingAvg: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0
+  },
+})
 
 const Room = mongoose.model("Room", roomSchema);
 module.exports = Room;

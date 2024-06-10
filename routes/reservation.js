@@ -14,7 +14,7 @@ const reservationRouter = (reservationController) => {
       const limit = req.query.limit * 1 || 6;
       const skip = (page - 1) * limit;
       const endIndex = page * limit;
-      const result = await reservationController.getAllReservations();
+      const result = await reservationController.getAllReservations(skip,limit);
       const { data, documentCount } = result;
       const pagination = {
         currentPage: page,
