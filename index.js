@@ -51,7 +51,7 @@ const promotionRouter = require("./routes/promotion");
 const subscriptionAdvantageRouter = require("./routes/subscriptionAdvantage");
 const subscriptionRouter = require("./routes/subscription");
 const reviewRouter = require("./routes/review")
-
+const contactRouter = require("./routes/contact")
 app.use(express.json());
 app.use(cors());
 app.use("/api/v1", mainRouter);
@@ -112,7 +112,7 @@ mainRouter.use(
 );
 mainRouter.use("/subscriptions", subscriptionRouter(subscriptionController));
 mainRouter.use("/reviews", reviewRouter(reviewController))
-
+mainRouter.use("/contact",contactRouter)
 //if router not found will display this message
 app.all("*", (req, res, next) => {
   next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`));
