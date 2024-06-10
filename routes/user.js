@@ -31,6 +31,7 @@ const userRouter = (userController, authController) => {
       if (skip > 0) {
         pagination.prevPage = page - 1;
       }
+      res.status(200).json({ status: "success", pagination, data: data });
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }

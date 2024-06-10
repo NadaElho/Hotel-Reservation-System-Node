@@ -5,8 +5,8 @@ class ReviewController {
         this.reviewRepository = reviewRepository
     }
   
-    async getReviews() {
-        return await this.reviewRepository.getReviews()
+    async getReviews(skip, limit) {
+        return await this.reviewRepository.getReviews(skip, limit)
     }
 
     async getRoomReviews(id) {
