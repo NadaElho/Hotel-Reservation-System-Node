@@ -4,16 +4,19 @@ const crypto = require("crypto");
 const BadRequestError = require("../handleErrors/badRequestError");
 
 class AuthRepository {
-  async signup(newUser) {
-    const hashedPassword = await bcrypt.hash(newUser.password, 12);
+  // async signup(newUser) {
+  //   const hashedPassword = await bcrypt.hash(newUser.password, 10);
 
-    return await User.create({
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      email: newUser.email,
-      password: hashedPassword,
-      role: newUser.role,
-    });
+  //   return await User.create({
+  //     firstName: newUser.firstName,
+  //     lastName: newUser.lastName,
+  //     email: newUser.email,
+  //     password: hashedPassword,
+  //     role: newUser.role,
+  //   });
+  // }
+  async signup(newUser) {
+    return await User.create(newUser);
   }
 
   async login(user) {
