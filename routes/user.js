@@ -44,7 +44,6 @@ const userRouter = (userController, authController) => {
         status: "success",
         message: "Token sent to email!  " + response,
       });
-      // return { status: "success", message: "Token sent to email!" };
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
@@ -53,12 +52,16 @@ const userRouter = (userController, authController) => {
   router.patch("/resetPassword/:token", async (req, res) => {
     try {
       const resetToken = req.params.token;
-      const { newPassword } = req.body;
+      const newPassword = req.body.password;
+
       const response = await authController.resetPassword(
         resetToken,
         newPassword
       );
-      res.json(response);
+      res.status(200).json({
+        status: "success",
+        message: "your password has updated this is new token : " + response,
+      });
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
