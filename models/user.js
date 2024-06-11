@@ -5,16 +5,16 @@ const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, "you must enter a First Name!"],
+    required: ["you must enter a First Name!"],
   },
   lastName: {
     type: String,
-    required: [true, "you must enter a Last Name!"],
+    required: ["you must enter a Last Name!"],
   },
   email: {
     type: String,
     unique: true,
-    required: [true, "you must enter an email!"],
+    required: ["you must enter an email!"],
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Please enter a valid email",
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   images: [
     {
       type: String,
-      required: [true, "Room must have Image"],
+      required: ["Room must have Image"],
     },
   ],
   phoneNumber: {
@@ -37,12 +37,12 @@ const userSchema = new mongoose.Schema({
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Role",
-    required: true,
+    // required: true,
   },
   password: {
     type: String,
-    required: [true, "you must enter a password!"],
-    minlength: 8,
+    required: ["you must enter a password!"],
+    // minlength: 8,
   },
   resetToken: {
     type: String,
@@ -69,7 +69,6 @@ userSchema.methods.resetPassword = async function (newPassword) {
   this.resetToken = undefined;
   this.passwordResetExpires = undefined;
 };
-
 userSchema.methods.addToken = async function (token) {
   this.resetToken = token;
 };
