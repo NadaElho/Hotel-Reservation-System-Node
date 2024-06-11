@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
+
 const contact = () => {
   router.post("/", async (req, res) => {
     const transporter = nodemailer.createTransport({
@@ -14,16 +15,14 @@ const contact = () => {
     const mailOptions = {
       from: req.body.email,
       to: process.env.USER_EMAIL,
-      subject: `Contact us from ${req.body.firstName}`,
+      subject: `Message from ${req.body.firstName}`,
       html: `<div>
-                      <h3 style="color: #3b5d50;">${req.body.message}</h3>
-          
+                <h3 style="color: #3b5d50;">${req.body.message}</h3>
               </div>`,
     };
 
     transporter.sendMail(mailOptions, (error, success) => {
       if (error) {
-        console.log(error);
         res.send({ message: error.message });
       } else {
         console.log(`Email sent ${success.response}`);
@@ -33,6 +32,7 @@ const contact = () => {
       }
     });
   });
+  return router
 };
-module.exports = contact;
 
+module.exports = contact;
