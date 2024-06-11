@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const BadRequestError = require("../handleErrors/badRequestError");
-const sendEmail = require("./../middlewares/email");
 const nodemailer = require("nodemailer");
+const NotFoundError = require("../handleErrors/notFoundError");
 require("dotenv").config();
 class AuthController {
   constructor(authRepository) {
@@ -82,10 +82,7 @@ class AuthController {
     // console.log(user);
 
     if (!user) {
-      throw new BadRequestError(
-        "There is no user with that email address.",
-        404
-      );
+      throw new NotFoundError("There is no user with that email address.");
     }
 
     const resetToken = user.createPasswordResetToken();
@@ -93,37 +90,35 @@ class AuthController {
     await user.save({ validateBeforeSave: false });
     // await this.authRepository.saveUser(user);
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "abdelaziz.adel.m13@gmail.com",
-        pass: "kynw ohvo uerx wqbg",
-      },
-    });
+    //   const transporter = nodemailer.createTransport({
+    //     service: "gmail",
+    //     auth: {
+    //       user: "abdelaziz.adel.m13@gmail.com",
+    //       pass: "13zizo28",
+    //     },
+    //   });
 
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${resetToken}`;
+    //   const resetURL = `${req.protocol}://${req.get(
+    //     "host"
+    //   )}/api/v1/users/resetPassword/${resetToken}`;
 
-    const mailOptions = {
-      from: "hotel system ",
-      to: "abdelazizadel1328@gmail.com",
-      subject: "Reset password",
-      html: `<div>
-      <h3>Hello, <span style='color: #f8b810'>${user.name}</span></h3>
-      <h4>Click on the link below to reset yor password</h4>
-      <p>${resetURL}</p>
-      </div>`,
-    };
-
-    transporter.sendMail(mailOptions, (err, success) => {
-      if (err) {
-        console.log(err);
-      } else {
-        s;
-        console.log("Email sent: " + success.response);
-      }
-    });
+    // const mailOptions = {
+    //   from: process.env.USER_EMAIL,
+    //   to: user.email,
+    //   subject: 'Reset password',
+    //   html: `<div>
+    //   <h3>Hello, <span style='color: #f8b810'>${user.firstName}</span></h3>
+    //   <h4>Click on the link below to reset yor password</h4>
+    //   <p>${link}</p>
+    //   </div>`,
+    // }
+    // transporter.sendMail(mailOptions, (err, success) => {
+    //   if (err) {
+    //     console.log(err)
+    //   } else {
+    //     console.log('Email sent: ' + success.response)
+    //   }
+    // })
 
     return resetToken;
   }

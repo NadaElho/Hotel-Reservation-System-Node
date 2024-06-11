@@ -52,14 +52,7 @@ class ReservationRepository {
     return roomReservations
   }
 
-  async addNewReservation({
-    userId,
-    roomId,
-    status,
-    checkIn,
-    checkOut,
-    totalPrice,
-  }) {
+  async addNewReservation({userId, roomId,status,checkIn,checkOut,totalPrice,}) {
     await Reservation.create({
       userId,
       roomId,

@@ -18,8 +18,10 @@ const AmenityRepository = require("./repositories/amenity");
 const UserRepository = require("./repositories/user");
 const AuthRepository = require("./repositories/auth");
 const RoleRepository = require("./repositories/role");
+const PromotionRepository = require("./repositories/promotion");
 const SubscriptionAdvantageRepository = require("./repositories/subscriptionAdvantage");
 const SubscriptionRepository = require("./repositories/subscription");
+const ReviewRepository = require("./repositories/review");
 
 // Importing controllers
 const ReservationController = require("./controllers/reservation");
@@ -31,8 +33,10 @@ const AmenityController = require("./controllers/amenity");
 const AuthController = require("./controllers/auth");
 const UserController = require("./controllers/user");
 const RoleController = require("./controllers/role");
+const PromotionController = require("./controllers/promotion");
 const SubscriptionAdvantageController = require("./controllers/subscriptionAdvantage");
 const SubscriptionController = require("./controllers/subscription");
+const ReviewController = require("./controllers/review");
 
 // Importing routers
 const reservationRouter = require("./routes/reservation");
@@ -43,11 +47,11 @@ const hotelRouter = require("./routes/hotel");
 const amenityRouter = require("./routes/amenity");
 const userRouter = require("./routes/user");
 const roleRouter = require("./routes/role");
-const SubscriptionAdvantagerRouter = require("./routes/subscriptionAdvantage");
-const SubscriptionRouter = require("./routes/subscription");
+const promotionRouter = require("./routes/promotion");
 const subscriptionAdvantageRouter = require("./routes/subscriptionAdvantage");
 const subscriptionRouter = require("./routes/subscription");
-
+const reviewRouter = require("./routes/review")
+const contactRouter = require("./routes/contact")
 app.use(express.json());
 app.use(cors());
 app.use("/api/v1", mainRouter);
@@ -62,11 +66,14 @@ const amenityRepository = new AmenityRepository();
 const userRepository = new UserRepository();
 const authRepository = new AuthRepository();
 const roleRepository = new RoleRepository();
+const promotionRepository = new PromotionRepository();
 const subscriptionAdvantageRepository = new SubscriptionAdvantageRepository();
 const subscriptionRepository = new SubscriptionRepository();
+const reviewRepository = new ReviewRepository()
 
 // Creating instances of controllers
 const reservationController = new ReservationController(reservationRepository);
+reservationController.schedule()
 const reservationSatusController = new ReservationSatusController(
   reservationSatusRepository
 );
@@ -77,12 +84,14 @@ const amenityController = new AmenityController(amenityRepository);
 const authController = new AuthController(authRepository);
 const userController = new UserController(userRepository);
 const roleController = new RoleController(roleRepository);
+const promotionController = new PromotionController(promotionRepository);
 const subscriptionAdvantageController = new SubscriptionAdvantageController(
   subscriptionAdvantageRepository
 );
 const subscriptionController = new SubscriptionController(
   subscriptionRepository
 );
+const reviewController = new ReviewController(reviewRepository)
 
 // routers with controllers
 mainRouter.use("/reservations", reservationRouter(reservationController));
@@ -96,12 +105,14 @@ mainRouter.use("/hotels", hotelRouter(hotelController));
 mainRouter.use("/amenities", amenityRouter(amenityController));
 mainRouter.use("/users", userRouter(userController, authController));
 mainRouter.use("/roles", roleRouter(roleController));
+mainRouter.use("/promotions" , promotionRouter(promotionController))
 mainRouter.use(
   "/subscription-advantage",
   subscriptionAdvantageRouter(subscriptionAdvantageController)
 );
 mainRouter.use("/subscriptions", subscriptionRouter(subscriptionController));
-
+mainRouter.use("/reviews", reviewRouter(reviewController))
+mainRouter.use("/contact",contactRouter)
 //if router not found will display this message
 app.all("*", (req, res, next) => {
   next(new NotFoundError(`Can't find ${req.originalUrl} on this server!`));
@@ -115,6 +126,7 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT;
+
 app.listen(port, () => {
   console.log(`listening on port ${port} ...`);
 });

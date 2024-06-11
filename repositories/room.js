@@ -1,42 +1,46 @@
-const Room = require('../models/room')
-const NotFoundError = require('../handleErrors/notFoundError')
-const Reservation = require('../models/reservation')
+const Room = require("../models/room");
+const NotFoundError = require("../handleErrors/notFoundError");
+const Reservation = require("../models/reservation");
 class roomRepository {
   async getAllRooms(query, sortBy, skip, limit) {
-    const documentCount = await Room.countDocuments(query)
+    const documentCount = await Room.countDocuments(query);
     const data = await Room.find(query)
-      .populate('roomTypeId').populate('hotelId').populate('amenitiesIds')
+      .populate("roomTypeId")
+      .populate("hotelId")
+      .populate("amenitiesIds")
+      .populate("promotionId")
       .sort(sortBy)
       .skip(skip)
-      .limit(limit)
-//TODO:
+      .limit(limit);
+    //TODO:
     if (!data || data.length === 0) {
-      throw new NotFoundError('No rooms found')
+      throw new NotFoundError("No rooms found");
     }
 
-    return { data, documentCount }
+    return { data, documentCount };
   }
 
   async getRoomById(id) {
     const room = await Room.findOne(id)
-      .populate('amenitiesIds')
-      .populate('hotelId')
-      .populate('roomTypeId')
+      .populate("amenitiesIds")
+      .populate("hotelId")
+      .populate("roomTypeId")
+      .populate("promotionId");
 
     if (!room && id._id) {
-      throw new NotFoundError('The room with this ID was not found')
+      throw new NotFoundError("The room with this ID was not found");
     }
-    return room
+    return room;
   }
 
   async addRoom(req) {
-    return await Room.create(req)
+    return await Room.create(req);
   }
   async editRoom(id, req) {
-    return await Room.updateOne(id, req)
+    return await Room.updateOne(id, req);
   }
   async deleteRoom(id) {
-    return await Room.deleteOne(id)
+    return await Room.deleteOne(id);
   }
   async getReservationsBetweenDates(checkIn, checkOut) {
     return await Reservation.find({
@@ -61,10 +65,10 @@ class roomRepository {
             },
           ],
         },
-        { status: { $ne: '663a8158e3427acea0ef0b54' } },
+        { status: { $ne: "663a8158e3427acea0ef0b54" } },
       ],
-    })
+    });
   }
 }
 
-module.exports = roomRepository
+module.exports = roomRepository;

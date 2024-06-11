@@ -37,6 +37,12 @@ const hotelSchema = mongoose.Schema({
       required: [true, "PhoneNumber is required"],
     },
   ],
+  longitude:{
+    type:String
+  },
+  latitude:{
+    type:String
+  }
 });
 const Hotel = mongoose.model("Hotel", hotelSchema);
 module.exports = Hotel;
