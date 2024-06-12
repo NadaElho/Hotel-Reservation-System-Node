@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const BadRequestError = require("../handleErrors/badRequestError");
-const sendEmail = require("./../middlewares/email");
 const nodemailer = require("nodemailer");
+const NotFoundError = require("../handleErrors/notFoundError");
 require("dotenv").config();
 class AuthController {
   constructor(authRepository) {
@@ -10,11 +10,26 @@ class AuthController {
   }
 
   async signup(newUser) {
-    return await this.authRepository.signup(newUser);
+    // return await User.create({
+    //   firstName: newUser.firstName,
+    //   lastName: newUser.lastName,
+    //   email: newUser.email,
+    //   password: hashedPassword,
+    //   role: newUser.role,
+    // });
+
+    const hashedPassword = await bcrypt.hash(newUser.password, 10);
+
+    return await this.authRepository.signup({
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+      password: hashedPassword,
+      role: newUser.role,
+    });
   }
 
   async login(user) {
-    console.log(user);
     if (!user.password && !user.email) {
       throw new BadRequestError("must write your email and your password");
     }
@@ -29,13 +44,9 @@ class AuthController {
 
     const loggedUser = await this.authRepository.login(user);
 
-    // console.log(user.password);
-
     if (!loggedUser) {
       throw new BadRequestError("invalid email or password");
     }
-
-    console.log(loggedUser);
 
     const passwordMatch = await bcrypt.compare(
       user.password,
@@ -45,16 +56,16 @@ class AuthController {
     const userByEmail = await this.authRepository.getUserByEmail(user.email);
 
     const { role, _id } = userByEmail;
-    console.log(passwordMatch);
-    // if (!passwordMatch) {
-    //   throw new BadRequestError("invalid email or password");
-    // }
+
+    if (!passwordMatch) {
+      throw new BadRequestError("invalid email or password");
+    }
 
     const token = jwt.sign(
       { id: loggedUser._id, email: loggedUser.email },
       process.env.JWT_SECRET_KEY
     );
-    // console.log(token);
+
     return { token, role, id: _id };
   }
 
@@ -62,72 +73,60 @@ class AuthController {
     const user = await this.authRepository.getUserByEmail(email);
 
     if (!user) {
-      throw new BadRequestError(
-        "There is no user with that email address.",
-        404
-      );
+      throw new NotFoundError("There is no user with that email address.");
     }
 
     const resetToken = user.createPasswordResetToken();
 
+    await user.save({ validateBeforeSave: false });
     await this.authRepository.saveUser(user);
 
+    const link = `http://localhost:3000/api/v1/users/resetPassword/${resetToken}`
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: 'gmail',
       auth: {
-        user: "abdelaziz.adel.m13@gmail.com",
-        pass: "13zizo28",
+        user: process.env.USER_EMAIL,
+        pass: process.env.USER_PASS,
       },
-    });
-
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${resetToken}`;
-
+    })
+  
     const mailOptions = {
-      from: "hotel system ",
-      to: "abdelazizadel1328@gmail.com",
-      subject: "Reset password",
+      from: process.env.USER_EMAIL,
+      to: user.email,
+      subject: 'Reset password',
       html: `<div>
-      <h3>Hello, <span style='color: #f8b810'>${user.name}</span></h3>
+      <h3>Hello, <span style='color: #f8b810'>${user.firstName}</span></h3>
       <h4>Click on the link below to reset yor password</h4>
-      <p>${resetURL}</p>
+      <p>${link}</p>
       </div>`,
-    };
-
+    }
     transporter.sendMail(mailOptions, (err, success) => {
       if (err) {
-        console.log(err);
+        console.log(err)
       } else {
-        s;
-        console.log("Email sent: " + success.response);
+        console.log('Email sent: ' + success.response)
       }
-    });
-
-    return resetToken;
+    })
   }
 
   async resetPassword(resetToken, newPassword) {
+
     const user = await this.authRepository.getUserByResetToken(resetToken);
 
-    console.log(user);
-
     if (!user) {
-      throw new BadRequestError("Token is invalid or has expired", 400);
+      throw new BadRequestError("Token is invalid or has expired");
     }
 
     await user.resetPassword(newPassword);
 
-    await this.authRepository.saveUser(user);
+    await user.save();
 
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET_KEY
     );
 
-    console.log(token);
-
-    return { token };
+    return token;
   }
 }
 
