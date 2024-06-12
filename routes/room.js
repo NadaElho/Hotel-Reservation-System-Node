@@ -22,12 +22,12 @@ const roomRouter = (roomController) => {
         "checkOut",
         "amenitiesIds",
         "roomTypeId",
-        "hotelId"
+        "hotelId",
       ];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
       queryStr = queryStr.replace(
-        /\b(gte|gt|lte|lt)\b/g,
+        /\b(gte|gt|lte|lt|eq)\b/g,
         (match) => `$${match}`
       );
       const parse = JSON.parse(queryStr);

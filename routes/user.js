@@ -103,7 +103,6 @@ const userRouter = (userController, authController) => {
       const user = req.body;
       const data = await authController.login(user);
       res.json({ message: "loggin successfully", data });
-
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }
