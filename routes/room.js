@@ -228,6 +228,45 @@ const roomRouter = (roomController) => {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
   });
+
+  //* favourite**
+  router.get("/favourites/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const favouriteRooms = await roomController.getRoomsInFavourite(userId);
+      if (favouriteRooms.length === 0)
+        throw Error("There are no rooms in favourite");
+      res.status(200).json({ data: favouriteRooms });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
+
+  router.post("/favourites/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { roomId } = req.body;
+      await roomController.addRoomToFavourite(userId, roomId);
+      res
+        .status(201)
+        .json({ message: "Room added to favourites successfully" });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
+
+  router.delete("/favourites/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { roomId } = req.body;
+      await roomController.deleteRoomFromFavourite(userId, roomId);
+      res
+        .status(200)
+        .json({ message: "Room deleted to favourites successfully" });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
   return router;
 };
 

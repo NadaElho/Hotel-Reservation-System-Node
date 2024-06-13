@@ -44,6 +44,20 @@ const userSchema = new mongoose.Schema({
     required: ["you must enter a password!"],
     minlength: 8,
   },
+  resetToken: {
+    type: String,
+    createdAt: { type: Date, expires: 600, default: Date.now },
+  },
+  subscriptionId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Subscription",
+  },
+  favouriteRooms :[ {
+    type : mongoose.Schema.Types.ObjectId,
+    ref: "Room"
+  }],
+
+  passwordResetExpires: Date,
 });
 
 userSchema.methods.createPasswordResetToken = function () {
