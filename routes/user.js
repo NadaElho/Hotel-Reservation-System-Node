@@ -91,8 +91,11 @@ const userRouter = (userController, authController) => {
       if (user.role == "6642764acd637f7c34eb4b97") {
         throw new ForbiddenError("You aren't allowed to be admin");
       }
-      await authController.signup({ ...req.body });
-      res.json({ message: "you signed up successfully, you must login" });
+      const data = await authController.signup({ ...user });
+      res.json({
+        message: "you signed up successfully, you must login",
+        data: data,
+      });
     } catch (error) {
       res.status(500).json({ message: "Server Error: " + error.message });
     }

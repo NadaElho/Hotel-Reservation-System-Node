@@ -10,11 +10,26 @@ const router = express.Router();
 const roomTypeRouter = (roomTypeController) => {
   router.get("/", async (req, res) => {
     try {
-      const roomsType = await roomTypeController.getAllRoomsType();
-      res.status(200).json({
-        status: "success",
-        data: roomsType,
-      });
+      const page = req.query.page * 1 || 1;
+      const limit = req.query.limit * 1 || 6;
+      const skip = (page - 1) * limit;
+      const endIndex = page * limit;
+      const result = await roomTypeController.getAllRoomsType(skip, limit);
+      const { data, documentCount } = result;
+      const pagination = {
+        currentPage: page,
+        limit,
+        numberPages: Math.ceil(documentCount / limit),
+        documentCount,
+      };
+      if (endIndex < documentCount) {
+        pagination.nextPage = page + 1;
+      }
+
+      if (skip > 0) {
+        pagination.prevPage = page - 1;
+      }
+      res.status(200).json({ status: "success", pagination, data: data });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
