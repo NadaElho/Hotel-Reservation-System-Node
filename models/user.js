@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
   ],
   phoneNumber: {
     type: String,
-    match: [/^\d{11}$/, "Phone number must be 11 digits"],
+    // match: [/^\d{11}$/, "Phone number must be 11 digits"],
   },
   role: {
     type: mongoose.Schema.Types.ObjectId,
@@ -52,6 +52,11 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Subscription",
   },
+  favouriteRooms :[ {
+    type : mongoose.Schema.Types.ObjectId,
+    ref: "Room"
+  }],
+
   passwordResetExpires: Date,
 });
 
