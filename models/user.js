@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: ["you must enter a password!"],
-    // minlength: 8,
+    minlength: 8,
   },
   resetToken: {
     type: String,
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = randomBytes(32).toString("hex");
-  
+
   this.resetToken = createHash("sha256").update(resetToken).digest("hex");
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
 
@@ -79,13 +79,13 @@ userSchema.methods.addToken = async function (token) {
 };
 
 // Pre-save hook to hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+// userSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
 
-  this.password = await bcrypt.hash(this.password, 12);
-  console.log(this.password);
-  next();
-});
+//   this.password = await bcrypt.hash(this.password, 12);
+//   console.log(this.password);
+//   next();
+// });
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
