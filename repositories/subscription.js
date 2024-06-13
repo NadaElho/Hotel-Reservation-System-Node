@@ -1,35 +1,40 @@
-
-const NotFoundError = require('../handleErrors/notFoundError')
-const Subscription = require('../models/subscription')
+const NotFoundError = require("../handleErrors/notFoundError");
+const Subscription = require("../models/subscription");
 
 class SubscriptionRepository {
-  async getAllSubscriptions() {
-    const subscription = await Subscription.find().populate('subscriptionAdvantageIds')
-    if (!subscription.length ) {
-      throw new NotFoundError('No Subscription  found')
+  async getAllSubscriptions(skip, limit) {
+    const documentCount = await Subscription.countDocuments();
+    const data = await Subscription.find()
+      .populate("subscriptionAdvantageIds")
+      .skip(skip)
+      .limit(limit);
+    //TODO:
+
+    if (!data.length) {
+      throw new NotFoundError("No Subscription  found");
     }
-    return subscription 
+    return { data, documentCount };
   }
 
   async getSubscriptionById(id) {
-    const subscription  = await Subscription.findOne(id)
-    if (!subscription ) {
-      throw new NotFoundError('The Subscription with this ID was not found')
+    const subscription = await Subscription.findOne(id);
+    if (!subscription) {
+      throw new NotFoundError("The Subscription with this ID was not found");
     }
-    return subscription 
+    return subscription;
   }
 
   async addSubscription(req) {
-    return await Subscription.create(req)
+    return await Subscription.create(req);
   }
 
   async editSubscription(id, req) {
-    return await Subscription.updateOne(id, req)
+    return await Subscription.updateOne(id, req);
   }
 
   async deleteSubscription(id) {
-    return await Subscription.deleteOne(id)
+    return await Subscription.deleteOne(id);
   }
 }
 
-module.exports = SubscriptionRepository
+module.exports = SubscriptionRepository;
