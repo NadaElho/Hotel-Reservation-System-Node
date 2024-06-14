@@ -17,7 +17,7 @@ class ReviewController {
         const {roomId} = body
         const roomReviews = await this.reviewRepository.getRoomReviews(body.roomId)
         const countReviews = roomReviews.length
-        const sumRatings = roomReviews.reduce((total, review)=>{
+        const sumRatings = roomReviews.reviews.reduce((total, review)=>{
             return total + review.rating
         }, 0)
         const avg = (sumRatings + body.rating) / (countReviews + 1)
@@ -33,8 +33,9 @@ class ReviewController {
             const review = await this.reviewRepository.getReview(id)
             const prevRating = review.rating
             const roomReviews = await this.reviewRepository.getRoomReviews(review.roomId)
-            const countReviews = roomReviews.length
-            const sumRatings = roomReviews.reduce((total, review)=>{
+
+            const countReviews = roomReviews.reviews.length
+            const sumRatings = roomReviews.reviews.reduce((total, review)=>{
                return total + review.rating
             }, 0)
             const avg = (sumRatings + body.rating - prevRating) / (countReviews)
@@ -49,10 +50,10 @@ class ReviewController {
         const review = await this.reviewRepository.getReview(id)
         const rating = review.rating;
         const roomReviews = await this.reviewRepository.getRoomReviews(review.roomId)
-        const sumRatings = roomReviews.reduce((total, review)=>{
+        const sumRatings = roomReviews.reviews.reduce((total, review)=>{
             return total + review.rating
-        }, 0)
-        const avg = (sumRatings - rating) / (roomReviews.length - 1) 
+            }, 0)
+            const avg = (sumRatings - rating) / (roomReviews.reviews.length - 1) 
         await Room.findOneAndUpdate({_id: review.roomId}, {
             ratingAvg: avg,
         })
