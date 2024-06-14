@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: ["you must enter a password!"],
-    // minlength: 8,
+    minlength: 8,
   },
   emergencyContact: {
     type: String
@@ -55,12 +55,17 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Subscription",
   },
+  favouriteRooms :[ {
+    type : mongoose.Schema.Types.ObjectId,
+    ref: "Room"
+  }],
+
   passwordResetExpires: Date,
 });
 
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = randomBytes(32).toString("hex");
-  
+
   this.resetToken = createHash("sha256").update(resetToken).digest("hex");
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
 

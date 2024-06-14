@@ -22,12 +22,12 @@ const roomRouter = (roomController) => {
         "checkOut",
         "amenitiesIds",
         "roomTypeId",
-        "hotelId"
+        "hotelId",
       ];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
       queryStr = queryStr.replace(
-        /\b(gte|gt|lte|lt)\b/g,
+        /\b(gte|gt|lte|lt|eq)\b/g,
         (match) => `$${match}`
       );
       const parse = JSON.parse(queryStr);
@@ -224,6 +224,45 @@ const roomRouter = (roomController) => {
         status: "success",
         message: "Room deleted successfully",
       });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
+
+  //* favourite**
+  router.get("/favourites/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const favouriteRooms = await roomController.getRoomsInFavourite(userId);
+      if (favouriteRooms.length === 0)
+        throw Error("There are no rooms in favourite");
+      res.status(200).json({ data: favouriteRooms });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
+
+  router.post("/favourites/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { roomId } = req.body;
+      await roomController.addRoomToFavourite(userId, roomId);
+      res
+        .status(201)
+        .json({ message: "Room added to favourites successfully" });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
+
+  router.delete("/favourites/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { roomId } = req.body;
+      await roomController.deleteRoomFromFavourite(userId, roomId);
+      res
+        .status(200)
+        .json({ message: "Room deleted to favourites successfully" });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }

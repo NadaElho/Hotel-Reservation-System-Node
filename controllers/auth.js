@@ -53,6 +53,7 @@ class AuthController {
       loggedUser.password
     );
 
+    console.log("loggedUser", passwordMatch);
     const userByEmail = await this.authRepository.getUserByEmail(user.email);
 
     const { role, _id } = userByEmail;
@@ -81,36 +82,35 @@ class AuthController {
     await user.save({ validateBeforeSave: false });
     await this.authRepository.saveUser(user);
 
-    const link = `http://localhost:3000/api/v1/users/resetPassword/${resetToken}`
+    const link = `http://localhost:3000/api/v1/users/resetPassword/${resetToken}`;
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.USER_EMAIL,
         pass: process.env.USER_PASS,
       },
-    })
-  
+    });
+
     const mailOptions = {
       from: process.env.USER_EMAIL,
       to: user.email,
-      subject: 'Reset password',
+      subject: "Reset password",
       html: `<div>
       <h3>Hello, <span style='color: #f8b810'>${user.firstName}</span></h3>
       <h4>Click on the link below to reset yor password</h4>
       <p>${link}</p>
       </div>`,
-    }
+    };
     transporter.sendMail(mailOptions, (err, success) => {
       if (err) {
-        console.log(err)
+        console.log(err);
       } else {
-        console.log('Email sent: ' + success.response)
+        console.log("Email sent: " + success.response);
       }
-    })
+    });
   }
 
   async resetPassword(resetToken, newPassword) {
-
     const user = await this.authRepository.getUserByResetToken(resetToken);
 
     if (!user) {
