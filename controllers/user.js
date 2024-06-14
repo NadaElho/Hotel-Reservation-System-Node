@@ -1,3 +1,6 @@
+const bcrypt = require("bcrypt")
+const BadRequestError = require("../handleErrors/badRequestError")
+
 class UserController {
   constructor(userRepository) {
     this.userRepository = userRepository
@@ -13,6 +16,16 @@ class UserController {
 
   async updateUser(id, body) {
     return await this.userRepository.updateUser(id, body)
+  }
+
+  async updaeUserPassword(id, body){
+    const user = await this.getUserById(id)
+    const isCorrectPassword = await bcrypt.compare(body.currentPassword, user.password)
+    if(!isCorrectPassword){
+      throw new BadRequestError("Old password is incorrect") 
+    }
+    const newPassword =  await bcrypt.hash(body.newPassword, 10)
+    return await this.userRepository.updaeUserPassword(id, newPassword)
   }
 
   deleteUser(id) {

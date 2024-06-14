@@ -37,6 +37,15 @@ const userRouter = (userController, authController) => {
     }
   });
 
+  router.get("/:id", protect, async (req, res) => {
+    try {
+     const data = await userController.getUserById(req.params.id)
+      res.status(200).json({ status: "success",  data: data });
+    } catch (error) {
+      res.status(500).json({ message: "Server Error: " + error.message });
+    }
+  });
+
   router.post("/forgotPassword", async (req, res) => {
     try {
       const { email } = req.body;
@@ -134,6 +143,7 @@ const userRouter = (userController, authController) => {
     uploadImage,
     async (req, res) => {
       try {
+        console.log(req.body);
         const { error } = validateUpdateUser(req.body);
         if (error) {
           throw new BadRequestError(error.message);
@@ -149,6 +159,23 @@ const userRouter = (userController, authController) => {
         }
         await userController.updateUser(id, userBody);
         res.status(201).json({ message: "This user updated successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Server Error: " + error.message });
+      }
+    }
+  );
+  router.patch(
+    "/:id/password",
+    protect,
+    async (req, res) => {
+      try {
+        const id = req.params.id;
+        const user = await userController.getUserById(id);
+        if (!user) {
+          throw new NotFoundError("this user is not exist");
+        }
+       await userController.updaeUserPassword(id, req.body)
+        res.status(201).json({ message: "Password updated successfully" });
       } catch (error) {
         res.status(500).json({ message: "Server Error: " + error.message });
       }

@@ -44,6 +44,9 @@ const userSchema = new mongoose.Schema({
     required: ["you must enter a password!"],
     minlength: 8,
   },
+  emergencyContact: {
+    type: String
+  },
   resetToken: {
     type: String,
     createdAt: { type: Date, expires: 600, default: Date.now },
