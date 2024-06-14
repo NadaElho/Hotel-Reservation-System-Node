@@ -20,6 +20,10 @@ class UserRepository {
     return await User.updateOne({ _id: id }, body);
   }
 
+  async updaeUserPassword(id, password){
+    return await User.updateOne({ _id: id }, {password});
+  }
+
   async deleteUser(id) {
     return await User.deleteOne({ _id: id });
   }
