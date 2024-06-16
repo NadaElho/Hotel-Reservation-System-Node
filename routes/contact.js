@@ -17,7 +17,7 @@ const contact = () => {
       to: process.env.USER_EMAIL,
       subject: `Message from ${req.body.firstName}`,
       html: `<div>
-                <h3 style="color: #3b5d50;">${req.body.message}</h3>
+                <h3 style="color: #7c6555;">${req.body.message}</h3>
               </div>`,
     };
 

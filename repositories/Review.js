@@ -1,45 +1,41 @@
-const Review = require("../models/review");
-const NotFoundError = require("../handleErrors/notFoundError");
+const Review = require('../models/review')
+const NotFoundError = require('../handleErrors/notFoundError')
 
 class ReviewRepository {
   async getReviews(skip, limit) {
     const documentCount = await Review.countDocuments();
-    const reviews = await Review.find()
-      .populate("userId")
-      .populate("roomId")
-      .skip(skip)
-      .limit(limit);
+    const reviews = await Review.find().skip(skip).limit(limit).populate("userId").populate("roomId")
     if (!reviews.length) {
-      throw new NotFoundError("No reviews found");
+      throw new NotFoundError('No reviews found')
     }
-    return { reviews, documentCount };
+    return {reviews, documentCount}
   }
 
-  async getRoomReviews(id, skip, limit) {
-    const documentCount = await Review.countDocuments({ roomId: id });
-    const reviews = await Review.find({ roomId: id }).skip(skip).limit(limit);
-    return { reviews, documentCount };
+  async getRoomReviews(id, skip, limit){
+    const documentCount = await Review.countDocuments({roomId: id});
+    const reviews = await Review.find({roomId: id}).skip(skip).limit(limit).populate("userId").populate("roomId")
+    return {reviews, documentCount}
   }
 
-  async getReview(id) {
-    const review = await Review.findOne({ _id: id });
+  async getReview(id){
+    const review = await Review.findOne({_id: id}).populate("userId").populate("roomId")
     if (!review) {
-      throw new NotFoundError("No review found with this id");
+        throw new NotFoundError('No review found with this id')
     }
-    return review;
+    return review
   }
 
   async addReview(body) {
-    await Review.create(body);
+    await Review.create(body)
   }
 
   async editReview(id, body) {
-    await Review.updateOne({ _id: id }, body);
+    await Review.updateOne({ _id: id }, body)
   }
 
   async deleteReview(id) {
-    await Review.deleteOne({ _id: id });
+    await Review.deleteOne({ _id: id })
   }
 }
 
-module.exports = ReviewRepository;
+module.exports = ReviewRepository

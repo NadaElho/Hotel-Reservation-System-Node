@@ -230,7 +230,7 @@ const roomRouter = (roomController) => {
   });
 
   //* favourite**
-  router.get("/favourites/:userId", async (req, res) => {
+  router.get("/favourites/:userId", protect, async (req, res) => {
     try {
       const { userId } = req.params;
       const favouriteRooms = await roomController.getRoomsInFavourite(userId);
@@ -242,7 +242,7 @@ const roomRouter = (roomController) => {
     }
   });
 
-  router.post("/favourites/:userId", async (req, res) => {
+  router.post("/favourites/:userId", protect, async (req, res) => {
     try {
       const { userId } = req.params;
       const { roomId } = req.body;
@@ -255,14 +255,14 @@ const roomRouter = (roomController) => {
     }
   });
 
-  router.delete("/favourites/:userId", async (req, res) => {
+  router.delete("/favourites/:userId", protect, async (req, res) => {
     try {
       const { userId } = req.params;
       const { roomId } = req.body;
       await roomController.deleteRoomFromFavourite(userId, roomId);
       res
         .status(200)
-        .json({ message: "Room deleted to favourites successfully" });
+        .json({ message: "Room deleted from favourites successfully" });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
