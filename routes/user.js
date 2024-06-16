@@ -33,7 +33,7 @@ const userRouter = (userController, authController) => {
       }
       res.status(200).json({ status: "success", pagination, data: data });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message:  error.message });
     }
   });
 
@@ -42,7 +42,7 @@ const userRouter = (userController, authController) => {
      const data = await userController.getUserById(req.params.id)
       res.status(200).json({ status: "success",  data: data });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message:  error.message });
     }
   });
 
@@ -55,7 +55,7 @@ const userRouter = (userController, authController) => {
         message: "Token sent to email!  " + response,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message:  error.message });
     }
   });
 
@@ -73,7 +73,7 @@ const userRouter = (userController, authController) => {
         message: "your password has updated this is new token : " + response,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message:  error.message });
     }
   });
 
@@ -86,7 +86,7 @@ const userRouter = (userController, authController) => {
       }
       res.json({ data: user });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message:  error.message });
     }
   });
 
@@ -106,7 +106,7 @@ const userRouter = (userController, authController) => {
         data: data,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message:  error.message });
     }
   });
 
@@ -116,7 +116,7 @@ const userRouter = (userController, authController) => {
       const data = await authController.login(user);
       res.json({ message: "loggin successfully", data });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -132,7 +132,7 @@ const userRouter = (userController, authController) => {
       await userController.deleteUser(id);
       res.status(200).json({ message: "The user deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message:  error.message });
     }
   });
 
@@ -143,7 +143,6 @@ const userRouter = (userController, authController) => {
     uploadImage,
     async (req, res) => {
       try {
-        console.log(req.body);
         const { error } = validateUpdateUser(req.body);
         if (error) {
           throw new BadRequestError(error.message);
@@ -160,7 +159,7 @@ const userRouter = (userController, authController) => {
         await userController.updateUser(id, userBody);
         res.status(201).json({ message: "This user updated successfully" });
       } catch (error) {
-        res.status(500).json({ message: "Server Error: " + error.message });
+        res.status(500).json({ message:  error.message });
       }
     }
   );
@@ -177,7 +176,7 @@ const userRouter = (userController, authController) => {
        await userController.updaeUserPassword(id, req.body)
         res.status(201).json({ message: "Password updated successfully" });
       } catch (error) {
-        res.status(500).json({ message: "Server Error: " + error.message });
+        res.status(500).json({ message:  error.message });
       }
     }
   );

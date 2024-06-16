@@ -40,7 +40,7 @@ class ReviewController {
             }, 0)
             const avg = (sumRatings + body.rating - prevRating) / (countReviews)
             await Room.findOneAndUpdate({_id: review.roomId}, {
-               ratingAvg: avg,
+                ratingAvg: isNaN(avg) ? 0 : avg 
             })
         }
       return await this.reviewRepository.editReview(id, body)
@@ -55,7 +55,7 @@ class ReviewController {
             }, 0)
             const avg = (sumRatings - rating) / (roomReviews.reviews.length - 1) 
         await Room.findOneAndUpdate({_id: review.roomId}, {
-            ratingAvg: avg,
+            ratingAvg: isNaN(avg) ? 0 : avg 
         })
         return await this.reviewRepository.deleteReview(id)
     }
