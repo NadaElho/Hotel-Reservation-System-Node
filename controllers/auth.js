@@ -53,7 +53,6 @@ class AuthController {
       loggedUser.password
     );
 
-    console.log("loggedUser", passwordMatch);
     const userByEmail = await this.authRepository.getUserByEmail(user.email);
 
     const { role, _id } = userByEmail;
@@ -82,7 +81,7 @@ class AuthController {
     await user.save({ validateBeforeSave: false });
     await this.authRepository.saveUser(user);
 
-    const link = `http://localhost:3000/api/v1/users/resetPassword/${resetToken}`;
+    const link = `http://localhost:5173/newPassword/${resetToken}`;
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -96,7 +95,7 @@ class AuthController {
       to: user.email,
       subject: "Reset password",
       html: `<div>
-      <h3>Hello, <span style='color: #f8b810'>${user.firstName}</span></h3>
+      <h3>Hello, <span style='color: #7c6555'>${user.firstName}</span></h3>
       <h4>Click on the link below to reset yor password</h4>
       <p>${link}</p>
       </div>`,
