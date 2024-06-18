@@ -23,6 +23,7 @@ const roomRouter = (roomController) => {
         "amenitiesIds",
         "roomTypeId",
         "hotelId",
+        "roomsId",
       ];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
@@ -65,14 +66,19 @@ const roomRouter = (roomController) => {
 
       //filter
       let amenities;
+      let roomsId;
       if (req.query.amenitiesIds) {
         const fields = req.query.amenitiesIds.split(",");
+        console.log(fields);
         amenities = { amenitiesIds: { $all: fields } };
       }
       if (req.params.hotelId) {
         query = { ...filterObj };
       }
-
+      if (req.query.roomsId) {
+        const fields = req.query.roomsId.split(",");
+        roomsId = { _id: { $in: fields } };
+      }
       if (hotelId && roomTypeId) {
         query = {
           ...queryRoom,
@@ -82,6 +88,8 @@ const roomRouter = (roomController) => {
           ...parse,
           ...amenities,
         };
+      } else if (roomsId) {
+        query = { ...roomsId };
       } else if (roomTypeId) {
         query = { ...queryRoom, roomTypeId, ...query, ...parse, ...amenities };
       } else if (hotelId) {
