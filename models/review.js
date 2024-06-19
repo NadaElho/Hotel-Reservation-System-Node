@@ -14,6 +14,7 @@ const reviewSchema = mongoose.Schema({
   userId: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
+    required: true
   },
   roomId: {
     type: mongoose.Schema.Types.ObjectId,
