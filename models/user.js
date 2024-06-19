@@ -45,20 +45,22 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
   },
   emergencyContact: {
-    type: String
+    type: String,
   },
   resetToken: {
     type: String,
     createdAt: { type: Date, expires: 600, default: Date.now },
   },
-  subscriptionId:{
+  subscriptionId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Subscription",
   },
-  favouriteRooms :[ {
-    type : mongoose.Schema.Types.ObjectId,
-    ref: "Room"
-  }],
+  favouriteRooms: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Room",
+    },
+  ],
 
   passwordResetExpires: Date,
 });
