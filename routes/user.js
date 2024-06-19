@@ -33,16 +33,16 @@ const userRouter = (userController, authController) => {
       }
       res.status(200).json({ status: "success", pagination, data: data });
     } catch (error) {
-      res.status(500).json({ message:  error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
   router.get("/:id", protect, async (req, res) => {
     try {
-     const data = await userController.getUserById(req.params.id)
-      res.status(200).json({ status: "success",  data: data });
+      const data = await userController.getUserById(req.params.id);
+      res.status(200).json({ status: "success", data: data });
     } catch (error) {
-      res.status(500).json({ message:  error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -55,7 +55,7 @@ const userRouter = (userController, authController) => {
         message: "Token sent to email!  " + response,
       });
     } catch (error) {
-      res.status(500).json({ message:  error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -73,7 +73,7 @@ const userRouter = (userController, authController) => {
         message: "your password has updated this is new token : " + response,
       });
     } catch (error) {
-      res.status(500).json({ message:  error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -86,7 +86,7 @@ const userRouter = (userController, authController) => {
       }
       res.json({ data: user });
     } catch (error) {
-      res.status(500).json({ message:  error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -106,7 +106,7 @@ const userRouter = (userController, authController) => {
         data: data,
       });
     } catch (error) {
-      res.status(500).json({ message:  error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -132,7 +132,7 @@ const userRouter = (userController, authController) => {
       await userController.deleteUser(id);
       res.status(200).json({ message: "The user deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message:  error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -159,28 +159,36 @@ const userRouter = (userController, authController) => {
         await userController.updateUser(id, userBody);
         res.status(201).json({ message: "This user updated successfully" });
       } catch (error) {
-        res.status(500).json({ message:  error.message });
+        res.status(500).json({ message: error.message });
       }
     }
   );
-  router.patch(
-    "/:id/password",
-    protect,
-    async (req, res) => {
-      try {
-        const id = req.params.id;
-        const user = await userController.getUserById(id);
-        if (!user) {
-          throw new NotFoundError("this user is not exist");
-        }
-       await userController.updaeUserPassword(id, req.body)
-        res.status(201).json({ message: "Password updated successfully" });
-      } catch (error) {
-        res.status(500).json({ message:  error.message });
+  router.patch("/:id/password", protect, async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await userController.getUserById(id);
+      if (!user) {
+        throw new NotFoundError("this user is not exist");
       }
+      await userController.updaeUserPassword(id, req.body);
+      res.status(201).json({ message: "Password updated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-  );
-
+  });
+  router.get("/add-subscription/:id", protect, async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await userController.addSubscriptionToUser(id, req.user);
+      res.status(200).json({
+        status: "success",
+        message: "add subscription to user successfully",
+        data: user,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
   return router;
 };
 

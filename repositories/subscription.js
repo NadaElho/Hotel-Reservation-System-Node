@@ -26,13 +26,12 @@ class SubscriptionRepository {
     return subscription;
   }
 
-  async addSubscription(req, userId) {
-    console.log(userId);
+  async addSubscription(req) {
     // const user = await User.findById(userId._id);
     const subscription = await Subscription.create(req);
-    userId.subscriptionId = subscription._id;
-    await userId.save();
-    return userId;
+    // userId.subscriptionId = subscription._id;
+    // await userId.save();
+    return subscription;
   }
 
   async editSubscription(id, req) {

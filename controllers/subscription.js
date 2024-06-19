@@ -11,11 +11,8 @@ class SubscriptionController {
     return await this.subscriptionRepository.getSubscriptionById(id);
   }
 
-  async addSubscription(newSubscription, userId) {
-    return await this.subscriptionRepository.addSubscription(
-      newSubscription,
-      userId
-    );
+  async addSubscription(newSubscription) {
+    return await this.subscriptionRepository.addSubscription(newSubscription);
   }
 
   async editSubscription(id, UpdateSubscription) {

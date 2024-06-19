@@ -44,8 +44,7 @@ const subscriptionRouter = (subscriptionController) => {
         throw new BadRequestError(error.message);
       }
       const subscription = await subscriptionController.addSubscription(
-        req.body,
-        req.user
+        req.body
       );
 
       res.status(201).json({
