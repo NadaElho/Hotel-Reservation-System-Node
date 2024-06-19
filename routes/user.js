@@ -9,6 +9,18 @@ const ForbiddenError = require("../handleErrors/forbiddenError");
 const router = express.Router();
 
 const userRouter = (userController, authController) => {
+  router.delete("/delete-subscription", protect, async (req, res) => {
+    try {
+      const user = await userController.deleteSubscriptionToUser(req.user);
+      res.status(200).json({
+        status: "success",
+        message: "delete subscription to user successfully",
+        data: user,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
   router.get("/", protect, restrictTo("admin"), async (req, res) => {
     try {
       const page = req.query.page * 1 || 1;
@@ -72,19 +84,6 @@ const userRouter = (userController, authController) => {
         status: "success",
         message: "your password has updated this is new token : " + response,
       });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  });
-
-  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
-    try {
-      const id = req.params.id;
-      const user = await userController.getUserById(id);
-      if (!user) {
-        throw new NotFoundError("this user is not exist");
-      }
-      res.json({ data: user });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -176,7 +175,7 @@ const userRouter = (userController, authController) => {
       res.status(500).json({ message: error.message });
     }
   });
-  router.get("/add-subscription/:id", protect, async (req, res) => {
+  router.patch("/add-subscription/:id", protect, async (req, res) => {
     try {
       const id = req.params.id;
       const user = await userController.addSubscriptionToUser(id, req.user);
@@ -189,6 +188,7 @@ const userRouter = (userController, authController) => {
       res.status(500).json({ message: error.message });
     }
   });
+
   return router;
 };
 

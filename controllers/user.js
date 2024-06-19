@@ -41,6 +41,9 @@ class UserController {
       userId
     );
   }
+  async deleteSubscriptionToUser(userId) {
+    return await this.userRepository.deleteSubscriptionToUser(userId);
+  }
 }
 
 module.exports = UserController;

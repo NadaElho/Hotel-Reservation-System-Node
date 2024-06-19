@@ -1,3 +1,4 @@
+const NotFoundError = require("../handleErrors/notFoundError");
 const Subscription = require("../models/subscription");
 const User = require("../models/user");
 
@@ -36,6 +37,21 @@ class UserRepository {
       throw new NotFoundError("The Subscription with this ID was not found");
     }
     userId.subscriptionId = subscriptionId;
+    await userId.save();
+    return userId;
+  }
+  async deleteSubscriptionToUser(userId) {
+    if (!userId.subscriptionId) {
+      throw new NotFoundError("The Subscription with this ID was not found");
+    }
+    const subscriptionId = userId.subscriptionId.toString();
+    const subscription = await Subscription.findOne({
+      _id: subscriptionId,
+    });
+    if (!subscription) {
+      throw new NotFoundError("The Subscription with this ID was not found");
+    }
+    userId.subscriptionId = null;
     await userId.save();
     return userId;
   }
