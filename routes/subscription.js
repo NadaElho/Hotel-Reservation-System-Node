@@ -43,13 +43,15 @@ const subscriptionRouter = (subscriptionController) => {
       if (error) {
         throw new BadRequestError(error.message);
       }
-      const subscription = await subscriptionController.addSubscription({
-        ...req.body,
-      });
+      const subscription = await subscriptionController.addSubscription(
+        req.body,
+        req.user
+      );
+
       res.status(201).json({
         status: "success",
         message: "Subscription  added successfully",
-        subscription: subscription,
+        data: subscription,
       });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
