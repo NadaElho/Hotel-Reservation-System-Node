@@ -1,9 +1,9 @@
 class PromotionController {
   constructor(promotionRepository) {
-    this.promotionRepository = promotionRepository; 
+    this.promotionRepository = promotionRepository;
   }
-  async getAllPromotions() {
-    return await this.promotionRepository.getAllPromotions();
+  async getAllPromotions(skip, limit) {
+    return await this.promotionRepository.getAllPromotions(skip, limit);
   }
 
   async getPromotionById(id) {
