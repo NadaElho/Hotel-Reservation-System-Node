@@ -9,6 +9,18 @@ const ForbiddenError = require("../handleErrors/forbiddenError");
 const router = express.Router();
 
 const userRouter = (userController, authController) => {
+  router.delete("/delete-subscription", protect, async (req, res) => {
+    try {
+      const user = await userController.deleteSubscriptionToUser(req.user);
+      res.status(200).json({
+        status: "success",
+        message: "delete subscription to user successfully",
+        data: user,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
   router.get("/", protect, restrictTo("admin"), async (req, res) => {
     try {
       const page = req.query.page * 1 || 1;
@@ -33,16 +45,16 @@ const userRouter = (userController, authController) => {
       }
       res.status(200).json({ status: "success", pagination, data: data });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
   router.get("/:id", protect, async (req, res) => {
     try {
-     const data = await userController.getUserById(req.params.id)
-      res.status(200).json({ status: "success",  data: data });
+      const data = await userController.getUserById(req.params.id);
+      res.status(200).json({ status: "success", data: data });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -55,7 +67,7 @@ const userRouter = (userController, authController) => {
         message: "Token sent to email!  " + response,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -73,20 +85,7 @@ const userRouter = (userController, authController) => {
         message: "your password has updated this is new token : " + response,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
-    }
-  });
-
-  router.get("/:id", protect, restrictTo("admin"), async (req, res) => {
-    try {
-      const id = req.params.id;
-      const user = await userController.getUserById(id);
-      if (!user) {
-        throw new NotFoundError("this user is not exist");
-      }
-      res.json({ data: user });
-    } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -106,7 +105,7 @@ const userRouter = (userController, authController) => {
         data: data,
       });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -116,7 +115,7 @@ const userRouter = (userController, authController) => {
       const data = await authController.login(user);
       res.json({ message: "loggin successfully", data });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -132,7 +131,7 @@ const userRouter = (userController, authController) => {
       await userController.deleteUser(id);
       res.status(200).json({ message: "The user deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Server Error: " + error.message });
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -143,7 +142,6 @@ const userRouter = (userController, authController) => {
     uploadImage,
     async (req, res) => {
       try {
-        console.log(req.body);
         const { error } = validateUpdateUser(req.body);
         if (error) {
           throw new BadRequestError(error.message);
@@ -160,27 +158,36 @@ const userRouter = (userController, authController) => {
         await userController.updateUser(id, userBody);
         res.status(201).json({ message: "This user updated successfully" });
       } catch (error) {
-        res.status(500).json({ message: "Server Error: " + error.message });
+        res.status(500).json({ message: error.message });
       }
     }
   );
-  router.patch(
-    "/:id/password",
-    protect,
-    async (req, res) => {
-      try {
-        const id = req.params.id;
-        const user = await userController.getUserById(id);
-        if (!user) {
-          throw new NotFoundError("this user is not exist");
-        }
-       await userController.updaeUserPassword(id, req.body)
-        res.status(201).json({ message: "Password updated successfully" });
-      } catch (error) {
-        res.status(500).json({ message: "Server Error: " + error.message });
+  router.patch("/:id/password", protect, async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await userController.getUserById(id);
+      if (!user) {
+        throw new NotFoundError("this user is not exist");
       }
+      await userController.updaeUserPassword(id, req.body);
+      res.status(201).json({ message: "Password updated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-  );
+  });
+  router.patch("/add-subscription/:id", protect, async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await userController.addSubscriptionToUser(id, req.user);
+      res.status(200).json({
+        status: "success",
+        message: "add subscription to user successfully",
+        data: user,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
 
   return router;
 };

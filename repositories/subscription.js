@@ -1,5 +1,6 @@
 const NotFoundError = require("../handleErrors/notFoundError");
 const Subscription = require("../models/subscription");
+const User = require("../models/user");
 
 class SubscriptionRepository {
   async getAllSubscriptions(skip, limit) {
@@ -21,11 +22,16 @@ class SubscriptionRepository {
     if (!subscription) {
       throw new NotFoundError("The Subscription with this ID was not found");
     }
+
     return subscription;
   }
 
   async addSubscription(req) {
-    return await Subscription.create(req);
+    // const user = await User.findById(userId._id);
+    const subscription = await Subscription.create(req);
+    // userId.subscriptionId = subscription._id;
+    // await userId.save();
+    return subscription;
   }
 
   async editSubscription(id, req) {

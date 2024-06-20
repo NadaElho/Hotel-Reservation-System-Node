@@ -1,8 +1,16 @@
+const NotFoundError = require("../handleErrors/notFoundError");
 const Promotion = require("../models/promotion");
 
 class PromotionRepository {
-  async getAllPromotions() {
-    return await Promotion.find();
+  async getAllPromotions(skip,limit) {
+    const documentCount = await Promotion.countDocuments();
+    const data = await Promotion.find().skip(skip).limit(limit);
+    //TODO:
+
+    if (!data.length) {
+      throw new NotFoundError("No Promotion found");
+    }
+    return { data, documentCount };
   }
 
   async getPromotionById(id) {

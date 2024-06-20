@@ -48,7 +48,7 @@ class ReviewController {
       await Room.findOneAndUpdate(
         { _id: review.roomId },
         {
-          ratingAvg: avg,
+          ratingAvg: isNaN(avg) ? 0 : avg,
         }
       );
     }
@@ -68,6 +68,9 @@ class ReviewController {
   
     await Room.findOneAndUpdate(
       { _id: review.roomId },
+      {
+        ratingAvg: isNaN(avg) ? 0 : avg,
+      }
       { ratingAvg: avg }
     );
   

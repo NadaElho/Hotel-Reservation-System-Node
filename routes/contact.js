@@ -17,22 +17,21 @@ const contact = () => {
       to: process.env.USER_EMAIL,
       subject: `Message from ${req.body.firstName}`,
       html: `<div>
-                <h3 style="color: #3b5d50;">${req.body.message}</h3>
+                <h3 style="color: #7c6555;">${req.body.message}</h3>
               </div>`,
     };
 
-    transporter.sendMail(mailOptions, (error, success) => {
-      if (error) {
-        res.send({ message: error.message });
-      } else {
-        console.log(`Email sent ${success.response}`);
-        res.send({
-          message: `Thank you for your message, ${firstName}. We will get back to you shortly.`,
-        });
-      }
-    });
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log(`Email sent: ${info.response}`);
+      res.status(200).json({
+        message: `Thank you for your message, ${req.body.firstName}. We will get back to you shortly.`,
+      });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
   });
-  return router
+  return router;
 };
 
 module.exports = contact;

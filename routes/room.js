@@ -23,6 +23,7 @@ const roomRouter = (roomController) => {
         "amenitiesIds",
         "roomTypeId",
         "hotelId",
+        "roomsId",
       ];
       excludedFields.forEach((el) => delete queryObj[el]);
       let queryStr = JSON.stringify(queryObj);
@@ -65,14 +66,19 @@ const roomRouter = (roomController) => {
 
       //filter
       let amenities;
+      let roomsId;
       if (req.query.amenitiesIds) {
         const fields = req.query.amenitiesIds.split(",");
+        console.log(fields);
         amenities = { amenitiesIds: { $all: fields } };
       }
       if (req.params.hotelId) {
         query = { ...filterObj };
       }
-
+      if (req.query.roomsId) {
+        const fields = req.query.roomsId.split(",");
+        roomsId = { _id: { $in: fields } };
+      }
       if (hotelId && roomTypeId) {
         query = {
           ...queryRoom,
@@ -82,6 +88,8 @@ const roomRouter = (roomController) => {
           ...parse,
           ...amenities,
         };
+      } else if (roomsId) {
+        query = { ...roomsId };
       } else if (roomTypeId) {
         query = { ...queryRoom, roomTypeId, ...query, ...parse, ...amenities };
       } else if (hotelId) {
@@ -230,7 +238,7 @@ const roomRouter = (roomController) => {
   });
 
   //* favourite**
-  router.get("/favourites/:userId", async (req, res) => {
+  router.get("/favourites/:userId", protect, async (req, res) => {
     try {
       const { userId } = req.params;
       const favouriteRooms = await roomController.getRoomsInFavourite(userId);
@@ -242,7 +250,7 @@ const roomRouter = (roomController) => {
     }
   });
 
-  router.post("/favourites/:userId", async (req, res) => {
+  router.post("/favourites/:userId", protect, async (req, res) => {
     try {
       const { userId } = req.params;
       const { roomId } = req.body;
@@ -255,14 +263,14 @@ const roomRouter = (roomController) => {
     }
   });
 
-  router.delete("/favourites/:userId", async (req, res) => {
+  router.delete("/favourites/:userId", protect, async (req, res) => {
     try {
       const { userId } = req.params;
       const { roomId } = req.body;
       await roomController.deleteRoomFromFavourite(userId, roomId);
       res
         .status(200)
-        .json({ message: "Room deleted to favourites successfully" });
+        .json({ message: "Room deleted from favourites successfully" });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
