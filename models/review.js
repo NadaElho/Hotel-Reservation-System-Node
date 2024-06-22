@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 
 const reviewSchema = mongoose.Schema({
-  title: {
+  title_en: {
+    type: String,
+    reuired: true
+  },
+  title_ar: {
     type: String,
     reuired: true
   },
@@ -24,7 +28,7 @@ const reviewSchema = mongoose.Schema({
   date:{
     type: Date,
     default: Date.now,
-  }
+  },
 })
 
 const Review = mongoose.model('Review', reviewSchema)

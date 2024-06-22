@@ -71,7 +71,6 @@ class ReviewController {
       {
         ratingAvg: isNaN(avg) ? 0 : avg,
       }
-      { ratingAvg: avg }
     );
   
     return await this.reviewRepository.deleteReview(id);
