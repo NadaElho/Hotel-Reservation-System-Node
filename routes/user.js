@@ -16,13 +16,14 @@ const userRouter = (userController, authController) => {
       const user = await userController.deleteSubscriptionToUser(req.user);
       res.status(200).json({
         status: "success",
-        message: "delete subscription to user successfully",
+        message: "user unsubscribed successfully",
         data: user,
       });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   });
+  
   router.get("/", protect, restrictTo("admin"), async (req, res) => {
     try {
       const page = req.query.page * 1 || 1;

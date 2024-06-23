@@ -9,7 +9,6 @@ class SubscriptionRepository {
       .populate("subscriptionAdvantageIds")
       .skip(skip)
       .limit(limit);
-    //TODO:
 
     if (!data.length) {
       throw new NotFoundError("No Subscription  found");
@@ -18,7 +17,7 @@ class SubscriptionRepository {
   }
 
   async getSubscriptionById(id) {
-    const subscription = await Subscription.findOne(id);
+    const subscription = await Subscription.findOne({ _id: id });
     if (!subscription) {
       throw new NotFoundError("The Subscription with this ID was not found");
     }
@@ -40,6 +39,11 @@ class SubscriptionRepository {
 
   async deleteSubscription(id) {
     return await Subscription.deleteOne(id);
+  }
+
+  async payWithStripe(id) {
+    const subscription = await Subscription.findOne({ _id: id })
+    return subscription;
   }
 }
 
