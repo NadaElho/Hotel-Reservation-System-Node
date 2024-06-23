@@ -57,17 +57,18 @@ class ReservationController {
     const user = await User.findOne({_id: userId}).populate("subscriptionId")
     let calcTotalPrice = 0
 
-    if (room.promotionId[0]) {
+    if (room?.promotionId[0]?.percentage) {
       calcTotalPrice = calcNoOfNights * room.price * (1 - room.promotionId[0].percentage / 100);
     } else {
       calcTotalPrice = calcNoOfNights * room.price;
     }
+
     
-    if (user.subscriptionId) {
+    if (user.subscriptionId.percentage) {
       calcTotalPrice *= (1 - user.subscriptionId.percentage / 100);
     }
     
-      return await this.reservationRepository.addNewReservation({
+    return await this.reservationRepository.addNewReservation({
       ...body,
       totalPrice: calcTotalPrice,
     })
