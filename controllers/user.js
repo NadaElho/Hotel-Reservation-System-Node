@@ -13,7 +13,9 @@ class UserController {
   async getUserById(id) {
     return await this.userRepository.getUserById(id);
   }
-
+  async getRoleById(id) {
+    return await this.userRepository.getRoleById(id);
+  }
   async updateUser(id, body) {
     return await this.userRepository.updateUser(id, body);
   }
