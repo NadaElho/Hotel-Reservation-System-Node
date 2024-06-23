@@ -7,6 +7,8 @@ const NotFoundError = require("../handleErrors/notFoundError");
 const BadRequestError = require("../handleErrors/badRequestError");
 const ForbiddenError = require("../handleErrors/forbiddenError");
 const router = express.Router();
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const userRouter = (userController, authController) => {
   router.delete("/delete-subscription", protect, async (req, res) => {
@@ -157,6 +159,28 @@ const userRouter = (userController, authController) => {
         }
         await userController.updateUser(id, userBody);
         res.status(201).json({ message: "This user updated successfully" });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    }
+  );
+
+  router.patch(
+    "/add-admin/:id",
+    protect,
+    restrictTo("admin"),
+    async (req, res) => {
+      try {
+        const id = req.params.id;
+        const user = await userController.getUserById(id);
+        const role = await userController.getRoleById(req.body.role);
+        user.role = role._id;
+        await user.save();
+        const newAdmin = await userController.getUserById(id);
+        res.status(201).json({
+          message: "User updated To Admin successfully",
+          data: newAdmin,
+        });
       } catch (error) {
         res.status(500).json({ message: error.message });
       }
