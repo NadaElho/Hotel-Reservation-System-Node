@@ -18,7 +18,14 @@ class UserRepository {
 
   async getUserById(id) {
 
-    const user = await User.findOne({ _id: id }).populate("role");
+    const user = await User.findOne({ _id: id }).populate("role").populate("subscriptionId").populate({
+      path: "favouriteRooms",
+      model: "Room",
+      populate:{
+        path: "promotionId",
+        model: "Promotion"
+      }
+    });
     if (!user) {
       throw new NotFoundError("The user with this ID was not found");
     }
