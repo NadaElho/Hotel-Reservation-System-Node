@@ -1,5 +1,6 @@
 const BadRequestError = require("../handleErrors/badRequestError");
 const NotFoundError = require("../handleErrors/notFoundError");
+const Role = require("../models/role");
 const Subscription = require("../models/subscription");
 const User = require("../models/user");
 
@@ -16,9 +17,20 @@ class UserRepository {
   }
 
   async getUserById(id) {
-    return await User.findOne({ _id: id }).populate("role").populate("subscriptionId");
-  }
 
+    const user = await User.findOne({ _id: id }).populate("role");
+    if (!user) {
+      throw new NotFoundError("The user with this ID was not found");
+    }
+    return user;
+  }
+  async getRoleById(id) {
+    const role = await Role.findOne({ _id: id });
+    if (!role) {
+      throw new NotFoundError("This Role ID was not found");
+    }
+    return role;
+  }
   async updateUser(id, body) {
     return await User.updateOne({ _id: id }, body);
   }
