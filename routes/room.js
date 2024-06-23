@@ -69,7 +69,6 @@ const roomRouter = (roomController) => {
       let roomsId;
       if (req.query.amenitiesIds) {
         const fields = req.query.amenitiesIds.split(",");
-        console.log(fields);
         amenities = { amenitiesIds: { $all: fields } };
       }
       if (req.params.hotelId) {

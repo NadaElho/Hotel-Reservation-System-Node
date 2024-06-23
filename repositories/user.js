@@ -1,3 +1,4 @@
+const BadRequestError = require("../handleErrors/badRequestError");
 const NotFoundError = require("../handleErrors/notFoundError");
 const Role = require("../models/role");
 const Subscription = require("../models/subscription");
@@ -48,6 +49,9 @@ class UserRepository {
     });
     if (!subscription) {
       throw new NotFoundError("The Subscription with this ID was not found");
+    }
+    if(userId.subscriptionId == subscriptionId){
+      throw new BadRequestError("You are subscribed in the same plan");
     }
     userId.subscriptionId = subscriptionId;
     await userId.save();

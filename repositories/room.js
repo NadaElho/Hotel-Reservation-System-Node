@@ -60,7 +60,6 @@ class roomRepository {
       throw new Error("Room already added to favourites");
     }
     user.favouriteRooms.push(roomId);
-    console.log(user);
     await user.save();
     return user;
   }

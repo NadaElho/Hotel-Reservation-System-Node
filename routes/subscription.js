@@ -123,7 +123,6 @@ const subscriptionRouter = (subscriptionController) => {
 
   router.post("/:id/payment", protect, async (req, res) => {
     try {
-      console.log(req.params.id)
       let response = await subscriptionController.payWithStripe(
         req,
         req.params.id
