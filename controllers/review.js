@@ -15,6 +15,7 @@ class ReviewController {
 
   async addReview(body) {
     const { roomId } = body;
+   
     const roomReviews = await this.reviewRepository.getRoomReviews(body.roomId);
     const countReviews = roomReviews.reviews.length;
     const sumRatings = roomReviews.reviews.reduce((total, review) => {
@@ -53,25 +54,28 @@ class ReviewController {
     }
     return await this.reviewRepository.editReview(id, body);
   }
-
   async deleteReview(id) {
     const review = await this.reviewRepository.getReview(id);
     const rating = review.rating;
-    const roomReviews = await this.reviewRepository.getRoomReviews(
-      review.roomId
-    );
+    const roomReviews = await this.reviewRepository.getRoomReviews(review.roomId);
+
     const sumRatings = roomReviews.reviews.reduce((total, review) => {
       return total + review.rating;
-    }, 0);
-    const avg = (sumRatings - rating) / (roomReviews.reviews.length - 1);
+    }, 0);  
+    const countReviewsDeleted = roomReviews.reviews.length - 1;
+    const avg = (sumRatings + rating) / (countReviewsDeleted );
+
+  
     await Room.findOneAndUpdate(
       { _id: review.roomId },
       {
         ratingAvg: isNaN(avg) ? 0 : avg,
       }
     );
+  
     return await this.reviewRepository.deleteReview(id);
   }
+  
 }
 
 module.exports = ReviewController;

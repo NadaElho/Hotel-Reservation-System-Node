@@ -52,14 +52,19 @@ class roomRepository {
 
   async addRoomToFavourite(userId, roomId) {
     const user = await User.findById(userId);
-    if (!user) throw new NotFoundError("user not found");
-    const isFavorited = user.favouriteRooms.find(
-      (id) => id.toString() === roomId
+    if (!user) throw new NotFoundError("User not found");
+
+    const isFavorited = user.favouriteRooms.findIndex(
+      (id) => id && id.toString() === roomId
     );
-    if (isFavorited) {
-      throw new Error("Room already added to favourites");
+
+    if (isFavorited !== -1) {
+      user.favouriteRooms.splice(isFavorited, 1);
+      console.log("room is not Favorited ");
+    } else {
+      user.favouriteRooms.push(roomId);
+      console.log("room is Favorited ");
     }
-    user.favouriteRooms.push(roomId);
     await user.save();
     return user;
   }
@@ -68,7 +73,7 @@ class roomRepository {
     const user = await User.findById(userId);
     if (!user) throw new NotFoundError("user not found");
     const room = user.favouriteRooms.findIndex(
-      (id) => id.toString() === roomId
+      (id) => id && id.toString() === roomId
     );
     if (room === -1) throw new NotFoundError("Room not found in favourites");
     user.favouriteRooms.splice(room, 1);
