@@ -60,10 +60,8 @@ class roomRepository {
 
     if (isFavorited !== -1) {
       user.favouriteRooms.splice(isFavorited, 1);
-      console.log("room is not Favorited ");
     } else {
       user.favouriteRooms.push(roomId);
-      console.log("room is Favorited ");
     }
     await user.save();
     return user;

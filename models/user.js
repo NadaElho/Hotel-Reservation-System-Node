@@ -83,14 +83,5 @@ userSchema.methods.addToken = async function (token) {
   this.resetToken = token;
 };
 
-// Pre-save hook to hash password before saving
-// userSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) return next();
-
-//   this.password = await bcrypt.hash(this.password, 12);
-//   console.log(this.password);
-//   next();
-// });
-
 const User = mongoose.model("User", userSchema);
 module.exports = User;

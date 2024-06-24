@@ -23,7 +23,11 @@ class UserRepository {
       model: "Room",
       populate:{
         path: "promotionId",
-        model: "Promotion"
+        model: "Promotion",
+        path: "hotelId",
+        model: "Hotel",
+        path: "roomTypeId",
+        model: "RoomType"
       }
     });
     if (!user) {
