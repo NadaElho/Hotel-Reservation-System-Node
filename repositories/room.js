@@ -28,7 +28,7 @@ class roomRepository {
       .populate("roomTypeId")
       .populate("promotionId");
 
-    if (!room && id._id) {
+    if (!room) {
       throw new NotFoundError("The room with this ID was not found");
     }
     return room;
@@ -65,7 +65,6 @@ class roomRepository {
       user.favouriteRooms.push(roomId);
       console.log("room is Favorited ");
     }
-
     await user.save();
     return user;
   }

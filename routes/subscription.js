@@ -8,7 +8,7 @@ const BadRequestError = require("../handleErrors/badRequestError");
 const router = express.Router();
 
 const subscriptionRouter = (subscriptionController) => {
-  router.get("/", protect, restrictTo("admin"), async (req, res) => {
+  router.get("/", async (req, res) => {
     try {
       const page = req.query.page * 1 || 1;
       const limit = req.query.limit * 1 || 6;
@@ -116,6 +116,18 @@ const subscriptionRouter = (subscriptionController) => {
         message: "subscription  founded",
         data: subscription,
       });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
+
+  router.post("/:id/payment", protect, async (req, res) => {
+    try {
+      let response = await subscriptionController.payWithStripe(
+        req,
+        req.params.id
+      );
+      res.status(200).json({ status: "success", session: response });
     } catch (error) {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
