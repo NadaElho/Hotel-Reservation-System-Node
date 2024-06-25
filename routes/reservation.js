@@ -101,6 +101,15 @@ const reservationRouter = (reservationController) => {
     }
   });
 
+  router.patch("/:id/paid", protect, async (req, res) => {
+    try {
+      await reservationController.userPaid(req.params.id);
+      res.status(200).json({ message: "paid successfully" });
+    } catch (error) {
+      res.status(error.statusCode || 500).json({ message: error.message });
+    }
+  });
+
   router.patch("/:id/cancel", protect, async (req, res) => {
     try {
       await reservationController.cancelReservation(req.params.id);

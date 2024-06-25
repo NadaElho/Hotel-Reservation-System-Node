@@ -76,6 +76,13 @@ class ReservationRepository {
     await Reservation.updateOne({ _id: id }, { checkIn, checkOut });
   }
 
+  async userPaid(id){
+    return await Reservation.updateOne(
+      { _id: id },
+      { $set: { paid: true } }
+    );
+  }
+
   async cancelReservation(id) {
     await Reservation.updateOne(
       { _id: id },
