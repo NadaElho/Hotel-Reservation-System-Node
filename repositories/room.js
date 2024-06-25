@@ -28,9 +28,9 @@ class roomRepository {
       .populate("roomTypeId")
       .populate("promotionId");
 
-    if (!room) {
-      throw new NotFoundError("The room with this ID was not found");
-    }
+    // if (!room) {
+    //   throw new NotFoundError("The room with this ID was not found");
+    // }
     return room;
   }
 
