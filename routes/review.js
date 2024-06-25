@@ -3,7 +3,7 @@ const { protect } = require("../middlewares/auth");
 const router = express.Router();
 
 const reviewRouter = (reviewController) => {
-  router.get("/", protect, async (req, res) => {
+  router.get("/",  async (req, res) => {
     try {
       const page = req.query.page * 1 || 1;
       const limit = req.query.limit * 1 || 6;
@@ -34,7 +34,7 @@ const reviewRouter = (reviewController) => {
     }
   });
 
-  router.get("/:roomId", protect, async (req, res) => {
+  router.get("/:roomId", async (req, res) => {
     try {
       const page = req.query.page * 1 || 1;
       const limit = req.query.limit * 1 || 6;

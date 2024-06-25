@@ -1,14 +1,11 @@
 const mongoose = require('mongoose')
 
 const reviewSchema = mongoose.Schema({
-  title_en: {
+  title: {
     type: String,
     reuired: true
   },
-  title_ar: {
-    type: String,
-    reuired: true
-  },
+
   rating: {
     type: Number,
     min: 1,
