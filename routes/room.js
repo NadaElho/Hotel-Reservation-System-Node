@@ -141,22 +141,10 @@ const roomRouter = (roomController) => {
       res.status(error.statusCode || 500).json({ message: error.message });
     }
   });
-
-  router.get("/:id/roomReserved", async (req, res) => {
-    try {
-      let roomNotAvailable = await roomController.getNotAvailableDays(
-        req.params.id
-      );
-      res.status(200).json({ data: roomNotAvailable });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
   router.post(
     "/",
     protect,
-    restrictTo("admin"),
+
     uploadMultiple,
     uploadImage,
     async (req, res) => {
@@ -183,6 +171,16 @@ const roomRouter = (roomController) => {
       }
     }
   );
+  router.get("/:id/roomReserved", async (req, res) => {
+    try {
+      let roomNotAvailable = await roomController.getNotAvailableDays(
+        req.params.id
+      );
+      res.status(200).json({ data: roomNotAvailable });
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   router.patch(
     "/:id",
