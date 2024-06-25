@@ -63,7 +63,7 @@ class ReviewController {
       return total + review.rating;
     }, 0);  
     const countReviewsDeleted = roomReviews.reviews.length - 1;
-    const avg = (sumRatings + rating) / (countReviewsDeleted );
+    const avg = (sumRatings - rating) / (countReviewsDeleted );
 
   
     await Room.findOneAndUpdate(
