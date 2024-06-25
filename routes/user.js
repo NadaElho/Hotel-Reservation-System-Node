@@ -23,7 +23,7 @@ const userRouter = (userController, authController) => {
       res.status(500).json({ message: error.message });
     }
   });
-  
+
   router.get("/", protect, restrictTo("admin"), async (req, res) => {
     try {
       const page = req.query.page * 1 || 1;
@@ -130,7 +130,6 @@ const userRouter = (userController, authController) => {
         throw new NotFoundError("this user is not exist");
       }
 
-      await deleteImages(user.images);
       await userController.deleteUser(id);
       res.status(200).json({ message: "The user deleted successfully" });
     } catch (error) {
@@ -154,9 +153,6 @@ const userRouter = (userController, authController) => {
         const userBody = req.body;
         if (!user) {
           throw new NotFoundError("this user is not exist");
-        }
-        if (req.body.images) {
-          await deleteImages(user.images);
         }
         await userController.updateUser(id, userBody);
         res.status(201).json({ message: "This user updated successfully" });
