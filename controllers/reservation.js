@@ -16,10 +16,15 @@ class ReservationController {
       const allResevations = await Reservation.find()
       let todayDate = new Date()
       allResevations.forEach(async (reservation) => {
-        if (todayDate >= reservation.checkOut) {
+        if (todayDate >= reservation.checkOut && reservation.status == "663a8186e3427acea0ef0b56") {
           await Reservation.updateOne(
             { _id: reservation.id },
-            { $set: { status: '663a81a4e3427acea0ef0b58' } },
+            { $set: { status: reservation.paid ? '663a81a4e3427acea0ef0b58' : "663a8158e3427acea0ef0b54" } },
+          )
+        }else if (todayDate >= new Date(reservation.checkIn).getDate() - 1) {
+          await Reservation.updateOne(
+            { _id: reservation.id },
+            { $set: { status: reservation.paid ? '663a8186e3427acea0ef0b56' : "663a8158e3427acea0ef0b54" } },
           )
         }
       })
@@ -98,6 +103,10 @@ class ReservationController {
     })
   }
 
+  async userPaid(id){
+    return await this.reservationRepository.userPaid(id)
+  }
+
   async cancelReservation(id) {
     return await this.reservationRepository.cancelReservation(id)
   }
@@ -119,7 +128,7 @@ class ReservationController {
         },
       ],
       mode: 'payment',
-      success_url: `http://localhost:5173/payment-result?success=true&total=${reservation.totalPrice}`,
+      success_url: `http://localhost:5173/payment-result?success=true&total=${reservation.totalPrice}&id=${reservation._id}`,
       cancel_url: `http://localhost:5173/payment-result?canceled=true`,
       customer_email: reservation.userId.email,
     })

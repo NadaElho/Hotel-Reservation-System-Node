@@ -27,6 +27,10 @@ const reservationSchema = mongoose.Schema({
   totalPrice: {
     type: Number,
   },
+  paid:{
+    type: Boolean,
+    default: false
+  }
 })
 
 const Reservation = mongoose.model('Reservation', reservationSchema)
