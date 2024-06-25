@@ -10,7 +10,6 @@ const { auth } = require('../config/firebase')
 
 const uploadImage = async (req, res, next) => {
   try {
-    // console.log(req.files.length)
     if (!req.files?.length) {
       return next()
     }
@@ -40,7 +39,6 @@ const uploadImage = async (req, res, next) => {
     req.body.images = imageUrls
     next()
   } catch (err) {
-    console.log('Error happened', err.message)
     res.status(500).json({
       status: 'failed',
       message: 'updat'+err.message ,
