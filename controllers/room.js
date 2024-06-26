@@ -16,6 +16,9 @@ class RoomController {
   async getRoomById(roomId) {
     return await this.roomRepository.getRoomById(roomId);
   }
+  async getRoomByroomNumber(roomId) {
+    return await this.roomRepository.getRoomByroomNumber(roomId);
+  }
 
   async editRoom(id, updateRoom) {
     return await this.roomRepository.editRoom(id, updateRoom);
