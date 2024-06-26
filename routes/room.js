@@ -153,7 +153,7 @@ const roomRouter = (roomController) => {
         if (error) {
           throw new BadRequestError(error.message);
         }
-        const roomByNumber = await roomController.getRoomById({
+        const roomByNumber = await roomController.getRoomByroomNumber({
           roomNumber: req.body.roomNumber,
         });
         if (roomByNumber) {
