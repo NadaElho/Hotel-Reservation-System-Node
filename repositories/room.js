@@ -49,7 +49,12 @@ class roomRepository {
   }
   // **favourite**
   async getRoomsInFavourite(userId) {
-    const user = await User.findById(userId).populate("favouriteRooms");
+    const user = await User.findById(userId).populate("favouriteRooms").populate({
+      populate:{
+        path: "promotionId",
+        model: "Promotion"
+      }
+    });
     if (!user) throw new NotFoundError("user not found");
     return user.favouriteRooms;
   }
