@@ -32,12 +32,11 @@ const roomSchema = mongoose.Schema({
       ref: "Amenity",
     },
   ],
-  promotionId: [
+  promotionId: 
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Promotion",
     },
-  ],
   roomTypeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "RoomType",
