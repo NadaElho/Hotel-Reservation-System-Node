@@ -36,7 +36,6 @@ const roomSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Promotion",
   },
-
   roomTypeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "RoomType",
