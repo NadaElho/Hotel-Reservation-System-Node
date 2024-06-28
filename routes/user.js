@@ -51,7 +51,14 @@ const userRouter = (userController, authController) => {
       res.status(500).json({ message: error.message });
     }
   });
-
+  router.get("/userProfile", protect, async (req, res) => {
+    try {
+      const data = req.user;
+      res.status(200).json({ status: "success", data: data });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
   router.get("/:id", protect, async (req, res) => {
     try {
       const data = await userController.getUserById(req.params.id);
