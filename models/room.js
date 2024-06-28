@@ -32,11 +32,10 @@ const roomSchema = mongoose.Schema({
       ref: "Amenity",
     },
   ],
-  promotionId: 
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Promotion",
-    },
+  promotionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Promotion",
+  },
   roomTypeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "RoomType",
@@ -56,14 +55,13 @@ const roomSchema = mongoose.Schema({
       required: [true, "Room must have Image"],
     },
   ],
-ratingAvg: {
-  type: Number,
-  min: 0,
-  max: 5,
-  default: 0
-},
+  ratingAvg: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0,
+  },
 });
-
 
 const Room = mongoose.model("Room", roomSchema);
 module.exports = Room;
