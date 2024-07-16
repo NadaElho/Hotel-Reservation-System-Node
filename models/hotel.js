@@ -38,10 +38,12 @@ const hotelSchema = mongoose.Schema({
     },
   ],
   longitude:{
-    type:String
+    type:String,
+    required: true
   },
   latitude:{
-    type:String
+    type:String,
+    required: true
   }
 });
 const Hotel = mongoose.model("Hotel", hotelSchema);

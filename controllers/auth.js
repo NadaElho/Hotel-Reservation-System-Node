@@ -81,7 +81,7 @@ class AuthController {
     await user.save({ validateBeforeSave: false });
     await this.authRepository.saveUser(user);
 
-    const link = `http://localhost:5173/newPassword/${resetToken}`;
+    const link = `http://localhost:5173/newpassword/${resetToken}`;
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
