@@ -42,7 +42,7 @@ class SubscriptionRepository {
   }
 
   async payWithStripe(id) {
-    const subscription = await Subscription.findOne({ _id: id })
+    const subscription = await Subscription.findOne({ _id: id });
     return subscription;
   }
 }
