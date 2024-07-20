@@ -22,7 +22,7 @@ npm start
 ### Demo Videos
 
 - **Admin Demo**: [Watch Admin Demo](https://drive.google.com/file/d/1FEHatwNXgpm7dDsB16nsICGH6HBaciEt/view?usp=drive_link)
-- **User Demo**: [Watch User Demo](https://drive.google.com/file/d/1FEHatwNXgpm7dDsB16nsICGH6HBaciEt/view?usp=drive_link)
+- **User Demo**: [Watch User Demo](https://drive.google.com/file/d/13MZdOBiftWyHYwiOfD1PBkriUngszs-E/view?usp=sharing)
 
 ## Repositories
 
